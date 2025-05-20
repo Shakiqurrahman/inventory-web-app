@@ -11,8 +11,10 @@ const LoginPage = () => {
     };
 
     return (
-        <div className={`${theme === "dark" ? "bg-[#18191A]" : ""} h-screen`}>
-            <div className="flex justify-end p-8 gap-4">
+        <div
+            className={`${theme === "dark" ? "bg-[#18191A]" : ""} h-screen p-4`}
+        >
+            <div className="flex justify-end p-2 md:p-8 gap-4">
                 <button onClick={handleToggleTheme} className="cursor-pointer">
                     {theme === "light" ? (
                         <MdOutlineLightMode className="size-6" />
@@ -52,7 +54,7 @@ const LoginPage = () => {
                         below.
                     </p>
                     <h3
-                        className={`text-3xl font-medium text-center py-2 ${
+                        className={`text-xl md:text-3xl font-medium text-center py-2 ${
                             theme === "dark"
                                 ? "text-[#838aa0]"
                                 : "text-gray-500 "
@@ -65,7 +67,7 @@ const LoginPage = () => {
                         <input
                             type="text"
                             placeholder="Username or Email"
-                            className={`w-full border border-gray-400 outline-0 p-2 rounded-sm ${
+                            className={`w-full border border-gray-400 outline-0 p-2 rounded-sm text-sm md:text-base ${
                                 theme === "dark"
                                     ? "text-gray-200"
                                     : "placeholder:text-gray-500"
@@ -74,7 +76,7 @@ const LoginPage = () => {
                         <input
                             type="password"
                             placeholder="Password"
-                            className={`w-full border border-gray-400 outline-0 p-2 rounded-sm ${
+                            className={`w-full border border-gray-400 outline-0 p-2 rounded-sm text-sm md:text-base ${
                                 theme === "dark"
                                     ? "text-gray-200"
                                     : "placeholder:text-gray-500"
@@ -92,7 +94,7 @@ const LoginPage = () => {
                                 theme === "light"
                                     ? "bg-[#1a1a1a] text-white"
                                     : "bg-gray-300 text-[#1a1a1a]"
-                            }  w-full p-2 rounded-sm cursor-pointer`}
+                            }  w-full p-2 rounded-sm cursor-pointer text-sm md:text-base`}
                         >
                             LOGIN
                         </button>
