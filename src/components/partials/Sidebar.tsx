@@ -1,4 +1,21 @@
-import { useRef, type FC } from "react";
+import { useRef, useState, type FC } from "react";
+import { IoIosArrowDown } from "react-icons/io";
+import { IoSettingsOutline } from "react-icons/io5";
+import { MdOutlinePowerSettingsNew } from "react-icons/md";
+import {
+  TfiBarChart,
+  TfiCloudDown,
+  TfiDashboard,
+  TfiDownload,
+  TfiFolder,
+  TfiHarddrive,
+  TfiIdBadge,
+  TfiMoney,
+  TfiReceipt,
+  TfiShoppingCart,
+  TfiUser,
+} from "react-icons/tfi";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import Logo from "../../assets/logo/logo.png";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
@@ -8,7 +25,25 @@ type SidebarProps = {
 };
 
 const Sidebar: FC<SidebarProps> = ({ open, close }) => {
+  const location = useLocation();
+  const isActiveInventory =
+    location.pathname.startsWith("/items") ||
+    location.pathname.startsWith("/categories");
+
+  const isActiveInvoices =
+    location.pathname.startsWith("/orders") ||
+    location.pathname.startsWith("/invoices");
+
   const sidebarRef = useRef<HTMLDivElement | null>(null);
+  const inventoryRef = useRef<HTMLUListElement | null>(null);
+  const invoicesRef = useRef<HTMLUListElement | null>(null);
+
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+
+  const handleMenuClick = (menu: string) => {
+    setOpenMenu((prev) => (prev === menu ? null : menu));
+  };
+
   const handleClose = () => {
     close(false);
   };
@@ -31,31 +66,277 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
           <div className="flex items-center justify-center h-18 bg-gray-800 text-white shrink-0">
             <img src={Logo} alt="Brand Logo" className="w-10" />
           </div>
-          <nav className="flex-1 p-4 overflow-y-auto">
+          <nav className="flex-1 py-4 overflow-y-auto select-none">
             <ul>
-              <li className="mb-2">
-                <a
-                  href="#"
-                  className="block p-2 text-gray-700 hover:bg-gray-200 rounded"
+              <li>
+                <NavLink
+                  to={`/`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                      isActive
+                        ? "border-primary"
+                        : "hover:border-primary border-transparent"
+                    } text-sm`
+                  }
                 >
+                  <TfiDashboard className="text-lg" />
                   Dashboard
-                </a>
+                </NavLink>
               </li>
-              <li className="mb-2">
-                <a
-                  href="#"
-                  className="block p-2 text-gray-700 hover:bg-gray-200 rounded"
+              <li
+                onClick={() => handleMenuClick("inventory")}
+                className={`border-l-4 overflow-hidden ${
+                  isActiveInventory || openMenu === "inventory"
+                    ? "border-primary"
+                    : "hover:border-primary border-transparent"
+                } text-sm cursor-pointer`}
+              >
+                <div
+                  className={`flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 ${
+                    openMenu === "inventory" ? "bg-gray-200" : ""
+                  }`}
                 >
-                  Settings
-                </a>
+                  <TfiHarddrive className="text-lg" />
+                  Inventory{" "}
+                  <IoIosArrowDown
+                    className={`ml-auto text-lg duration-300 ${
+                      openMenu === "inventory" ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
+                </div>
+                <ul
+                  className="pl-4 bg-gray-200 duration-300"
+                  ref={inventoryRef}
+                  style={{
+                    height:
+                      openMenu === "inventory"
+                        ? inventoryRef.current?.scrollHeight + "px"
+                        : 0,
+                  }}
+                >
+                  <li>
+                    <NavLink
+                      to={`/items`}
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 p-3 ${
+                          isActive
+                            ? "text-secondary"
+                            : "text-gray-700 hover:text-secondary"
+                        } text-sm`
+                      }
+                    >
+                      <TfiHarddrive className="text-lg" />
+                      Items
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to={`/categories`}
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 p-3 ${
+                          isActive
+                            ? "text-secondary"
+                            : "text-gray-700 hover:text-secondary"
+                        } text-sm`
+                      }
+                    >
+                      <TfiFolder className="text-lg" />
+                      Categories
+                    </NavLink>
+                  </li>
+                </ul>
               </li>
-              <li className="mb-2">
-                <a
-                  href="#"
-                  className="block p-2 text-gray-700 hover:bg-gray-200 rounded"
+              <li>
+                <NavLink
+                  to={`/customers`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                      isActive
+                        ? "border-primary"
+                        : "hover:border-primary border-transparent"
+                    } text-sm`
+                  }
                 >
-                  Profile
-                </a>
+                  <TfiUser className="text-lg" />
+                  Customers
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={`/suppliers`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                      isActive
+                        ? "border-primary"
+                        : "hover:border-primary border-transparent"
+                    } text-sm`
+                  }
+                >
+                  <TfiDownload className="text-lg" />
+                  Suppliers
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={`/reports`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                      isActive
+                        ? "border-primary"
+                        : "hover:border-primary border-transparent"
+                    } text-sm`
+                  }
+                >
+                  <TfiBarChart className="text-lg" />
+                  Reports
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={`/receiving`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                      isActive
+                        ? "border-primary"
+                        : "hover:border-primary border-transparent"
+                    } text-sm`
+                  }
+                >
+                  <TfiCloudDown className="text-lg" />
+                  Receiving
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={`/sales`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                      isActive
+                        ? "border-primary"
+                        : "hover:border-primary border-transparent"
+                    } text-sm`
+                  }
+                >
+                  <TfiShoppingCart className="text-lg" />
+                  Sales
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={`/expenses`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                      isActive
+                        ? "border-primary"
+                        : "hover:border-primary border-transparent"
+                    } text-sm`
+                  }
+                >
+                  <TfiMoney className="text-lg" />
+                  Expenses
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={`/employees`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                      isActive
+                        ? "border-primary"
+                        : "hover:border-primary border-transparent"
+                    } text-sm`
+                  }
+                >
+                  <TfiIdBadge className="text-lg" />
+                  Employees
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={`/store-config`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                      isActive
+                        ? "border-primary"
+                        : "hover:border-primary border-transparent"
+                    } text-sm`
+                  }
+                >
+                  <IoSettingsOutline className="text-lg" />
+                  Store Config
+                </NavLink>
+              </li>
+              <li
+                onClick={() => handleMenuClick("invoices")}
+                className={`border-l-4 overflow-hidden ${
+                  isActiveInvoices || openMenu === "invoices"
+                    ? "border-primary"
+                    : "hover:border-primary border-transparent"
+                } text-sm cursor-pointer`}
+              >
+                <div
+                  className={`flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 ${
+                    openMenu === "invoices" ? "bg-gray-200" : ""
+                  }`}
+                >
+                  <TfiReceipt className="text-lg" />
+                  Invoices{" "}
+                  <IoIosArrowDown
+                    className={`ml-auto text-lg duration-300 ${
+                      openMenu === "invoices" ? "rotate-180" : "rotate-0"
+                    }`}
+                  />
+                </div>
+                <ul
+                  className="pl-4 bg-gray-200 duration-300"
+                  ref={invoicesRef}
+                  style={{
+                    height:
+                      openMenu === "invoices"
+                        ? invoicesRef.current?.scrollHeight + "px"
+                        : 0,
+                  }}
+                >
+                  <li>
+                    <NavLink
+                      to={`/items`}
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 p-3 ${
+                          isActive
+                            ? "text-secondary"
+                            : "text-gray-700 hover:text-secondary"
+                        } text-sm`
+                      }
+                    >
+                      <TfiUser className="text-lg" />
+                      Customers
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to={`/categories`}
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 p-3 ${
+                          isActive
+                            ? "text-secondary"
+                            : "text-gray-700 hover:text-secondary"
+                        } text-sm`
+                      }
+                    >
+                      <TfiDownload className="text-lg" />
+                      Suppliers
+                    </NavLink>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <Link
+                  to="#"
+                  className="flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 border-transparent hover:border-red-700 text-sm"
+                >
+                  <MdOutlinePowerSettingsNew className="text-lg" />
+                  Logout
+                </Link>
               </li>
             </ul>
           </nav>

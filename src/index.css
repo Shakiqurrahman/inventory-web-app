@@ -4,5 +4,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 * {
-    font-family: "Poppins", sans-serif;
+  font-family: "Poppins", sans-serif;
+}
+
+@theme {
+  --color-primary: #fab161;
+  --color-secondary: #b47220;
 }
