@@ -10,7 +10,9 @@ const MainLayout = () => {
       <Sidebar open={isOpen} close={setIsOpen} />
       <div className="w-full h-full overflow-y-auto">
         <Navbar openSidebar={setIsOpen} />
-        <Outlet />
+        <div className="p-4">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
