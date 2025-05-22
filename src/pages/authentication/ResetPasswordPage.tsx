@@ -4,17 +4,16 @@ import { useForm } from "react-hook-form";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { z } from "zod";
-import logo from "../assets/logo/logo.png";
+import logo from "../../assets/logo/logo.png";
 
 // zod schema
 const loginSchema = z.object({
-    username: z.string().min(1, "Username or Email is required"),
-    password: z.string().min(1, "Password is required"),
+    email: z.string().min(1, "Username or Email is required"),
 });
 
 type loginForm = z.infer<typeof loginSchema>;
 
-const LoginPage = () => {
+const ResetPasswordPage = () => {
     const [theme, setTheme] = useState(
         () => localStorage.getItem("theme") || "light"
     );
@@ -57,7 +56,7 @@ const LoginPage = () => {
                 </button>
             </div>
 
-            <div className="max-w-[520px] border rounded-md pb-10 bg-white dark:bg-[#242526] border-gray-300 dark:border-gray-800">
+            <div className="w-full sm:w-[540px] border rounded-md pb-10 bg-white dark:bg-[#242526] border-gray-300 dark:border-gray-800">
                 <div className="bg-[#1a1a1a] dark:bg-[#ddd] flex justify-center rounded-t-md">
                     <img
                         src={logo}
@@ -66,13 +65,8 @@ const LoginPage = () => {
                     />
                 </div>
                 <p className="text-xs pt-10 p-4 text-[#1a1a1a] dark:text-gray-300">
-                    Welcome to the Fit and Found Point Of Sale System. To
-                    continue, please login using your username and password
-                    below.
+                    Reset Password
                 </p>
-                <h3 className="text-xl md:text-3xl font-medium text-center py-2 text-gray-500 dark:text-[#838aa0]">
-                    Press login to continue
-                </h3>
 
                 <form
                     onSubmit={handleSubmit(onSubmit)}
@@ -80,37 +74,27 @@ const LoginPage = () => {
                 >
                     <input
                         type="text"
-                        placeholder="Username or Email"
-                        {...register("username")}
+                        placeholder="Enter your Email"
+                        {...register("email")}
                         className="w-full border border-gray-400 outline-0 p-2 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
                     />
-                    {errors.username && (
+                    {errors.email && (
                         <p className="text-red-500 text-xs mt-1">
-                            {errors.username.message}
+                            {errors.email.message}
                         </p>
                     )}
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        {...register("password")}
-                        className="w-full border border-gray-400 outline-0 p-2 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
-                    />
-                    {errors.password && (
-                        <p className="text-red-500 text-xs mt-1">
-                            {errors.password.message}
-                        </p>
-                    )}
+
                     <Link
-                        to={"/reset-password"}
-                        className="block text-right text-gray-400 hover:underline text-sm"
+                        to={"/login"}
+                        className="block text-gray-400 hover:underline text-sm"
                     >
-                        Reset Password?
+                        Login
                     </Link>
                     <button
                         type="submit"
                         className="w-full p-2 rounded-sm cursor-pointer text-sm md:text-base bg-[#1a1a1a] text-white dark:bg-gray-300 dark:text-[#1a1a1a]"
                     >
-                        LOGIN
+                        Reset Password
                     </button>
                 </form>
             </div>
@@ -118,4 +102,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default ResetPasswordPage;
