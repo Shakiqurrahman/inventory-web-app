@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { z } from "zod";
@@ -8,7 +9,10 @@ import logo from "../../assets/logo/logo.png";
 
 // zod schema
 const loginSchema = z.object({
-    email: z.string().min(1, "Username or Email is required"),
+    email: z
+        .string()
+        .min(1, "Username or Email is required")
+        .email("Must be valid email"),
 });
 
 type loginForm = z.infer<typeof loginSchema>;
@@ -41,6 +45,29 @@ const ResetPasswordPage = () => {
 
     const onSubmit = (data: loginForm) => {
         console.log("Login Data: ", data);
+
+        if (errors.email == null) {
+            toast.success(
+                <span className="text-sm">
+                    <strong>Success</strong> A password reset e-mail has been
+                    sent to your e-mail. Please check your e-mail and click the
+                    link."
+                </span>,
+                {
+                    duration: 5000,
+                    style: {
+                        border: "1px solid #c3e6cb",
+                        padding: "16px",
+                        color: "#155724",
+                        backgroundColor: "#d4edda",
+                    },
+                    iconTheme: {
+                        primary: "#155724",
+                        secondary: "#d4edda",
+                    },
+                }
+            );
+        }
         // Handle Login logic here
     };
 
@@ -64,19 +91,19 @@ const ResetPasswordPage = () => {
                         className="object-contain size-18 p-2"
                     />
                 </div>
-                <p className="text-xs pt-10 p-4 text-[#1a1a1a] dark:text-gray-300">
+                <p className="text-sm pt-10 p-4 text-[#1a1a1a] dark:text-gray-300">
                     Reset Password
                 </p>
 
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="p-4 space-y-3 text-base"
+                    className="p-4 text-base"
                 >
                     <input
                         type="text"
                         placeholder="Enter your Email"
                         {...register("email")}
-                        className="w-full border border-gray-400 outline-0 p-2 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
+                        className="w-full border border-gray-400 outline-0 px-4 py-2 md:py-3 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
                     />
                     {errors.email && (
                         <p className="text-red-500 text-xs mt-1">
@@ -86,13 +113,13 @@ const ResetPasswordPage = () => {
 
                     <Link
                         to={"/login"}
-                        className="block text-gray-400 hover:underline text-sm"
+                        className="block text-gray-400 hover:underline text-sm py-5"
                     >
                         Login
                     </Link>
                     <button
                         type="submit"
-                        className="w-full p-2 rounded-sm cursor-pointer text-sm md:text-base bg-[#1a1a1a] text-white dark:bg-gray-300 dark:text-[#1a1a1a]"
+                        className="w-full p-2 md:p-3 rounded-sm cursor-pointer text-sm md:text-base bg-[#1a1a1a] text-white dark:bg-gray-300 dark:text-[#1a1a1a]"
                     >
                         Reset Password
                     </button>
