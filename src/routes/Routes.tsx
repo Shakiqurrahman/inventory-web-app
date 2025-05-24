@@ -1,7 +1,8 @@
 import { createBrowserRouter, type RouteObject } from "react-router-dom";
-import ResetPasswordPage from "../pages/authentication/ResetPasswordPage";
 import ErrorPage from "../pages/ErrorPage";
 import LoginPage from "../pages/LoginPage";
+import ResetPasswordOtp from "../pages/resetPassword/resetPasswordOtp";
+import ResetPasswordPage from "../pages/resetPassword/ResetPasswordPage";
 import MainLayout from "./Layout";
 
 const routes: RouteObject[] = [
@@ -22,6 +23,10 @@ const routes: RouteObject[] = [
     {
         path: "/reset-password",
         element: <ResetPasswordPage />,
+    },
+    {
+        path: "reset-password/otp",
+        element: <ResetPasswordOtp />,
     },
     {
         path: "*",
