@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 const ResetPasswordOtp = () => {
     const CODE_LENGTH = 6;
     const [code, setCode] = useState<string[]>(Array(CODE_LENGTH).fill(""));
-    const inputRefs = useRef<HTMLInputElement[]>([]);
+    const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
     const handleChange = (value: string, index: number) => {
         if (!/^\d?$/.test(value)) return; // Acept only one digit
@@ -66,7 +66,9 @@ const ResetPasswordOtp = () => {
                             onChange={(e) => handleChange(e.target.value, idx)}
                             onKeyDown={(e) => handleKeyDown(e, idx)}
                             onPaste={(e) => handlePaste(e)}
-                            ref={(el) => (inputRefs.current[idx] = el)}
+                            ref={(el) => {
+                                inputRefs.current[idx] = el
+                            }}
                             className="w-10 h-12 text-center border border-gray-300 rounded-md text-xl focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                     ))}
