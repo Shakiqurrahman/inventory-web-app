@@ -1,7 +1,9 @@
 import { useRef, useState, type FC } from "react";
+import { BsToggles } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
+import { TbHistory } from "react-icons/tb";
 import {
   TfiBarChart,
   TfiCloudDown,
@@ -28,7 +30,8 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
   const location = useLocation();
   const isActiveInventory =
     location.pathname.startsWith("/items") ||
-    location.pathname.startsWith("/categories");
+    location.pathname.startsWith("/categories") ||
+    location.pathname.startsWith("/attributes");
 
   const isActiveInvoices =
     location.pathname.startsWith("/orders") ||
@@ -144,6 +147,21 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                       Categories
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to={`/attributes`}
+                      className={({ isActive }) =>
+                        `flex items-center gap-2 p-3 ${
+                          isActive
+                            ? "text-secondary"
+                            : "text-gray-700 hover:text-secondary"
+                        } text-sm`
+                      }
+                    >
+                      <BsToggles className="text-lg" />
+                      Attributes
+                    </NavLink>
+                  </li>
                 </ul>
               </li>
               <li>
@@ -219,6 +237,21 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                 >
                   <TfiShoppingCart className="text-lg" />
                   Sales
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={`/sales-history`}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                      isActive
+                        ? "border-primary"
+                        : "hover:border-primary border-transparent"
+                    } text-sm`
+                  }
+                >
+                  <TbHistory className="text-lg" />
+                  Sales History
                 </NavLink>
               </li>
               <li>
