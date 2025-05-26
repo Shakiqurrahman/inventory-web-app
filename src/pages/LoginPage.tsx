@@ -29,7 +29,9 @@ const LoginPage = () => {
     }, [theme]);
 
     const handleToggleTheme = () => {
-        setTheme((prev) => (prev === "light" ? "dark" : "light"));
+        const newTheme = theme === "light" ? "dark" : "light";
+        setTheme(newTheme);
+        localStorage.setItem("theme", newTheme);
     };
 
     const {
@@ -58,7 +60,7 @@ const LoginPage = () => {
             </div>
 
             <div className="max-w-[520px] border rounded-md pb-10 bg-white dark:bg-[#242526] border-gray-300 dark:border-gray-800">
-                <div className="bg-[#1a1a1a] dark:bg-[#ddd] flex justify-center rounded-t-md">
+                <div className="bg-[#1a1a1a] dark:bg-black flex justify-center rounded-t-md">
                     <img
                         src={logo}
                         alt="logo"
@@ -82,7 +84,7 @@ const LoginPage = () => {
                         type="text"
                         placeholder="Username or Email"
                         {...register("username")}
-                        className="w-full border border-gray-400 outline-0 p-2 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
+                        className="w-full border border-gray-600 outline-0 p-2 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
                     />
                     {errors.username && (
                         <p className="text-red-500 text-xs mt-1">
@@ -93,7 +95,7 @@ const LoginPage = () => {
                         type="password"
                         placeholder="Password"
                         {...register("password")}
-                        className="w-full border border-gray-400 outline-0 p-2 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
+                        className="w-full border border-gray-600 outline-0 p-2 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
                     />
                     {errors.password && (
                         <p className="text-red-500 text-xs mt-1">
@@ -108,7 +110,7 @@ const LoginPage = () => {
                     </Link>
                     <button
                         type="submit"
-                        className="w-full p-2 rounded-sm cursor-pointer text-sm md:text-base bg-[#1a1a1a] text-white dark:bg-gray-300 dark:text-[#1a1a1a]"
+                        className="w-full p-2 rounded-sm cursor-pointer text-sm md:text-base bg-[#1a1a1a] hover:bg-gray-600 text-white dark:bg-gray-600 dark:hover:bg-gray-800 duration-300"
                     >
                         LOGIN
                     </button>
