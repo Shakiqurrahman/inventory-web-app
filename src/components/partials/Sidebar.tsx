@@ -96,7 +96,9 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
               >
                 <div
                   className={`flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 ${
-                    openMenu === "inventory" ? "bg-gray-200" : ""
+                    isActiveInventory || openMenu === "inventory"
+                      ? "bg-gray-200"
+                      : ""
                   }`}
                 >
                   <TfiHarddrive className="text-lg" />
@@ -309,7 +311,9 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
               >
                 <div
                   className={`flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 ${
-                    openMenu === "invoices" ? "bg-gray-200" : ""
+                    isActiveInvoices || openMenu === "invoices"
+                      ? "bg-gray-200"
+                      : ""
                   }`}
                 >
                   <TfiReceipt className="text-lg" />

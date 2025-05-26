@@ -1,4 +1,5 @@
 import { createBrowserRouter, type RouteObject } from "react-router-dom";
+import AllCategories from "../pages/categories/AllCategories";
 import DashboardPage from "../pages/DashboardPage";
 import ErrorPage from "../pages/ErrorPage";
 import LoginPage from "../pages/LoginPage";
@@ -7,32 +8,36 @@ import ResetPasswordPage from "../pages/resetPassword/ResetPasswordPage";
 import MainLayout from "./Layout";
 
 const routes: RouteObject[] = [
-    {
+  {
+    path: "/",
+    element: <MainLayout />,
+    children: [
+      {
         path: "/",
-        element: <MainLayout />,
-        children: [
-            {
-                path: "/",
-                element: <DashboardPage />,
-            },
-        ],
-    },
-    {
-        path: "/login",
-        element: <LoginPage />,
-    },
-    {
-        path: "/reset-password",
-        element: <ResetPasswordPage />,
-    },
-    {
-        path: "reset-password/otp",
-        element: <ResetPasswordOtp />,
-    },
-    {
-        path: "*",
-        element: <ErrorPage />,
-    },
+        element: <DashboardPage />,
+      },
+      {
+        path: "/categories",
+        element: <AllCategories />,
+      },
+    ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPasswordPage />,
+  },
+  {
+    path: "reset-password/otp",
+    element: <ResetPasswordOtp />,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
+  },
 ];
 
 export const router = createBrowserRouter(routes);
