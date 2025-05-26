@@ -15,6 +15,10 @@ const ResetPasswordOtp = () => {
         if (value && index < CODE_LENGTH - 1) {
             inputRefs.current[index + 1]?.focus();
         }
+
+        if (newCode.every((digit) => digit !== "")) {
+            handleSubmit();
+        }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
@@ -39,12 +43,30 @@ const ResetPasswordOtp = () => {
             }
 
             setCode(newCode);
+
+            if (newCode.every((digit) => digit !== "")) {
+                handleSubmit();
+            }
         }
     };
 
+    const handleSubmit = () => {
+        const otpCode = code.join("");
+
+        console.log("Submitted OTP: ", otpCode);
+
+        // 👉 You can call an API here
+        // verifyOtp(otpCode).then(...)
+
+        // Example: clear the inputs or show success
+        // setCode(Array(CODE_LENGTH).fill(""));
+    };
+
+    const isCodeComplete = code.every((char) => char !== "");
+
     return (
-        <div className="flex justify-center items-center min-h-screen bg-green-100 px-4">
-            <div className="bg-white p-8 rounded-xl shadow-md w-full  sm:w-[360px] text-center">
+        <div className="flex justify-center items-center min-h-screen px-4">
+            <div className="bg-gray-50 p-8 rounded-xl shadow-md w-full  sm:w-[360px] text-center">
                 <div className="mb-4 flex justify-center">
                     <img src="/icon.png" alt="verification" className="h-10" />
                 </div>
@@ -67,11 +89,24 @@ const ResetPasswordOtp = () => {
                             onKeyDown={(e) => handleKeyDown(e, idx)}
                             onPaste={(e) => handlePaste(e)}
                             ref={(el) => {
-                                inputRefs.current[idx] = el
+                                inputRefs.current[idx] = el;
                             }}
                             className="w-10 h-12 text-center border border-gray-300 rounded-md text-xl focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                     ))}
+                </div>
+
+                <div className="flex flex-col gap-3">
+                    <button
+                        className="bg-green-500 hover:bg-green-600 text-white py-2 rounded-md disabled:opacity-50 cursor-pointer"
+                        disabled={!isCodeComplete}
+                        onClick={handleSubmit}
+                    >
+                        Confirm Code
+                    </button>
+                    <button className="text-blue-600 hover:underline text-sm cursor-pointer">
+                        Resend
+                    </button>
                 </div>
             </div>
         </div>
