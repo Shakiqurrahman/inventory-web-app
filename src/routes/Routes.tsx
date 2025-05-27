@@ -4,6 +4,8 @@ import ErrorPage from "../pages/ErrorPage";
 import LoginPage from "../pages/LoginPage";
 import ResetPasswordOtp from "../pages/resetPassword/ResetPasswordOtp";
 import ResetPasswordPage from "../pages/resetPassword/ResetPasswordPage";
+import NewSuplier from "../pages/supplierPage/NewSuplier";
+import SuppliersPage from "../pages/supplierPage/SuppliersPage";
 import MainLayout from "./Layout";
 
 const routes: RouteObject[] = [
@@ -14,6 +16,14 @@ const routes: RouteObject[] = [
             {
                 path: "/",
                 element: <DashboardPage />,
+            },
+            {
+                path: "/suppliers",
+                element: <SuppliersPage />,
+            },
+            {
+                path: "/suppliers/new-supplier",
+                element: <NewSuplier />,
             },
         ],
     },
