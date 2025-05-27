@@ -13,7 +13,7 @@ import type { RootState } from "../redux/store";
 
 // zod schema
 const loginSchema = z.object({
-  email: z.string().min(1, "Username or Email is required"),
+  identifier: z.string().min(1, "Username or Email is required"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -89,11 +89,11 @@ const LoginPage = () => {
           <input
             type="text"
             placeholder="Username or Email"
-            {...register("email")}
+            {...register("identifier")}
             className="w-full border border-gray-600 outline-0 p-2 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
           />
-          {errors.email && (
-            <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+          {errors.identifier && (
+            <p className="text-red-500 text-xs mt-1">{errors.identifier.message}</p>
           )}
           <input
             type="password"
