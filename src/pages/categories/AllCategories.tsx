@@ -48,6 +48,8 @@ const AllCategories = () => {
           </table>
         </div>
       </div>
+      {/* <CreateCategoryModal /> */}
+      {/* <EditCategories /> */}
     </>
   );
 };
