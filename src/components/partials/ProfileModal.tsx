@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import Avatar from "../../assets/images/avatar-default.jpg";
 import useOutsideClick from "../../hooks/useOutsideClick";
 

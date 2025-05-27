@@ -3,7 +3,7 @@ import { LiaIdCard } from "react-icons/lia";
 import { PiClock } from "react-icons/pi";
 import { SlPeople } from "react-icons/sl";
 import { TfiCloudDown, TfiHarddrive, TfiShoppingCart } from "react-icons/tfi";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const DashboardPage = () => {
   return (

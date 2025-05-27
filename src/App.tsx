@@ -1,6 +1,6 @@
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
-import { RouterProvider } from "react-router";
+import { RouterProvider } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "./redux/store";
 import { router } from "./routes/Routes";

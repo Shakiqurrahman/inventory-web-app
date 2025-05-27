@@ -17,7 +17,7 @@ import {
   TfiShoppingCart,
   TfiUser,
 } from "react-icons/tfi";
-import { Link, NavLink, useLocation } from "react-router";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import Logo from "../../assets/logo/logo.png";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
