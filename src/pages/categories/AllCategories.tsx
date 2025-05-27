@@ -1,4 +1,5 @@
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiPlus, FiSearch, FiTrash } from "react-icons/fi";
+import { MdOutlineModeEdit } from "react-icons/md";
 
 const AllCategories = () => {
   return (
@@ -14,10 +15,37 @@ const AllCategories = () => {
               className="placeholder:text-sm size-full outline-none"
             />
           </div>
-          <button className="bg-primary text-white px-4 py-2 rounded-lg ml-2 flex items-center text-sm gap-2 cursor-pointer hover:bg-secondary duration-200">
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2 flex items-center text-xs gap-1 cursor-pointer hover:bg-blue-600 duration-200">
             <FiPlus className="text-lg" />
             New Category
           </button>
+        </div>
+        <div className="mt-10">
+          <table className="w-full border-collapse rounded-md text-gray-700">
+            <thead>
+              <tr className="bg-gray-200 text-left *:font-semibold text-sm">
+                <th className="p-3 w-[60px]">ID</th>
+                <th className="p-3">Category Name</th>
+                <th className="p-3 w-[200px]">Products</th>
+                <th className="p-3 w-[200px]">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-gray-300 hover:bg-gray-50 text-sm">
+                <td className="p-3">1</td>
+                <td className="p-3">Flytech It</td>
+                <td className="p-3">3 products</td>
+                <td className="flex items-center gap-1 p-3">
+                  <button className="flex gap-0.5 items-center py-1.5 px-3 bg-blue-500 text-white rounded-sm text-xs cursor-pointer shrink-0">
+                    <MdOutlineModeEdit className="" /> <span>Edit</span>
+                  </button>
+                  <button className="bg-red-400 text-white p-1.5 rounded-sm cursor-pointer shrink-0">
+                    <FiTrash className="text-md" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </>
