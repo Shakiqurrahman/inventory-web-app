@@ -1,11 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { z } from "zod";
 import logo from "../../assets/logo/logo.png";
+import { toggleTheme } from "../../redux/features/theme/themeSlice";
+import type { RootState } from "../../redux/store";
 
 // zod schema
 const loginSchema = z.object({
@@ -18,9 +21,8 @@ const loginSchema = z.object({
 type loginForm = z.infer<typeof loginSchema>;
 
 const ResetPasswordPage = () => {
-    const [theme, setTheme] = useState(
-        () => localStorage.getItem("theme") || "light"
-    );
+    const dispatch = useDispatch();
+    const theme = useSelector((state: RootState) => state.theme.value);
 
     useEffect(() => {
         const root = window.document.documentElement;
@@ -32,9 +34,7 @@ const ResetPasswordPage = () => {
     }, [theme]);
 
     const handleToggleTheme = () => {
-        const newTheme = theme === "light" ? "dark" : "light";
-        setTheme(newTheme);
-        localStorage.setItem("theme", newTheme);
+        dispatch(toggleTheme());
     };
 
     const {
