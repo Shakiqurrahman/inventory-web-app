@@ -1,7 +1,21 @@
 import { FiPlus, FiSearch, FiTrash } from "react-icons/fi";
 import { MdOutlineModeEdit } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteCategory,
+  toggleCreateModal,
+  toggleEditModal,
+} from "../../redux/features/categories/categoriesSlice";
+import type { RootState } from "../../redux/store";
+import CreateCategoryModal from "./CreateCategoryModal";
+import EditCategories from "./EditCategories";
 
 const AllCategories = () => {
+  const dispatch = useDispatch();
+  const { categories, openCreateModal, openEditModal } = useSelector(
+    (state: RootState) => state.categories
+  );
+
   return (
     <>
       <div className="bg-white p-4 rounded-lg">
@@ -15,7 +29,11 @@ const AllCategories = () => {
               className="placeholder:text-sm size-full outline-none"
             />
           </div>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2 flex items-center text-xs gap-1 cursor-pointer hover:bg-blue-600 duration-200">
+          <button
+            type="button"
+            onClick={() => dispatch(toggleCreateModal())}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2 flex items-center text-xs gap-1 cursor-pointer hover:bg-blue-600 duration-200"
+          >
             <FiPlus className="text-lg" />
             New Category
           </button>
@@ -31,25 +49,48 @@ const AllCategories = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-gray-300 hover:bg-gray-50 text-sm">
-                <td className="p-3">1</td>
-                <td className="p-3">Flytech It</td>
-                <td className="p-3">3 products</td>
-                <td className="flex items-center gap-1 p-3">
-                  <button className="flex gap-0.5 items-center py-1.5 px-3 bg-blue-500 text-white rounded-sm text-xs cursor-pointer shrink-0">
-                    <MdOutlineModeEdit className="" /> <span>Edit</span>
-                  </button>
-                  <button className="bg-red-400 text-white p-1.5 rounded-sm cursor-pointer shrink-0">
-                    <FiTrash className="text-md" />
-                  </button>
-                </td>
-              </tr>
+              {categories.length > 0 ? (
+                categories.map((category, index) => (
+                  <tr
+                    className="border-b border-gray-300 hover:bg-gray-50 text-sm"
+                    key={index}
+                  >
+                    <td className="p-3">{index + 1}</td>
+                    <td className="p-3">{category.categoryName}</td>
+                    <td className="p-3">3 products</td>
+                    <td className="flex items-center gap-1 p-3">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          dispatch(toggleEditModal({ id: index, ...category }))
+                        }
+                        className="flex gap-0.5 items-center py-1.5 px-3 bg-blue-500 text-white rounded-sm text-xs cursor-pointer shrink-0"
+                      >
+                        <MdOutlineModeEdit className="" /> <span>Edit</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => dispatch(deleteCategory(index))}
+                        className="bg-red-400 text-white p-1.5 rounded-sm cursor-pointer shrink-0"
+                      >
+                        <FiTrash className="text-md" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr className="border-b border-gray-300 text-sm">
+                  <td colSpan={4} className="p-3 text-center text-gray-500">
+                    No categories found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
-      {/* <CreateCategoryModal /> */}
-      {/* <EditCategories /> */}
+      {openCreateModal && <CreateCategoryModal />}
+      {openEditModal && <EditCategories />}
     </>
   );
 };
