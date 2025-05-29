@@ -1,4 +1,5 @@
 import { createBrowserRouter, type RouteObject } from "react-router";
+import Customerspage from "../pages/customerPage/Customerspage";
 import DashboardPage from "../pages/DashboardPage";
 import ErrorPage from "../pages/ErrorPage";
 import LoginPage from "../pages/LoginPage";
@@ -24,6 +25,10 @@ const routes: RouteObject[] = [
             {
                 path: "/suppliers/new-supplier",
                 element: <NewSuplier />,
+            },
+            {
+                path: "/customers",
+                element: <Customerspage />,
             },
         ],
     },
