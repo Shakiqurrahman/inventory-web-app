@@ -1,6 +1,9 @@
-import type { FC } from "react";
+import { useEffect, type FC } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTheme } from "../../redux/features/theme/themeSlice";
+import type { RootState } from "../../redux/store";
 import Breadcrumb from "./Breadcrumb";
 import ProfileModal from "./ProfileModal";
 
@@ -8,13 +11,23 @@ type NavbarProps = {
   openSidebar: (value: boolean) => void;
 };
 const Navbar: FC<NavbarProps> = ({ openSidebar }) => {
-  const theme = "light";
+  const dispatch = useDispatch();
+  const theme = useSelector((state: RootState) => state.theme.value);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, [theme]);
 
   const handleSidebarToggle = () => {
     openSidebar(true);
   };
   return (
-    <div className="h-18 flex gap-4 justify-between px-4 bg-white items-center">
+    <div className="h-18 flex gap-4 justify-between px-4 bg-white dark:bg-[#18191A] items-center">
       <button
         type="button"
         className="cursor-pointer lg:hidden"
@@ -24,7 +37,11 @@ const Navbar: FC<NavbarProps> = ({ openSidebar }) => {
       </button>
       <Breadcrumb />
       <div className="flex justify-end p-2">
-        <button className="cursor-pointer">
+        <button
+          type="button"
+          className="cursor-pointer"
+          onClick={() => dispatch(toggleTheme())}
+        >
           {theme === "light" ? (
             <MdOutlineLightMode className="size-6 text-[#1a1a1a]" />
           ) : (
