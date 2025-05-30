@@ -5,6 +5,7 @@ import Customerspage from "../pages/customerPage/Customerspage";
 import DashboardPage from "../pages/DashboardPage";
 import ErrorPage from "../pages/ErrorPage";
 import LoginPage from "../pages/LoginPage";
+import NewPassword from "../pages/resetPassword/NewPassword";
 import ResetPasswordOtp from "../pages/resetPassword/ResetPasswordOtp";
 import ResetPasswordPage from "../pages/resetPassword/ResetPasswordPage";
 import NewSuplier from "../pages/supplierPage/NewSuplier";
@@ -53,6 +54,10 @@ const routes: RouteObject[] = [
   {
     path: "reset-password/otp",
     element: <ResetPasswordOtp />,
+  },
+  {
+    path: "new-password",
+    element: <NewPassword />,
   },
   {
     path: "*",
