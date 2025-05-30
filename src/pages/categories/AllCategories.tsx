@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FiPlus, FiSearch, FiTrash } from "react-icons/fi";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +17,18 @@ const AllCategories = () => {
     (state: RootState) => state.categories
   );
 
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const filteredCategories = categories.filter((category) =>
+    category.categoryName
+      .toLowerCase()
+      .includes(searchValue.trim().toLowerCase())
+  );
+
   return (
     <>
       <div className="bg-white p-4 rounded-lg">
@@ -25,6 +38,8 @@ const AllCategories = () => {
             <FiSearch className="text-lg shrink-0" />
             <input
               type="text"
+              value={searchValue}
+              onChange={handleSearchChange}
               placeholder="Search"
               className="placeholder:text-sm size-full outline-none"
             />
@@ -49,8 +64,8 @@ const AllCategories = () => {
               </tr>
             </thead>
             <tbody>
-              {categories.length > 0 ? (
-                categories.map((category, index) => (
+              {filteredCategories.length > 0 ? (
+                filteredCategories.map((category, index) => (
                   <tr
                     className="border-b border-gray-300 hover:bg-gray-50 text-sm"
                     key={index}
