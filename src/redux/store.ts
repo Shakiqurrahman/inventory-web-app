@@ -11,6 +11,7 @@ import {
 import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
 import { baseApi } from "./api/baseApi";
+import attributesReducer from "./features/attributes/attributeSlice";
 import authReducer from "./features/auth/authSlice";
 import categoriesReducer from "./features/categories/categoriesSlice";
 import supplierReducer from "./features/supplierSlice";
@@ -33,6 +34,7 @@ export const store = configureStore({
     theme: themeReducer,
     supplier: supplierReducer,
     categories: categoriesReducer,
+    attributes: attributesReducer,
   },
 
   middleware: (getDefaultMiddlewares) =>

@@ -1,4 +1,5 @@
 import { createBrowserRouter, type RouteObject } from "react-router";
+import AttributesPage from "../pages/attributes/AttributesPage";
 import AllCategories from "../pages/categories/AllCategories";
 import Customerspage from "../pages/customerPage/Customerspage";
 import DashboardPage from "../pages/DashboardPage";
@@ -22,6 +23,10 @@ const routes: RouteObject[] = [
       {
         path: "/categories",
         element: <AllCategories />,
+      },
+      {
+        path: "/attributes",
+        element: <AttributesPage />,
       },
       {
         path: "/suppliers",
