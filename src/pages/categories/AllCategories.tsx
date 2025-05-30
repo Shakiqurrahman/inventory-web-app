@@ -33,7 +33,7 @@ const AllCategories = () => {
     <>
       <div className="bg-white p-4 rounded-lg">
         <h1 className="font-medium text-lg mb-4">Categories</h1>
-        <div className="flex justify-between">
+        <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
           <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 w-[300px] gap-2">
             <FiSearch className="text-lg shrink-0" />
             <input
@@ -47,13 +47,13 @@ const AllCategories = () => {
           <button
             type="button"
             onClick={() => dispatch(toggleCreateModal())}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2 flex items-center text-xs gap-1 cursor-pointer hover:bg-blue-600 duration-200"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center text-xs gap-1 cursor-pointer hover:bg-blue-600 duration-200"
           >
             <FiPlus className="text-lg" />
             New Category
           </button>
         </div>
-        <div className="mt-10">
+        <div className="mt-10 overflow-x-auto">
           <table className="w-full border-collapse rounded-md text-gray-700">
             <thead>
               <tr className="bg-gray-200 text-left *:font-semibold text-sm">

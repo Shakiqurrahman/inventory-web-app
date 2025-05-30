@@ -42,8 +42,11 @@ const EditCategories = () => {
     dispatch(toggleEditModal(null));
   });
   return (
-    <div className="fixed top-0 left-0 w-full h-screen bg-black/20 flex justify-center items-start">
-      <div className="bg-white rounded-lg p-6 w-[400px] mt-20" ref={formRef}>
+    <div className="fixed top-0 left-0 w-full h-screen bg-black/20 flex justify-center items-start z-[99999] p-4">
+      <div
+        className="bg-white rounded-lg p-6 w-full max-w-[400px] mt-20"
+        ref={formRef}
+      >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-medium">Edit Category</h2>
           <button
