@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { SupplierForm } from "./types.ts"; // adjust the path as needed
+import type { SupplierForm } from "../types";
+// adjust the path as needed
 
 interface supplierState {
     data: SupplierForm[];
@@ -21,7 +22,7 @@ const supplierSlice = createSlice({
         },
         updateSupplierData: (state, action) => {
             const index = state.data.findIndex(
-                (s) => s.phone === action.payload.phone
+                (s: SupplierForm) => s.phone === action.payload.phone
             );
             if (index !== -1) {
                 state.data[index] = action.payload;
