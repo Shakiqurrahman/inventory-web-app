@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router";
 import { z } from "zod";
-import { setSupplierData } from "../../redux/features/suppliers/supplierSlice";
+import { updateSupplierData } from "../../redux/features/suppliers/supplierSlice";
+import type { RootState } from "../../redux/store";
 
 const supplierSchema = z.object({
     companyName: z.string().min(1, "Company Name must be required"),
@@ -26,20 +27,32 @@ const supplierSchema = z.object({
 
 type supplierForm = z.infer<typeof supplierSchema>;
 
-const NewSuplier = () => {
+const EditSupplier = () => {
+    const { phone } = useParams();
+    const supplier = useSelector((state: RootState) =>
+        state.supplier.data.find((s) => s.phone === phone)
+    );
+
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<supplierForm>({
         resolver: zodResolver(supplierSchema),
+        defaultValues: supplier,
     });
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    // useEffect(() => {
+    //     if (supplier) {
+    //         reset(supplier);
+    //     }
+    // }, [supplier, reset]);
+
     const onSubmit = (data: supplierForm) => {
         console.log(data);
-        dispatch(setSupplierData(data));
+        dispatch(updateSupplierData(data));
         navigate("/suppliers");
     };
 
@@ -53,7 +66,9 @@ const NewSuplier = () => {
     };
     return (
         <div className="bg-white p-4 sm:p-6 rounded-lg">
-            <h3 className="font-medium text-lg mb-4">Supplier Information</h3>
+            <h3 className="font-medium text-lg mb-4">
+                Edit Supplier Information
+            </h3>
 
             <form
                 className="mt-5 space-y-4 *:flex *:flex-col *:gap-2"
@@ -212,4 +227,4 @@ const NewSuplier = () => {
     );
 };
 
-export default NewSuplier;
+export default EditSupplier;
