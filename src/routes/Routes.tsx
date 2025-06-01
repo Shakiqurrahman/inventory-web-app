@@ -11,6 +11,7 @@ import LoginPage from "../pages/LoginPage";
 import NewPassword from "../pages/resetPassword/NewPassword";
 import ResetPasswordOtp from "../pages/resetPassword/ResetPasswordOtp";
 import ResetPasswordPage from "../pages/resetPassword/ResetPasswordPage";
+import EditSupplier from "../pages/supplierPage/EditSupplier";
 import NewSuplier from "../pages/supplierPage/NewSuplier";
 import SuppliersPage from "../pages/supplierPage/SuppliersPage";
 import MainLayout from "./Layout";
@@ -39,6 +40,10 @@ const routes: RouteObject[] = [
       {
         path: "/suppliers/new-supplier",
         element: <NewSuplier />,
+      },
+      {
+        path: "/suppliers/edit-supplier/:phone",
+        element: <EditSupplier />,
       },
       {
         path: "/customers",

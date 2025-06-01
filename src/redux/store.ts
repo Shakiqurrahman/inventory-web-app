@@ -14,8 +14,9 @@ import { baseApi } from "./api/baseApi";
 import attributesReducer from "./features/attributes/attributeSlice";
 import authReducer from "./features/auth/authSlice";
 import categoriesReducer from "./features/categories/categoriesSlice";
+import customerReducar from "./features/customers/customersSlice";
 import employeeReducer from "./features/employees/employeeSlice";
-import supplierReducer from "./features/supplierSlice";
+import supplierReducer from "./features/suppliers/supplierSlice";
 import themeReducer from "./features/theme/themeSlice";
 
 const createPersistConfig = (key: string) => ({
@@ -36,6 +37,7 @@ export const store = configureStore({
     supplier: supplierReducer,
     categories: categoriesReducer,
     attributes: attributesReducer,
+    customers: customerReducar,
     employees: employeeReducer,
   },
 
