@@ -1,9 +1,26 @@
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router";
+import { ClipLoader } from "react-spinners";
+import {
+    useForgotPasswordMutation,
+    useVerifyOtpMutation,
+} from "../../redux/features/auth/authApi";
+import { setResetToken } from "../../redux/features/auth/resetPasswordSlice";
 
 const ResetPasswordOtp = () => {
+    const location = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const email = location.state?.email;
     const CODE_LENGTH = 6;
     const [code, setCode] = useState<string[]>(Array(CODE_LENGTH).fill(""));
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+    const [verifyOtp, { isLoading: isVerifying }] = useVerifyOtpMutation();
+    const [forgetPassword, { isLoading: isSending }] =
+        useForgotPasswordMutation();
 
     const handleChange = (value: string, index: number) => {
         if (!/^\d?$/.test(value)) return; // Acept only one digit
@@ -31,12 +48,12 @@ const ResetPasswordOtp = () => {
         e.preventDefault();
 
         const pastedData = e.clipboardData.getData("text").trim();
+        const cleanData = pastedData.replace(/\s+/g, "");
 
-        // check if all charecter are digits
-        if (/^\d+$/.test(pastedData)) {
-            const digits = pastedData?.slice(0, CODE_LENGTH).split(""); // only first six
-
+        if (/^\d+$/.test(cleanData)) {
+            const digits = cleanData.slice(0, CODE_LENGTH).split("");
             const newCode = [...code];
+
             for (let i = 0; i < digits.length; i++) {
                 newCode[i] = digits[i];
                 inputRefs.current[i]?.focus();
@@ -44,22 +61,38 @@ const ResetPasswordOtp = () => {
 
             setCode(newCode);
 
+            // ✅ Call handleSubmit with the latest value
             if (newCode.every((digit) => digit !== "")) {
-                handleSubmit();
+                const otpCode = newCode.join("");
+                console.log("Submitted OTP: ", otpCode);
+                handleSubmit(otpCode);
             }
         }
     };
 
-    const handleSubmit = () => {
-        const otpCode = code.join("");
-
+    const handleSubmit = async (otpCodeFromPaste?: string) => {
+        const otpCode = otpCodeFromPaste || code.join("");
         console.log("Submitted OTP: ", otpCode);
 
-        // 👉 You can call an API here
-        // verifyOtp(otpCode).then(...)
+        try {
+            const result = await verifyOtp({ email, otp: otpCode }).unwrap();
 
-        // Example: clear the inputs or show success
-        // setCode(Array(CODE_LENGTH).fill(""));
+            if (result.success) {
+                dispatch(setResetToken(result.data));
+                navigate("/new-password");
+            }
+            toast.success("Token verification Successful");
+            console.log(result);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            toast.error(err.data.message);
+            // console.log(err);
+        }
+    };
+
+    const resendOtp = async () => {
+        const response = await forgetPassword(email).unwrap();
+        toast.success(response.message);
     };
 
     const isCodeComplete = code.every((char) => char !== "");
@@ -100,12 +133,19 @@ const ResetPasswordOtp = () => {
                     <button
                         className="bg-green-500 hover:bg-green-600 text-white py-2 rounded-md disabled:opacity-50 cursor-pointer"
                         disabled={!isCodeComplete}
-                        onClick={handleSubmit}
+                        onClick={() => handleSubmit()}
                     >
-                        Confirm Code
+                        {isVerifying ? (
+                            <ClipLoader size={20} color="#fff" />
+                        ) : (
+                            "Confirm Code"
+                        )}
                     </button>
-                    <button className="text-blue-600 hover:underline text-sm cursor-pointer">
-                        Resend
+                    <button
+                        className="text-blue-600 hover:underline text-sm cursor-pointer"
+                        onClick={resendOtp}
+                    >
+                        {isSending ? "Sending..." : "Resend"}
                     </button>
                 </div>
             </div>

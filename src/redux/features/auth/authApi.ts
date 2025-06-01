@@ -1,31 +1,49 @@
 import { baseApi } from "../../api/baseApi";
 
 const authApi = baseApi.injectEndpoints({
-  endpoints: (builder) => ({
-    register: builder.mutation({
-      query: (userInfo) => ({
-        url: "/auth/register",
-        method: "POST",
-        body: userInfo,
-      }),
-    }),
-    
-    login: builder.mutation({
-      query: (userInfo) => ({
-        url: "/auth/login",
-        method: "POST",
-        body: userInfo,
-      }),
-    }),
+    endpoints: (builder) => ({
+        register: builder.mutation({
+            query: (userInfo) => ({
+                url: "/auth/register",
+                method: "POST",
+                body: userInfo,
+            }),
+        }),
 
-    logout: builder.mutation({
-      query: () => ({
-        url: "/auth/logout",
-        method: "POST",
-      }),
+        login: builder.mutation({
+            query: (userInfo) => ({
+                url: "/auth/login",
+                method: "POST",
+                body: userInfo,
+            }),
+        }),
+
+        logout: builder.mutation({
+            query: () => ({
+                url: "/auth/logout",
+                method: "POST",
+            }),
+        }),
+        forgotPassword: builder.mutation({
+            query: (email) => ({
+                url: `/auth/forgot-password/${email}`,
+                method: "POST",
+            }),
+        }),
+        verifyOtp: builder.mutation({
+            query: ({ email, otp }) => ({
+                url: `/auth/verify-otp/${email}`,
+                method: "POST",
+                body: { otp }, // 👈 OTP in the body
+            }),
+        }),
     }),
-  }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useLogoutMutation } =
-  authApi;
+export const {
+    useLoginMutation,
+    useRegisterMutation,
+    useLogoutMutation,
+    useForgotPasswordMutation,
+    useVerifyOtpMutation,
+} = authApi;
