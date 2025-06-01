@@ -3,6 +3,9 @@ import AttributesPage from "../pages/attributes/AttributesPage";
 import AllCategories from "../pages/categories/AllCategories";
 import Customerspage from "../pages/customerPage/Customerspage";
 import DashboardPage from "../pages/DashboardPage";
+import AllEmployeesPage from "../pages/employees/AllEmployeesPage";
+import CreateEmployeePage from "../pages/employees/CreateEmployeePage";
+import EditEmployeePage from "../pages/employees/EditEmployeePage";
 import ErrorPage from "../pages/ErrorPage";
 import LoginPage from "../pages/LoginPage";
 import NewPassword from "../pages/resetPassword/NewPassword";
@@ -40,6 +43,18 @@ const routes: RouteObject[] = [
       {
         path: "/customers",
         element: <Customerspage />,
+      },
+      {
+        path: "/employees",
+        element: <AllEmployeesPage />,
+      },
+      {
+        path: "/employees/new-employee",
+        element: <CreateEmployeePage />,
+      },
+      {
+        path: "/employees/edit-employee",
+        element: <EditEmployeePage />,
       },
     ],
   },

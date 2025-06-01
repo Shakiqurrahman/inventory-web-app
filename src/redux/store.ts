@@ -14,6 +14,7 @@ import { baseApi } from "./api/baseApi";
 import attributesReducer from "./features/attributes/attributeSlice";
 import authReducer from "./features/auth/authSlice";
 import categoriesReducer from "./features/categories/categoriesSlice";
+import employeeReducer from "./features/employees/employeeSlice";
 import supplierReducer from "./features/supplierSlice";
 import themeReducer from "./features/theme/themeSlice";
 
@@ -35,6 +36,7 @@ export const store = configureStore({
     supplier: supplierReducer,
     categories: categoriesReducer,
     attributes: attributesReducer,
+    employees: employeeReducer,
   },
 
   middleware: (getDefaultMiddlewares) =>
