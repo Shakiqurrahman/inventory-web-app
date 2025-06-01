@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -7,6 +8,8 @@ import { z } from "zod";
 import logo from "../../assets/logo/logo.png";
 
 import { FaEyeSlash, FaRegEye } from "react-icons/fa";
+import { useNavigate } from "react-router";
+import { useResetPasswordMutation } from "../../redux/features/auth/authApi";
 import { toggleTheme } from "../../redux/features/theme/themeSlice";
 import type { RootState } from "../../redux/store";
 
@@ -26,6 +29,11 @@ type loginForm = z.infer<typeof loginSchema>;
 const NewPassword = () => {
     const dispatch = useDispatch();
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
+    const [resetPassword, { isLoading }] = useResetPasswordMutation();
+    const resetToken = useSelector(
+        (state: RootState) => state.resetPassword.resetToken
+    );
 
     const theme = useSelector((state: RootState) => state.theme.value);
 
@@ -50,8 +58,23 @@ const NewPassword = () => {
         resolver: zodResolver(loginSchema),
     });
 
-    const onSubmit = (data: loginForm) => {
-        console.log(data);
+    const onSubmit = async (data: loginForm) => {
+        if (!resetToken) {
+            console.error("Reset token not available");
+            return;
+        }
+
+        try {
+            const res = await resetPassword({
+                token: resetToken,
+                newPassword: data.password,
+            }).unwrap();
+
+            console.log("password reset successfully", res);
+            navigate("/");
+        } catch (err: any) {
+            console.error("Password reset failed, ", err);
+        }
     };
     return (
         <div className="h-screen p-4 bg-white dark:bg-[#18191A] transition-colors duration-300 relative flex items-center justify-center">
@@ -136,7 +159,7 @@ const NewPassword = () => {
                         type="submit"
                         className="mt-5 w-full p-2 rounded-sm cursor-pointer text-sm md:text-base bg-[#1a1a1a] hover:bg-gray-600 text-white dark:bg-gray-600 dark:hover:bg-gray-800 duration-300 disabled:opacity-65"
                     >
-                        Update Password
+                        {isLoading ? "Updating..." : "Update Password"}
                     </button>
                 </form>
             </div>
