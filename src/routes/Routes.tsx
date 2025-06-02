@@ -59,7 +59,7 @@ const routes: RouteObject[] = [
                 element: <CreateEmployeePage />,
             },
             {
-                path: "/employees/edit-employee",
+                path: "/employees/edit-employee/:phone",
                 element: <EditEmployeePage />,
             },
         ],
