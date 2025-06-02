@@ -94,7 +94,7 @@ const NewSuplier = () => {
                     )}
                 </div>
                 <div>
-                    <label htmlFor="text" className="text-sm">
+                    <label htmlFor="email" className="text-sm">
                         Email
                     </label>
                     <input
@@ -111,7 +111,7 @@ const NewSuplier = () => {
                     )}
                 </div>
                 <div>
-                    <label htmlFor="text" className="text-sm">
+                    <label htmlFor="phone" className="text-sm">
                         Phone
                     </label>
                     <input
