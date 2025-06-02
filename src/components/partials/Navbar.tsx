@@ -8,50 +8,50 @@ import Breadcrumb from "./Breadcrumb";
 import ProfileModal from "./ProfileModal";
 
 type NavbarProps = {
-  openSidebar: (value: boolean) => void;
+    openSidebar: (value: boolean) => void;
 };
 const Navbar: FC<NavbarProps> = ({ openSidebar }) => {
-  const dispatch = useDispatch();
-  const theme = useSelector((state: RootState) => state.theme.value);
+    const dispatch = useDispatch();
+    const theme = useSelector((state: RootState) => state.theme.value);
 
-  useEffect(() => {
-    const root = window.document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-  }, [theme]);
+    useEffect(() => {
+        const root = window.document.documentElement;
+        if (theme === "dark") {
+            root.classList.add("dark");
+        } else {
+            root.classList.remove("dark");
+        }
+    }, [theme]);
 
-  const handleSidebarToggle = () => {
-    openSidebar(true);
-  };
-  return (
-    <div className="h-18 flex gap-4 justify-between px-4 bg-white dark:bg-[#18191A] items-center">
-      <button
-        type="button"
-        className="cursor-pointer lg:hidden"
-        onClick={handleSidebarToggle}
-      >
-        <GiHamburgerMenu className="text-2xl" />
-      </button>
-      <Breadcrumb />
-      <div className="flex justify-end p-2">
-        <button
-          type="button"
-          className="cursor-pointer"
-          onClick={() => dispatch(toggleTheme())}
-        >
-          {theme === "light" ? (
-            <MdOutlineLightMode className="size-6 text-[#1a1a1a]" />
-          ) : (
-            <MdOutlineDarkMode className="size-6 text-white" />
-          )}
-        </button>
-      </div>
-      <ProfileModal />
-    </div>
-  );
+    const handleSidebarToggle = () => {
+        openSidebar(true);
+    };
+    return (
+        <div className="h-18 flex gap-2 sm:gap-4 justify-between px-4 bg-white dark:bg-[#18191A] items-center">
+            <button
+                type="button"
+                className="cursor-pointer lg:hidden"
+                onClick={handleSidebarToggle}
+            >
+                <GiHamburgerMenu className="text-2xl" />
+            </button>
+            <Breadcrumb />
+            <div className="flex justify-end p-2 ml-auto">
+                <button
+                    type="button"
+                    className="cursor-pointer"
+                    onClick={() => dispatch(toggleTheme())}
+                >
+                    {theme === "light" ? (
+                        <MdOutlineLightMode className="size-5 sm:size-6 text-[#1a1a1a]" />
+                    ) : (
+                        <MdOutlineDarkMode className="size-5 sm:size-6 text-white" />
+                    )}
+                </button>
+            </div>
+            <ProfileModal />
+        </div>
+    );
 };
 
 export default Navbar;

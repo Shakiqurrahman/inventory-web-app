@@ -87,7 +87,7 @@ const SuppliersPage = () => {
                                         colSpan={6}
                                         className="p-3 text-center text-gray-500"
                                     >
-                                        No categories found
+                                        No Suppliers found
                                     </td>
                                 </tr>
                             )}
