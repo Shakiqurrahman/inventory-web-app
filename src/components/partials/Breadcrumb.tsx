@@ -5,12 +5,15 @@ import { Link, useLocation } from "react-router";
 const Breadcrumb = () => {
     const location = useLocation();
     const pathnames = location.pathname.split("/").filter((x) => x);
+    const isHomeActive = location.pathname === "/";
     return (
         <div>
             <div className="px-4">
-                <div className="text-[#999999] flex items-center lg:px-0 py-6 md:py-12 gap-1">
+                <div className="text-[#999999] flex items-center flex-wrap lg:px-0 py-6 md:py-12 gap-1">
                     <Link to="/">
-                        <GoHome />
+                        <GoHome
+                            className={`${isHomeActive ? "text-primary" : ""}`}
+                        />
                     </Link>
 
                     {pathnames.length > 0 && <MdKeyboardArrowRight />}
@@ -25,13 +28,13 @@ const Breadcrumb = () => {
                         return (
                             <div
                                 key={index}
-                                className="flex items-center gap-1 md:gap-3"
+                                className="flex items-center gap-1 md:gap-3 *:text-xs *:sm:text-sm"
                             >
                                 <Link
                                     to={routeTo}
                                     className={
                                         isLast
-                                            ? "text-primary cursor-pointer text-xs sm:text-sm"
+                                            ? "text-primary cursor-pointer "
                                             : ""
                                     }
                                 >

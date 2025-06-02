@@ -11,6 +11,7 @@ import AllExpensesPage from "../pages/expenses/AllExpensesPage";
 import CreateExpensePage from "../pages/expenses/CreateExpensePage";
 import EditExpensePage from "../pages/expenses/EditExpensePage";
 import LoginPage from "../pages/LoginPage";
+import ChangePassword from "../pages/resetPassword/ChangePassword";
 import NewPassword from "../pages/resetPassword/NewPassword";
 import ResetPasswordOtp from "../pages/resetPassword/ResetPasswordOtp";
 import ResetPasswordPage from "../pages/resetPassword/ResetPasswordPage";
@@ -99,6 +100,10 @@ const routes: RouteObject[] = [
                 element: <NewPassword />,
             },
         ],
+    },
+    {
+        path: "/change-password",
+        element: <ChangePassword />,
     },
     {
         path: "*",
