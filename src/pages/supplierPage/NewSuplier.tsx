@@ -12,7 +12,7 @@ const supplierSchema = z.object({
     phone: z
         .string()
         .min(1, "Phone Number must be required")
-        .regex(/^\d+$/, "Phone number must contain only digits"),
+    .regex(/^\d+$/, "Phone number must contain only digits"),
     email: z
         .string()
         .min(1, "Email must be Required")
