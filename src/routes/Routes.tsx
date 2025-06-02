@@ -27,61 +27,55 @@ const routes: RouteObject[] = [
         children: [
             {
                 path: "/",
-                element: <MainLayout />,
-                children: [
-                    {
-                        path: "/",
-                        element: <DashboardPage />,
-                    },
-                    {
-                        path: "/categories",
-                        element: <AllCategories />,
-                    },
-                    {
-                        path: "/attributes",
-                        element: <AttributesPage />,
-                    },
-                    {
-                        path: "/suppliers",
-                        element: <SuppliersPage />,
-                    },
-                    {
-                        path: "/suppliers/new-supplier",
-                        element: <NewSuplier />,
-                    },
-                    {
-                        path: "/suppliers/edit-supplier/:phone",
-                        element: <EditSupplier />,
-                    },
-                    {
-                        path: "/customers",
-                        element: <Customerspage />,
-                    },
-                    {
-                        path: "/employees",
-                        element: <AllEmployeesPage />,
-                    },
-                    {
-                        path: "/employees/new-employee",
-                        element: <CreateEmployeePage />,
-                    },
-                    {
-                        path: "/employees/edit-employee/:phone",
-                        element: <EditEmployeePage />,
-                    },
-                    {
-                        path: "/expenses",
-                        element: <AllExpensesPage />,
-                    },
-                    {
-                        path: "/expenses/new-expense",
-                        element: <CreateExpensePage />,
-                    },
-                    {
-                        path: "/expenses/edit-expense",
-                        element: <EditExpensePage />,
-                    },
-                ],
+                element: <DashboardPage />,
+            },
+            {
+                path: "/categories",
+                element: <AllCategories />,
+            },
+            {
+                path: "/attributes",
+                element: <AttributesPage />,
+            },
+            {
+                path: "/suppliers",
+                element: <SuppliersPage />,
+            },
+            {
+                path: "/suppliers/new-supplier",
+                element: <NewSuplier />,
+            },
+            {
+                path: "/suppliers/edit-supplier/:phone",
+                element: <EditSupplier />,
+            },
+            {
+                path: "/customers",
+                element: <Customerspage />,
+            },
+            {
+                path: "/employees",
+                element: <AllEmployeesPage />,
+            },
+            {
+                path: "/employees/new-employee",
+                element: <CreateEmployeePage />,
+            },
+            {
+                path: "/employees/edit-employee",
+                element: <EditEmployeePage />,
+            },
+            {
+                path: "/expenses",
+                element: <AllExpensesPage />,
+            },
+            {
+                path: "/expenses/new-expense",
+                element: <CreateExpensePage />,
+            },
+            {
+                path: "/expenses/edit-expense",
+                element: <EditExpensePage />,
             },
         ],
     },

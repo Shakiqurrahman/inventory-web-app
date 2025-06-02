@@ -74,7 +74,7 @@ const AllEmployeesPage = () => {
                                     </td>
                                     <td className="flex items-center gap-1 p-3">
                                         <Link
-                                            to={`edit-employee/${employee.phone}`}
+                                            to={`edit-employee`}
                                             state={{ id: index, ...employee }}
                                             className="flex gap-0.5 items-center py-1.5 px-3 bg-blue-500 text-white rounded-sm text-xs cursor-pointer shrink-0"
                                         >

@@ -1,10 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router";
 import { z } from "zod";
 import { updateEmployee } from "../../redux/features/employees/employeeSlice";
-import type { RootState } from "../../redux/store";
 
 const employeeSchema = z.object({
     name: z.string().min(1, "Company Name must be required"),
@@ -25,10 +24,18 @@ const employeeSchema = z.object({
 type employeeForm = z.infer<typeof employeeSchema>;
 
 const EditEmployeePage = () => {
-    const { phone } = useParams();
-    const employees = useSelector((state: RootState) =>
-        state.supplier.data.find((s) => s.phone === phone)
-    );
+    const { state } = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    // Assuming employees is an object with employee details
+    const employees = {
+        name: state?.name || "",
+        phone: state?.phone || "",
+        email: state?.email || "",
+        address: state?.address || "",
+        role: state?.role || "Staff",
+    };
 
     const {
         register,
@@ -38,10 +45,6 @@ const EditEmployeePage = () => {
         resolver: zodResolver(employeeSchema),
         defaultValues: employees,
     });
-
-    const { state } = useLocation();
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const onSubmit = (data: employeeForm) => {
         console.log(data);
