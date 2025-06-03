@@ -59,7 +59,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ close }) => {
                             name="username"
                             placeholder="Enter username"
                             disabled
-                            className="w-full border border-gray-300 rounded-md p-2 outline-none focus:border-blue-500 text-sm"
+                            className="w-full border border-gray-300 rounded-md p-2 outline-none focus:border-blue-500 text-sm cursor-not-allowed"
                         />
                     </div>
                     <div className="mb-4">
