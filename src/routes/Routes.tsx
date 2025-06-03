@@ -20,100 +20,105 @@ import EditSupplier from "../pages/supplierPage/EditSupplier";
 import NewSuplier from "../pages/supplierPage/NewSuplier";
 import SuppliersPage from "../pages/supplierPage/SuppliersPage";
 import MainLayout from "./Layout";
+import AdminProtected from "./protected/AdminProtected";
 import ProtectedResetRoute from "./protected/ProtectedResetRoute";
 
 const routes: RouteObject[] = [
-    {
+  {
+    path: "/",
+    element: (
+      <AdminProtected>
+        <MainLayout />
+      </AdminProtected>
+    ),
+    children: [
+      {
         path: "/",
-        element: <MainLayout />,
-        children: [
-            {
-                path: "/",
-                element: <DashboardPage />,
-            },
-            {
-                path: "/categories",
-                element: <AllCategories />,
-            },
-            {
-                path: "/attributes",
-                element: <AttributesPage />,
-            },
-            {
-                path: "/suppliers",
-                element: <SuppliersPage />,
-            },
-            {
-                path: "/suppliers/new-supplier",
-                element: <NewSuplier />,
-            },
-            {
-                path: "/suppliers/edit-supplier/:phone",
-                element: <EditSupplier />,
-            },
-            {
-                path: "/customers",
-                element: <Customerspage />,
-            },
-            {
-                path: "/employees",
-                element: <AllEmployeesPage />,
-            },
-            {
-                path: "/employees/new-employee",
-                element: <CreateEmployeePage />,
-            },
-            {
-                path: "/employees/edit-employee",
-                element: <EditEmployeePage />,
-            },
-            {
-                path: "/expenses",
-                element: <AllExpensesPage />,
-            },
-            {
-                path: "/expenses/new-expense",
-                element: <CreateExpensePage />,
-            },
-            {
-                path: "/expenses/edit-expense",
-                element: <EditExpensePage />,
-            },
-            {
-                path: "//sales-history",
-                element: <SaleHistoryPage />,
-            },
-        ],
-    },
-    {
-        path: "/login",
-        element: <LoginPage />,
-    },
-    {
-        path: "/reset-password",
-        element: <ResetPasswordPage />,
-    },
-    {
-        path: "reset-password/otp",
-        element: <ResetPasswordOtp />,
-    },
-    {
-        element: <ProtectedResetRoute />,
-        children: [
-            {
-                path: "new-password",
-                element: <NewPassword />,
-            },
-        ],
-    },
-    {
-        path: "/change-password",
-        element: <ChangePassword />,
-    },
-    {
-        path: "*",
-        element: <ErrorPage />,
-    },
+        element: <DashboardPage />,
+      },
+      {
+        path: "/categories",
+        element: <AllCategories />,
+      },
+      {
+        path: "/attributes",
+        element: <AttributesPage />,
+      },
+      {
+        path: "/suppliers",
+        element: <SuppliersPage />,
+      },
+      {
+        path: "/suppliers/new-supplier",
+        element: <NewSuplier />,
+      },
+      {
+        path: "/suppliers/edit-supplier/:phone",
+        element: <EditSupplier />,
+      },
+      {
+        path: "/customers",
+        element: <Customerspage />,
+      },
+      {
+        path: "/employees",
+        element: <AllEmployeesPage />,
+      },
+      {
+        path: "/employees/new-employee",
+        element: <CreateEmployeePage />,
+      },
+      {
+        path: "/employees/edit-employee",
+        element: <EditEmployeePage />,
+      },
+      {
+        path: "/expenses",
+        element: <AllExpensesPage />,
+      },
+      {
+        path: "/expenses/new-expense",
+        element: <CreateExpensePage />,
+      },
+      {
+        path: "/expenses/edit-expense",
+        element: <EditExpensePage />,
+      },
+      {
+        path: "/sales-history",
+        element: <SaleHistoryPage />,
+      },
+    ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPasswordPage />,
+  },
+  {
+    path: "reset-password/otp",
+    element: <ResetPasswordOtp />,
+  },
+  {
+    element: <ProtectedResetRoute />,
+    children: [
+      {
+        path: "new-password",
+        element: <NewPassword />,
+      },
+    ],
+  },
+  {
+    path: "/change-password",
+    element: <ChangePassword />,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
+  },
 ];
 
 export const router = createBrowserRouter(routes);
