@@ -10,6 +10,7 @@ import logo from "../assets/logo/logo.png";
 import { useLoginMutation } from "../redux/features/auth/authApi";
 import { toggleTheme } from "../redux/features/theme/themeSlice";
 import type { RootState } from "../redux/store";
+import { getErrorMessage } from "../utils/errorHandler";
 
 // zod schema
 const loginSchema = z.object({
@@ -53,8 +54,7 @@ const LoginPage = () => {
       toast.success("Login successfully!");
       navigate("/");
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to login");
+      toast.error(getErrorMessage(error));
     }
   };
 
