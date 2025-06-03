@@ -1,4 +1,5 @@
 import { useRef, useState, type FC } from "react";
+import toast from "react-hot-toast";
 import { BsToggles } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -17,9 +18,12 @@ import {
   TfiShoppingCart,
   TfiUser,
 } from "react-icons/tfi";
-import { Link, NavLink, useLocation } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 import Logo from "../../assets/logo/logo.png";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { useLogoutMutation } from "../../redux/features/auth/authApi";
+import { logoutUser } from "../../redux/features/auth/authSlice";
+import { useAppDispatch } from "../../redux/hook";
 
 type SidebarProps = {
   open: boolean;
@@ -42,6 +46,9 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
   const invoicesRef = useRef<HTMLUListElement | null>(null);
 
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [logoutApi] = useLogoutMutation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleMenuClick = (menu: string) => {
     setOpenMenu((prev) => (prev === menu ? null : menu));
@@ -50,6 +57,14 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
   const handleClose = () => {
     close(false);
   };
+
+  const handleLogout = async () => {
+    await logoutApi(null).unwrap();
+    dispatch(logoutUser());
+    toast.success("Logout successfully");
+    navigate("/login");
+  };
+
   useOutsideClick(sidebarRef, handleClose);
   return (
     <div
@@ -367,13 +382,14 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                 </ul>
               </li>
               <li>
-                <Link
-                  to="#"
-                  className="flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 border-transparent hover:border-red-700 text-sm"
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 border-transparent hover:border-red-700 text-sm w-full"
                 >
                   <MdOutlinePowerSettingsNew className="text-lg" />
                   Logout
-                </Link>
+                </button>
               </li>
             </ul>
           </nav>

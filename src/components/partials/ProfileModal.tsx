@@ -1,11 +1,17 @@
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { FaRegEdit } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { MdOutlinePowerSettingsNew } from "react-icons/md";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Avatar from "../../assets/images/avatar-default.jpg";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import type { TUserData } from "../../redux/features/auth/authSlice";
+import { useLogoutMutation } from "../../redux/features/auth/authApi";
+import {
+  logoutUser,
+  type TUserData,
+} from "../../redux/features/auth/authSlice";
+import { useAppDispatch } from "../../redux/hook";
 import EditProfileModal from "./EditProfileModal";
 
 interface IProps {
@@ -14,14 +20,25 @@ interface IProps {
 
 const ProfileModal = ({ user }: IProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [openEditProfile, setOpenEditProfile] = useState(false);
+  const [logoutApi] = useLogoutMutation();
+
   const handleToggle = () => {
     setOpen((prev) => (prev === false ? true : false));
   };
   useOutsideClick(menuRef, () => {
     setOpen(false);
   });
+
+  const handleLogout = async () => {
+    await logoutApi(null).unwrap();
+    dispatch(logoutUser());
+    toast.success("Logout successfully");
+    navigate("/login");
+  };
 
   return (
     <>
@@ -63,13 +80,14 @@ const ProfileModal = ({ user }: IProps) => {
             </Link>
           </li>
           <li className="bg-white shadow-md w-40">
-            <Link
-              to="/logout"
-              className="flex gap-2 items-center text-sm text-red-700 hover:bg-gray-200 p-3"
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex gap-2 items-center text-sm text-red-700 hover:bg-gray-200 p-3 w-full"
             >
               <MdOutlinePowerSettingsNew className="text-lg" />
               Logout
-            </Link>
+            </button>
           </li>
         </ul>
       </div>
