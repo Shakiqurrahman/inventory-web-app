@@ -15,6 +15,7 @@ import ChangePassword from "../pages/resetPassword/ChangePassword";
 import NewPassword from "../pages/resetPassword/NewPassword";
 import ResetPasswordOtp from "../pages/resetPassword/ResetPasswordOtp";
 import ResetPasswordPage from "../pages/resetPassword/ResetPasswordPage";
+import SaleHistoryPage from "../pages/salesHistory/SaleHistoryPage";
 import EditSupplier from "../pages/supplierPage/EditSupplier";
 import NewSuplier from "../pages/supplierPage/NewSuplier";
 import SuppliersPage from "../pages/supplierPage/SuppliersPage";
@@ -77,6 +78,10 @@ const routes: RouteObject[] = [
             {
                 path: "/expenses/edit-expense",
                 element: <EditExpensePage />,
+            },
+            {
+                path: "//sales-history",
+                element: <SaleHistoryPage />,
             },
         ],
     },
