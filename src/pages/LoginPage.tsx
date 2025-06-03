@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router";
 import { z } from "zod";
 import logo from "../assets/logo/logo.png";
 import { useLoginMutation } from "../redux/features/auth/authApi";
+import { setToken } from "../redux/features/auth/authSlice";
 import { toggleTheme } from "../redux/features/theme/themeSlice";
 import type { RootState } from "../redux/store";
 import { getErrorMessage } from "../utils/errorHandler";
@@ -49,8 +50,9 @@ const LoginPage = () => {
 
   const onSubmit = async (data: loginForm) => {
     try {
-      const userData = await loginMutation(data).unwrap();
-      console.log("🚀 ~ onSubmit ~ userData:", userData);
+      const response = await loginMutation(data).unwrap();
+      const token = response?.data?.accessToken;
+      dispatch(setToken(token));
       toast.success("Login successfully!");
       navigate("/");
     } catch (error) {
