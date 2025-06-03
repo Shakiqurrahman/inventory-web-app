@@ -11,6 +11,7 @@ import logo from "../../assets/logo/logo.png";
 import { useChangePasswordMutation } from "../../redux/features/auth/authApi";
 import { toggleTheme } from "../../redux/features/theme/themeSlice";
 import type { RootState } from "../../redux/store";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 // zod schema
 
@@ -69,11 +70,8 @@ const ChangePassword = () => {
             if (response.success) {
                 navigate("/");
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            toast.error(error.message || "An error occurred");
-            // You can also log the error to the console if needed
-            console.log(error);
+        } catch (error) {
+            toast.error(getErrorMessage(error));
         }
     };
 
