@@ -14,7 +14,7 @@ const EditCustomer = () => {
         (state: RootState) => state.categories
     );
     const [form, setForm] = useState({
-        categoryName: editCategory ? editCategory.categoryName : "",
+        categoryName: editCategory ? editCategory.name : "",
     });
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
