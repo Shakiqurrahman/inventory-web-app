@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useCreateCategoryMutation } from "../../redux/features/categories/categoriesApiSlice";
 import { toggleCreateModal } from "../../redux/features/categories/categoriesSlice";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const CreateCategoryModal = () => {
     const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const CreateCategoryModal = () => {
                 toast.success("Category created successfully");
                 dispatch(toggleCreateModal());
             } catch (err) {
-                toast.error("Failed to create category");
+                toast.error(getErrorMessage(err));
                 console.error(err);
             }
             // Reset form
@@ -47,7 +48,7 @@ const CreateCategoryModal = () => {
     });
 
     return (
-        <div className="fixed top-0 left-0 w-full h-screen bg-black/20 flex justify-center items-start z-[99999] p-4">
+        <div className="fixed top-0 left-0 w-full h-screen bg-black/20 flex justify-center items-start z-[999] p-4">
             <div
                 className="bg-white rounded-lg p-6 w-full max-w-[400px] mt-20"
                 ref={formRef}

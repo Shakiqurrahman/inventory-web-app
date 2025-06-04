@@ -26,12 +26,14 @@ const categoriesApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["categories"],
         }),
-        // forgotPassword: builder.mutation({
-        //     query: (email) => ({
-        //         url: `/auth/forgot-password/${email}`,
-        //         method: "POST",
-        //     }),
-        // }),
+        updateCategory: builder.mutation({
+            query: ({ id, name }) => ({
+                url: `/categories/${id}`,
+                method: "PUT",
+                body: { name },
+            }),
+            invalidatesTags: ["categories"],
+        }),
     }),
 });
 
@@ -39,5 +41,5 @@ export const {
     useCreateCategoryMutation,
     useGetCategoriesQuery,
     useDeleteCategoryMutation,
-    // useForgotPasswordMutation,
+    useUpdateCategoryMutation,
 } = categoriesApi;
