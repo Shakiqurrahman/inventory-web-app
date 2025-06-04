@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 
-
 export interface ICategory {
     id: string;
     name: string;

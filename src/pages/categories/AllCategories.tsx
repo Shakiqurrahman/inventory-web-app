@@ -37,6 +37,7 @@ const AllCategories = () => {
     const filteredCategories = categoriesData?.filter((category: ICategory) =>
         category.name.toLowerCase().includes(searchValue.trim().toLowerCase())
     );
+    console.log(filteredCategories);
 
     const handleDelete = async (id: string) => {
         setDeletingId(id);
@@ -113,7 +114,8 @@ const AllCategories = () => {
                                                     onClick={() =>
                                                         dispatch(
                                                             toggleEditModal({
-                                                                ...category,
+                                                                id: category.id,
+                                                                name: category.name,
                                                             })
                                                         )
                                                     }

@@ -3,10 +3,8 @@ import toast from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import {
-    toggleEditModal,
-    updateCategory,
-} from "../../redux/features/categories/categoriesSlice";
+import { useUpdateCategoryMutation } from "../../redux/features/categories/categoriesApiSlice";
+import { toggleEditModal } from "../../redux/features/categories/categoriesSlice";
 import type { RootState } from "../../redux/store";
 
 const EditCategories = () => {
@@ -15,6 +13,7 @@ const EditCategories = () => {
     const { editCategory } = useSelector(
         (state: RootState) => state.categories
     );
+    const [updateCategory, { isLoading }] = useUpdateCategoryMutation();
     const [form, setForm] = useState({
         categoryName: editCategory ? editCategory.name : "",
     });
@@ -25,16 +24,23 @@ const EditCategories = () => {
             [name]: value,
         }));
     };
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!form.categoryName) {
             toast.error("Category name is required");
             return;
         } else {
             // Dispatch the update action here
-            dispatch(
-                updateCategory({ id: editCategory?.id, updatedCategory: form })
-            );
+
+            try {
+                await updateCategory({
+                    id: editCategory?.id || "",
+                    name: form.categoryName,
+                }).unwrap();
+            } catch (error) {
+                console.error("Failed to update category:", error);
+            }
+
             dispatch(toggleEditModal(null));
             // Reset form
             setForm({ categoryName: "" });
@@ -80,7 +86,7 @@ const EditCategories = () => {
                             type="submit"
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 cursor-pointer text-sm"
                         >
-                            Update
+                            {isLoading ? "Updating..." : "Update"}
                         </button>
                     </div>
                 </form>
