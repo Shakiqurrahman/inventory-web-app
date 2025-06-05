@@ -1,177 +1,200 @@
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import DatePicker from "react-datepicker";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
-import { updateExpense } from "../../redux/features/expenses/expenseSlice";
+import { z } from "zod";
+import { useUpdateExpensesMutation } from "../../redux/features/expenses/expenseApi";
+
+const expensesSchema = z.object({
+    date: z
+        .string()
+        .min(1, "Date must be required")
+        .refine((val) => !isNaN(Date.parse(val)), {
+            message: "Invalid date format",
+        }),
+    amount: z.coerce.number().min(1, "Amount must be required"),
+    tax: z.coerce.number().optional(),
+    paymentMethod: z.string().min(1, "Payment Type must be required"),
+    reason: z.string().optional(),
+    recipientName: z.string().min(1, "Recipient Name must be required"),
+    approvedBy: z.string().min(1, "Approved By must be required"),
+});
+
+type expensesForm = z.infer<typeof expensesSchema>;
 
 const EditExpensePage = () => {
-  const { state } = useLocation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    date: state?.date || "", // Use state from location if available
-    amount: state?.amount || "",
-    tax: state?.tax || "",
-    paymentMethod: state?.paymentMethod || "Cash", // Default payment method
-    reason: state?.reason || "",
-    recipientName: state?.recipientName || "Shakil", // Default recipient name
-    approvedBy: state?.approvedBy || "Shakil", // Default approved by
-  });
-
-  const handleDateChange = (date: Date | null) => {
-    if (date) {
-      const isoDate = date.toISOString().split("T")[0];
-      setFormData((prev) => ({ ...prev, date: isoDate }));
-    }
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.date || !formData.amount || !formData.paymentMethod) {
-      toast.error("Please fill required fields.");
-      return;
-    }
-
-    // Dispatch the createExpense action with formData
-    dispatch(updateExpense({ id: state?.id, updatedExpense: formData }));
-
-    // Reset form after submission
-    setFormData({
-      date: "",
-      amount: "",
-      tax: "",
-      paymentMethod: "Cash", // Reset to default payment method
-      reason: "",
-      recipientName: "Shakil", // Reset to default recipient name
-      approvedBy: "Shakil", // Reset to default approved by
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+        watch,
+    } = useForm<expensesForm>({
+        resolver: zodResolver(expensesSchema),
     });
-    // Navigate to the expenses page after successful submission
-    navigate("/expenses");
-  };
-  return (
-    <div className="bg-white p-4 sm:p-6 rounded-lg">
-      <h3 className="text-2xl font-semibold">Expense Information</h3>
-      <form
-        className="mt-5 space-y-4 *:flex *:flex-col *:gap-2"
-        onSubmit={handleSubmit}
-      >
-        <div>
-          <label htmlFor="date">
-            Date <span className="text-red-600">*</span>
-          </label>
-          <DatePicker
-            selected={formData.date ? new Date(formData.date) : null}
-            onChange={handleDateChange}
-            dateFormat="dd-MM-yyyy"
-            className="border border-gray-300 w-full p-2 outline-none rounded-md"
-            placeholderText="Select a date"
-            id="date"
-            popperPlacement="top-start"
-          />
+    const { state } = useLocation();
+
+    const [updateExpenses, { isLoading }] = useUpdateExpensesMutation();
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (state) {
+            // Set the form values based on the state passed from the previous page
+            setValue("date", state.date);
+            setValue("amount", state.amount);
+            setValue("tax", state.tax || "");
+            setValue("paymentMethod", state.paymentMethod || "CASH");
+            setValue("reason", state.reason || "");
+            setValue("recipientName", state.recipientName || "Shakil");
+            setValue("approvedBy", state.approvedBy || "Shakiqur");
+        }
+    }, [state, setValue]);
+
+    const onSubmit = async (data: expensesForm) => {
+        console.log(data);
+        try {
+            const res = await updateExpenses({
+                id: state.id,
+                ...data,
+            }).unwrap();
+            console.log("response data");
+            console.log(res);
+            toast.success(res.message);
+
+            navigate("/expenses");
+        } catch (error) {
+            console.error("Failed to update expense:", error);
+            toast.error("Failed to update expense");
+            return;
+        }
+    };
+    return (
+        <div className="bg-white p-4 sm:p-6 rounded-lg">
+            <h3 className="text-2xl font-semibold">Expense Information</h3>
+            <form
+                className="mt-5 space-y-4 *:flex *:flex-col *:gap-2"
+                onSubmit={handleSubmit(onSubmit)}
+            >
+                <div>
+                    <label htmlFor="date">
+                        Date <span className="text-red-600">*</span>
+                    </label>
+                    <DatePicker
+                        selected={
+                            watch("date") ? new Date(watch("date")) : null
+                        }
+                        onChange={(date: Date | null) => {
+                            if (date) {
+                                setValue("date", date.toISOString(), {
+                                    shouldValidate: true,
+                                });
+                            }
+                        }}
+                        dateFormat="dd-MM-yyyy"
+                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                        placeholderText="Select a date"
+                        id="date"
+                    />
+
+                    {errors.date && (
+                        <span className="text-red-500 text-xs">
+                            {errors.date.message}
+                        </span>
+                    )}
+                </div>
+                <div>
+                    <label htmlFor="amount">
+                        Amount <span className="text-red-600">*</span>
+                    </label>
+                    <input
+                        {...register("amount")}
+                        type="number"
+                        name="amount"
+                        id="amount"
+                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                    />
+                    {errors.amount && (
+                        <span className="text-red-500 text-xs">
+                            {errors.amount.message}
+                        </span>
+                    )}
+                </div>
+                <div>
+                    <label htmlFor="tax">Tax</label>
+                    <input
+                        {...register("tax")}
+                        type="number"
+                        name="tax"
+                        id="tax"
+                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="paymentMethod">
+                        Payment Type <span className="text-red-600">*</span>
+                    </label>
+                    <select
+                        {...register("paymentMethod")}
+                        name="paymentMethod"
+                        id="paymentMethod"
+                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                    >
+                        <option value="CASH">Cash</option>
+                        <option value="CARD">Card</option>
+                        <option value="CHECK">Check</option>
+                        <option value="BKASH">bKash</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label htmlFor="reason">Reason</label>
+                    <textarea
+                        {...register("reason")}
+                        name="reason"
+                        id="reason"
+                        className="border border-gray-300 w-full p-2 outline-none rounded-md overflow-hidden resize-none min-h-[100px]"
+                    ></textarea>
+                </div>
+                <div>
+                    <label htmlFor="recipientName">Recipient Name</label>
+                    <select
+                        {...register("recipientName")}
+                        name="recipientName"
+                        id="recipientName"
+                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                    >
+                        <option value="Shakil">Shakil</option>
+                        <option value="Mahdi">Mahdi</option>
+                        <option value="Shakiqur">Shakiqur</option>
+                    </select>
+                </div>
+                <div>
+                    <label htmlFor="approvedBy">Approved By</label>
+                    <select
+                        {...register("approvedBy")}
+                        name="approvedBy"
+                        id="approvedBy"
+                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                    >
+                        <option value="Shakil">Shakil</option>
+                        <option value="Mahdi">Mahdi</option>
+                        <option value="Shakiqur">Shakiqur</option>
+                    </select>
+                </div>
+                <div>
+                    <button
+                        type="submit"
+                        className="cursor-pointer ml-auto bg-blue-500 text-white py-2 px-4 rounded-md"
+                    >
+                        {isLoading ? "Saving..." : "Save"}
+                    </button>
+                </div>
+            </form>
         </div>
-        <div>
-          <label htmlFor="amount">
-            Amount <span className="text-red-600">*</span>
-          </label>
-          <input
-            type="number"
-            name="amount"
-            id="amount"
-            value={formData.amount}
-            onChange={handleChange}
-            className="border border-gray-300 w-full p-2 outline-none rounded-md"
-          />
-        </div>
-        <div>
-          <label htmlFor="tax">Tax</label>
-          <input
-            type="number"
-            name="tax"
-            id="tax"
-            value={formData.tax}
-            onChange={handleChange}
-            className="border border-gray-300 w-full p-2 outline-none rounded-md"
-          />
-        </div>
-        <div>
-          <label htmlFor="paymentMethod">
-            Payment Type <span className="text-red-600">*</span>
-          </label>
-          <select
-            name="paymentMethod"
-            id="paymentMethod"
-            value={formData.paymentMethod}
-            onChange={handleChange}
-            className="border border-gray-300 w-full p-2 outline-none rounded-md"
-          >
-            <option value="Cash">Cash</option>
-            <option value="Card">Card</option>
-            <option value="Check">Check</option>
-            <option value="bKash">bKash</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="reason">Reason</label>
-          <textarea
-            name="reason"
-            id="reason"
-            value={formData.reason}
-            onChange={handleChange}
-            className="border border-gray-300 w-full p-2 outline-none rounded-md overflow-hidden resize-none min-h-[100px]"
-          ></textarea>
-        </div>
-        <div>
-          <label htmlFor="recipientName">Recipient Name</label>
-          <select
-            name="recipientName"
-            id="recipientName"
-            value={formData.recipientName}
-            onChange={handleChange}
-            className="border border-gray-300 w-full p-2 outline-none rounded-md"
-          >
-            <option value="Shakil">Shakil</option>
-            <option value="Mahdi">Mahdi</option>
-            <option value="Shakiqur">Shakiqur</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="approvedBy">Approved By</label>
-          <select
-            name="approvedBy"
-            id="approvedBy"
-            value={formData.approvedBy}
-            onChange={handleChange}
-            className="border border-gray-300 w-full p-2 outline-none rounded-md"
-          >
-            <option value="Shakil">Shakil</option>
-            <option value="Mahdi">Mahdi</option>
-            <option value="Shakiqur">Shakiqur</option>
-          </select>
-        </div>
-        <div>
-          <button
-            type="submit"
-            className="cursor-pointer ml-auto bg-blue-500 text-white py-2 px-4 rounded-md"
-          >
-            Save
-          </button>
-        </div>
-      </form>
-    </div>
-  );
+    );
 };
 
 export default EditExpensePage;
