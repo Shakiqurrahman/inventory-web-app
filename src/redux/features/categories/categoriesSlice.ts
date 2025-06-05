@@ -6,7 +6,7 @@ export interface ICategory {
     name: string;
     createdAt: string;
     updatedAt: string;
-    _count?: { products: number };
+    _count?: { product: number };
 }
 
 type CategoriesState = {

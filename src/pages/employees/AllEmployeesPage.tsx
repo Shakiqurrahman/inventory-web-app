@@ -1,18 +1,24 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FiPlus, FiSearch, FiTrash } from "react-icons/fi";
 import { MdOutlineModeEdit } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
-import { deleteEmployee } from "../../redux/features/employees/employeeSlice";
-import type { RootState } from "../../redux/store";
+import {
+    useDeleteEmployeeMutation,
+    useGetEmployeeListQuery,
+} from "../../redux/features/employees/employeeApi";
+import { type IEmployee } from "../../redux/features/employees/employeeSlice";
 
 const AllEmployeesPage = () => {
-    const dispatch = useDispatch();
-    const { employees } = useSelector((state: RootState) => state.employees);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+    const { data: getEmployeeList, isLoading } = useGetEmployeeListQuery(null);
+    const [deleteEmployee, { isLoading: isDeleting }] =
+        useDeleteEmployeeMutation();
 
     const [searchQuery, setSearchQuery] = useState("");
 
-    const filteredEmployees = employees.filter((employee) => {
+    const filteredEmployees = getEmployeeList?.filter((employee: IEmployee) => {
         const query = searchQuery.toLowerCase();
         return (
             (employee.name?.toLowerCase().includes(query) ?? false) ||
@@ -21,6 +27,17 @@ const AllEmployeesPage = () => {
             (employee.role?.toLowerCase().includes(query) ?? false)
         );
     });
+
+    const handleDelete = async (id: string) => {
+        setDeletingId(id);
+        try {
+            await deleteEmployee(id).unwrap();
+            toast.success("Employee deleted successfully");
+            setDeletingId(null);
+        } catch (err) {
+            console.error("Failed to delete employee", err);
+        }
+    };
 
     return (
         <div className="bg-white p-4 rounded-lg">
@@ -49,7 +66,7 @@ const AllEmployeesPage = () => {
             <div className="mt-10 overflow-x-auto">
                 <table className="w-full border-collapse rounded-md text-gray-700">
                     <thead>
-                        <tr className="bg-gray-200 text-left *:font-semibold text-sm">
+                        <tr className="bg-gray-200 text-left *:font-semibold text-sm text-nowrap">
                             <th className="p-3 w-[60px]">ID</th>
                             <th className="p-3">Name</th>
                             <th className="p-3">Email</th>
@@ -59,40 +76,63 @@ const AllEmployeesPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredEmployees.length > 0 ? (
-                            filteredEmployees.map((employee, index) => (
-                                <tr
-                                    className="border-b border-gray-300 hover:bg-gray-50 text-sm"
-                                    key={index}
+                        {isLoading ? (
+                            <tr className="text-sm">
+                                <td
+                                    colSpan={6}
+                                    className="p-3 text-center text-gray-500"
                                 >
-                                    <td className="p-3">{index + 1}</td>
-                                    <td className="p-3">{employee.name}</td>
-                                    <td className="p-3">{employee.email}</td>
-                                    <td className="p-3">{employee.phone}</td>
-                                    <td className="p-3">
-                                        {employee.role || "N/A"}
-                                    </td>
-                                    <td className="flex items-center gap-1 p-3">
-                                        <Link
-                                            to={`edit-employee`}
-                                            state={{ id: index, ...employee }}
-                                            className="flex gap-0.5 items-center py-1.5 px-3 bg-blue-500 text-white rounded-sm text-xs cursor-pointer shrink-0"
-                                        >
-                                            <MdOutlineModeEdit className="" />{" "}
-                                            <span>Edit</span>
-                                        </Link>
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                dispatch(deleteEmployee(index))
-                                            }
-                                            className="bg-red-400 text-white p-1.5 rounded-sm cursor-pointer shrink-0"
-                                        >
-                                            <FiTrash className="text-md" />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
+                                    Loading...
+                                </td>
+                            </tr>
+                        ) : filteredEmployees?.length > 0 ? (
+                            filteredEmployees?.map(
+                                (employee: IEmployee, index: number) => (
+                                    <tr
+                                        className="border-b border-gray-300 hover:bg-gray-50 text-sm"
+                                        key={index}
+                                    >
+                                        <td className="p-3">{index + 1}</td>
+                                        <td className="p-3">{employee.name}</td>
+                                        <td className="p-3">
+                                            {employee.email}
+                                        </td>
+                                        <td className="p-3">
+                                            {employee.phone}
+                                        </td>
+                                        <td className="p-3 capitalize">
+                                            {employee.role.toLowerCase() ||
+                                                "N/A"}
+                                        </td>
+                                        <td className="flex items-center gap-1 p-3">
+                                            <Link
+                                                to={`edit-employee`}
+                                                state={{
+                                                    ...employee,
+                                                }}
+                                                className="flex gap-0.5 items-center py-1.5 px-3 bg-blue-500 text-white rounded-sm text-xs cursor-pointer shrink-0"
+                                            >
+                                                <MdOutlineModeEdit className="" />{" "}
+                                                <span>Edit</span>
+                                            </Link>
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    handleDelete(employee.id)
+                                                }
+                                                className="bg-red-400 text-white p-1.5 rounded-sm cursor-pointer shrink-0"
+                                            >
+                                                {isDeleting &&
+                                                employee.id === deletingId ? (
+                                                    <AiOutlineLoading3Quarters className="animate-spin duration-300" />
+                                                ) : (
+                                                    <FiTrash className="text-base" />
+                                                )}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )
+                            )
                         ) : (
                             <tr className="border-b border-gray-300 text-sm">
                                 <td
