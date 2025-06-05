@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 
-type Employee = {
+export type IEmployee = {
+    id: string;
     name: string;
     email: string;
     phone: string;
     address: string;
-    role: "Staff" | "Manager";
+    role: "STAFF" | "MANAGER";
 };
 
 type EmployeeState = {
-    employees: Employee[];
+    employees: IEmployee[];
 };
 
 const initialState: EmployeeState = {

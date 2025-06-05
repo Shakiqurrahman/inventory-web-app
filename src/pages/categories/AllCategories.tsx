@@ -107,7 +107,7 @@ const AllCategories = () => {
                                                 {category.name}
                                             </td>
                                             <td className="p-3">
-                                                {category._count?.products || 0}{" "}
+                                                {category._count?.product || 0}{" "}
                                                 Products
                                             </td>
                                             <td className="flex items-center gap-1 p-3">
