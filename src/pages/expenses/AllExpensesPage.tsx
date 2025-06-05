@@ -10,6 +10,7 @@ import {
     useGetExpensesListQuery,
 } from "../../redux/features/expenses/expenseApi";
 import { type IExpense } from "../../redux/features/expenses/expenseSlice";
+import { formatDateToLongDate } from "../../utils/timeFormatHandler";
 
 const AllExpensesPage = () => {
     const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -102,9 +103,7 @@ const AllExpensesPage = () => {
                                             {expense.reason || "N/A"}
                                         </td>
                                         <td className="p-3">
-                                            {new Date(
-                                                expense.date
-                                            ).toLocaleDateString()}
+                                            {formatDateToLongDate(expense.date)}
                                         </td>
                                         <td className="p-3">
                                             {expense.recipientName}
