@@ -37,7 +37,6 @@ const AllCategories = () => {
     const filteredCategories = categoriesData?.filter((category: ICategory) =>
         category.name.toLowerCase().includes(searchValue.trim().toLowerCase())
     );
-    console.log(filteredCategories);
 
     const handleDelete = async (id: string) => {
         setDeletingId(id);
@@ -107,7 +106,10 @@ const AllCategories = () => {
                                             <td className="p-3">
                                                 {category.name}
                                             </td>
-                                            <td className="p-3">3 products</td>
+                                            <td className="p-3">
+                                                {category._count?.products || 0}{" "}
+                                                Products
+                                            </td>
                                             <td className="flex items-center gap-1 p-3">
                                                 <button
                                                     type="button"
