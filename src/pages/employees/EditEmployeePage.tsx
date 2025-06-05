@@ -47,11 +47,9 @@ const EditEmployeePage = () => {
         defaultValues: employees,
     });
 
-    const onSubmit = (data: employeeForm) => {
-        console.log(data);
-
+    const onSubmit = async(data: employeeForm) => {
         try {
-            updateEmployee({ id: state?.id, ...data }).unwrap();
+            await updateEmployee({ id: state?.id, ...data }).unwrap();
             toast.success("Employee updated successfully");
             navigate("/employees");
         } catch (error) {
