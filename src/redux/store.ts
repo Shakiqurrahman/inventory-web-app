@@ -18,6 +18,7 @@ import categoriesReducer from "./features/categories/categoriesSlice";
 import customerReducar from "./features/customers/customersSlice";
 import employeeReducer from "./features/employees/employeeSlice";
 import expenseReducer from "./features/expenses/expenseSlice";
+import itemFormReducer from "./features/items/itemFormSlice";
 import supplierReducer from "./features/suppliers/supplierSlice";
 import themeReducer from "./features/theme/themeSlice";
 
@@ -43,6 +44,7 @@ export const store = configureStore({
     employees: employeeReducer,
     resetPassword: resetPasswordReducer,
     expenses: expenseReducer,
+    itemForm: itemFormReducer,
   },
 
   middleware: (getDefaultMiddlewares) =>

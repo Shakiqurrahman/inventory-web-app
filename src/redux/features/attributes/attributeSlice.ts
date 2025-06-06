@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type Attribute = {
+  id?: number;
   name: string;
   attributeValues: string[];
 };
@@ -10,7 +11,18 @@ type AttributeState = {
 };
 
 const initialState: AttributeState = {
-  attributes: [],
+  attributes: [
+    {
+      id: 1,
+      name: "color",
+      attributeValues: ["red", "green", "blue"],
+    },
+    {
+      id: 2,
+      name: "size",
+      attributeValues: ["M", "L", "XL"],
+    },
+  ],
 };
 
 const attributeSlice = createSlice({
