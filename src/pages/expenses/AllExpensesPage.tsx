@@ -47,30 +47,28 @@ const AllExpensesPage = () => {
         <div className="bg-white p-4 rounded-lg">
             <h1 className="font-medium text-lg mb-4">Expenses</h1>
             <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
-                <div className="flex items-center gap-1">
-                    <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-2">
-                        <FiSearch className="text-lg shrink-0" />
-                        <input
-                            type="text"
-                            name="search"
-                            id="search"
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                            placeholder="Search Expense"
-                            className="placeholder:text-sm size-full outline-none"
-                        />
-
-                        <button className="bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer text-white py-2 px-3 rounded-lg text-sm">
-                            Search
-                        </button>
-                    </div>
+                <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-1">
+                    <FiSearch className="text-lg shrink-0 text-gray-500" />
+                    <input
+                        type="text"
+                        name="search"
+                        id="search"
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        placeholder="Search Expense"
+                        className="placeholder:text-sm size-full outline-none"
+                    />
                     <button
                         onClick={() => setSearchValue("")}
-                        className={`bg-gray-200 cursor-pointer hover:bg-gray-300 duration-300  rounded-lg p-2 ${
+                        className={`bg-gray-200 cursor-pointer hover:bg-gray-300 duration-300  rounded-full p-1 ${
                             showclose ? "block" : "hidden"
                         }`}
                     >
-                        <RxCross2 className="text-lg" />
+                        <RxCross2 className="text-sm " />
+                    </button>
+
+                    <button className="bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer text-white py-2 px-3 rounded-lg text-sm">
+                        Search
                     </button>
                 </div>
                 <Link
