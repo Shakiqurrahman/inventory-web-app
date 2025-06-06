@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FiPlus, FiSearch, FiTrash } from "react-icons/fi";
 import { MdOutlineModeEdit } from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { Link } from "react-router";
 import {
@@ -18,6 +19,16 @@ const AllExpensesPage = () => {
     const [deleteExpenses, { isLoading: deleteLoading }] =
         useDeleteExpensesMutation();
     console.log(getExpensesList);
+    const [searchValue, setSearchValue] = useState("");
+    const [showclose, setShowClose] = useState(false);
+
+    useEffect(() => {
+        if (searchValue) {
+            setShowClose(true);
+        } else {
+            setShowClose(false);
+        }
+    }, [setShowClose, searchValue]);
 
     const handleDelete = async (id: string) => {
         setDeletingId(id);
@@ -36,15 +47,31 @@ const AllExpensesPage = () => {
         <div className="bg-white p-4 rounded-lg">
             <h1 className="font-medium text-lg mb-4">Expenses</h1>
             <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
-                <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 w-[300px] gap-2">
-                    <FiSearch className="text-lg shrink-0" />
-                    <input
-                        type="text"
-                        name="search"
-                        id="search"
-                        placeholder="Search Expense"
-                        className="placeholder:text-sm size-full outline-none"
-                    />
+                <div className="flex items-center gap-1">
+                    <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-2">
+                        <FiSearch className="text-lg shrink-0" />
+                        <input
+                            type="text"
+                            name="search"
+                            id="search"
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                            placeholder="Search Expense"
+                            className="placeholder:text-sm size-full outline-none"
+                        />
+
+                        <button className="bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer text-white py-2 px-3 rounded-lg text-sm">
+                            Search
+                        </button>
+                    </div>
+                    <button
+                        onClick={() => setSearchValue("")}
+                        className={`bg-gray-200 cursor-pointer hover:bg-gray-300 duration-300  rounded-lg p-2 ${
+                            showclose ? "block" : "hidden"
+                        }`}
+                    >
+                        <RxCross2 className="text-lg" />
+                    </button>
                 </div>
                 <Link
                     to={"/expenses/new-expense"}
