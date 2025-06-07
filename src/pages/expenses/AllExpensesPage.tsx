@@ -15,6 +15,7 @@ import { formatDateToLongDate } from "../../utils/timeFormatHandler";
 
 const AllExpensesPage = () => {
   const [page, setPage] = useState(1);
+  console.log("🚀 ~ AllExpensesPage ~ setPage:", setPage)
 
   const [searchValue, setSearchValue] = useState("");
   const [search, setSearch] = useState("");
