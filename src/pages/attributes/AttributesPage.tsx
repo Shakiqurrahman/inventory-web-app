@@ -1,18 +1,41 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  useGetAttributesQuery,
+  useSaveAttributesMutation,
+} from "../../redux/features/attributes/attributeApiSlice";
 import {
   addAttribute,
   deleteAttribute,
+  getAttributes,
   updateAttribute,
+  type IAttribute,
 } from "../../redux/features/attributes/attributeSlice";
 import type { RootState } from "../../redux/store";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const AttributesPage = () => {
   const dispatch = useDispatch();
 
   const { attributes } = useSelector((state: RootState) => state.attributes);
 
+  const { data, isLoading } = useGetAttributesQuery(null);
+  const [saveAttributes, { isLoading: saveLoading }] =
+    useSaveAttributesMutation();
+
   const editableRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  useEffect(() => {
+    if (data && !isLoading) {
+      const formattedData = data?.map((v: IAttribute) => ({
+        id: v.id || "",
+        name: v.name || "",
+        attributeValues: v.values || [],
+      }));
+      dispatch(getAttributes(formattedData));
+    }
+  }, [data, dispatch, isLoading]);
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLDivElement>,
@@ -74,9 +97,22 @@ const AttributesPage = () => {
     dispatch(addAttribute(newAttribute));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Here you can implement the logic to save the attributes
+    const filterAttributes = attributes
+      .filter(
+        (attr) => attr.name.trim() !== "" && attr.attributeValues.length > 0
+      )
+      .map((attr) => ({ name: attr.name, values: attr.attributeValues }));
     console.log("Attributes saved:", attributes);
+    if (filterAttributes.length > 0) {
+      try {
+        await saveAttributes(filterAttributes).unwrap();
+        toast.success("Attributes saved successfully!");
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+      }
+    }
   };
 
   return (
@@ -90,7 +126,9 @@ const AttributesPage = () => {
           <span className="w-[60%]">Values</span>
           <span className="w-[10%] shrink-0">Delete</span>
         </div>
-        {attributes.length > 0 ? (
+        {isLoading ? (
+          <div className="text-grey-500 text-sm">Loading Attributes...</div>
+        ) : !isLoading && attributes.length > 0 ? (
           attributes.map((attribute, i) => (
             <div
               className="flex items-center py-2 gap-4 border-b border-gray-200 text-sm"
@@ -142,22 +180,25 @@ const AttributesPage = () => {
             No attributes available. Click "Add Attribute" to create one.
           </div>
         )}
-        <div className="flex gap-5 items-center justify-between mt-5 text-sm">
-          <button
-            type="button"
-            onClick={handleAddAttribute}
-            className="text-blue-500 hover:text-blue-700 cursor-pointer"
-          >
-            Add Attribute
-          </button>
-          <button
-            type="button"
-            onClick={handleSave}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer"
-          >
-            Save
-          </button>
-        </div>
+        {!isLoading && (
+          <div className="flex gap-5 items-center justify-between mt-5 text-sm">
+            <button
+              type="button"
+              onClick={handleAddAttribute}
+              className="text-blue-500 hover:text-blue-700 cursor-pointer"
+            >
+              Add Attribute
+            </button>
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={saveLoading}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 cursor-pointer disabled:bg-blue-500/50"
+            >
+              Save
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

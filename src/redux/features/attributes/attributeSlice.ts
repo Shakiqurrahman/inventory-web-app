@@ -1,7 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export type IAttribute = {
+  id: string;
+  name: string;
+  values: string[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 type Attribute = {
-  id?: number;
+  id?: string;
   name: string;
   attributeValues: string[];
 };
@@ -11,24 +19,16 @@ type AttributeState = {
 };
 
 const initialState: AttributeState = {
-  attributes: [
-    {
-      id: 1,
-      name: "color",
-      attributeValues: ["red", "green", "blue"],
-    },
-    {
-      id: 2,
-      name: "size",
-      attributeValues: ["M", "L", "XL"],
-    },
-  ],
+  attributes: [],
 };
 
 const attributeSlice = createSlice({
   name: "attributes",
   initialState,
   reducers: {
+    getAttributes: (state, action) => {
+      state.attributes = action.payload;
+    },
     addAttribute: (state, action) => {
       const newAttribute = action.payload;
       state.attributes.push(newAttribute);
@@ -45,6 +45,6 @@ const attributeSlice = createSlice({
     },
   },
 });
-export const { addAttribute, deleteAttribute, updateAttribute } =
+export const { addAttribute, deleteAttribute, updateAttribute, getAttributes } =
   attributeSlice.actions;
 export default attributeSlice.reducer;
