@@ -104,7 +104,6 @@ const AttributesPage = () => {
         (attr) => attr.name.trim() !== "" && attr.attributeValues.length > 0
       )
       .map((attr) => ({ name: attr.name, values: attr.attributeValues }));
-    console.log("Attributes saved:", attributes);
     if (filterAttributes.length > 0) {
       try {
         await saveAttributes(filterAttributes).unwrap();
@@ -165,7 +164,6 @@ const AttributesPage = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    console.log(i);
                     dispatch(deleteAttribute(i));
                   }}
                   className="text-red-500 hover:text-red-700 cursor-pointer"

@@ -1,6 +1,6 @@
 // Types
 type Attribute = {
-  id?: number;
+  id?: string;
   name: string;
   attributeValues: string[];
 };

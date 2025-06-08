@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 type Form = {
   name: string;
-  price: string;
+  costPrice: string;
+  sellPrice: string;
+  discount: string;
   description: string;
   category: string;
   brand: string;
@@ -21,7 +23,8 @@ type Variation = {
   attributes: string[];
   trashAttributes: string[];
   quantity: string;
-  price: string;
+  costPrice: string;
+  sellPrice: string;
 };
 
 type ItemFormState = {
@@ -33,7 +36,9 @@ type ItemFormState = {
 const initialState: ItemFormState = {
   form: {
     name: "",
-    price: "",
+    costPrice: "",
+    sellPrice: "",
+    discount: "",
     description: "",
     category: "",
     brand: "",
@@ -79,6 +84,9 @@ const itemFormSlice = createSlice({
     autoGenerateVariations: (state, action) => {
       state.variations = [...state.variations, ...action.payload];
     },
+    newAutoGenerateVariations: (state, action) => {
+      state.variations = action.payload;
+    },
     updateVariationValues: (state, action) => {
       const { index, updatedVariation } = action.payload;
       if (state.variations[index]) {
@@ -106,6 +114,7 @@ export const {
   addVariationField,
   removeVariationField,
   autoGenerateVariations,
+  newAutoGenerateVariations,
   updateVariationValues,
   removeVariationAttributesFromItem,
   restoreVariationAttributesFromTrash,

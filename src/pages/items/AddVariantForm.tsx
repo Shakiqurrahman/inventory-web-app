@@ -1,9 +1,15 @@
-import { useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { useGetAttributesQuery } from "../../redux/features/attributes/attributeApiSlice";
+import {
+  getAttributes,
+  type IAttribute,
+} from "../../redux/features/attributes/attributeSlice";
 import {
   addAttributeToItem,
   autoGenerateVariations,
+  newAutoGenerateVariations,
   removeAttributeFromItem,
   removeAttributeValuesFromItem,
   removeVariationAttributesFromItem,
@@ -18,6 +24,8 @@ import { generateVariations } from "../../utils/generateVariations";
 const AddVariantForm = () => {
   const dispatch = useDispatch();
 
+  const { data, isLoading: attributesLoading } = useGetAttributesQuery(null);
+
   const editableRefs = useRef<Array<HTMLDivElement | null>>([]);
   const editableVariationRefs = useRef<Array<HTMLDivElement | null>>([]);
 
@@ -30,6 +38,17 @@ const AddVariantForm = () => {
 
   const [selectedAttribute, setSelectedAttribute] = useState("");
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (data && !attributesLoading) {
+      const filterAttributes = data?.map((attr: IAttribute) => ({
+        id: attr.id || "",
+        name: attr.name || "",
+        attributeValues: attr.values || "",
+      }));
+      dispatch(getAttributes(filterAttributes));
+    }
+  }, [data, attributesLoading, dispatch]);
 
   const handleSelectAttribute = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedAttribute(e.target.value);
@@ -112,7 +131,7 @@ const AddVariantForm = () => {
   const handleAddAttribute = () => {
     if (selectedAttribute) {
       const findAttribute = attributesData.find(
-        (att) => att?.id?.toString() === selectedAttribute
+        (attr) => attr?.id?.toString() === selectedAttribute
       );
       if (findAttribute) {
         dispatch(addAttributeToItem(findAttribute));
@@ -121,6 +140,23 @@ const AddVariantForm = () => {
     } else {
       toast.error("Please Select an attribute");
     }
+  };
+
+  const handleDeleteAttribute = (index: number) => {
+    dispatch(removeAttributeFromItem(index));
+    const newVariations = attributes.filter((_, i) => i !== index);
+
+    const variationsArray = generateVariations(newVariations, []);
+
+    const generateVariationValues = variationsArray.map((v) => ({
+      name: v.join(", "),
+      attributes: v,
+      quantity: "",
+      costPrice: "",
+      sellPrice: "",
+    }));
+
+    dispatch(newAutoGenerateVariations(generateVariationValues));
   };
 
   const handleRestoreValues = (index: number, attrIndex: number) => {
@@ -178,7 +214,8 @@ const AddVariantForm = () => {
       name: v.join(", "),
       attributes: v,
       quantity: "",
-      price: "",
+      costPrice: "",
+      sellPrice: "",
     }));
 
     dispatch(autoGenerateVariations(generateVariationValues));
@@ -234,14 +271,14 @@ const AddVariantForm = () => {
             </button>
           </div>
         </div>
-        {attributes.length > 0 && (
+        {attributes?.length > 0 && (
           <div className="flex items-center py-2 gap-4 border-b border-gray-200 text-sm mt-5">
             <div className="w-[30%]">Name</div>
             <div className="w-[60%]">Values</div>
             <div className="w-[10%] shrink-0">Delete</div>
           </div>
         )}
-        {attributes.map((attr, i) => (
+        {attributes?.map((attr, i) => (
           <div
             key={i}
             className="flex items-center py-2 gap-4 border-b border-gray-200 text-sm hover:bg-[#f0f0f0] overflow-x-auto md:overflow-visible"
@@ -289,7 +326,7 @@ const AddVariantForm = () => {
             <div className="w-[10%] shrink-0">
               <button
                 type="button"
-                onClick={() => dispatch(removeAttributeFromItem(i))}
+                onClick={() => handleDeleteAttribute(i)}
                 className="text-red-500 hover:text-red-700 cursor-pointer"
               >
                 Delete
@@ -305,7 +342,8 @@ const AddVariantForm = () => {
                   <th className="p-3">Name</th>
                   <th className="p-3">Attributes</th>
                   <th className="p-3">Quantity</th>
-                  <th className="p-3">Price</th>
+                  <th className="p-3">Cost Price</th>
+                  <th className="p-3">Sell Price</th>
                   <th className="p-3 w-[100px]">Delete</th>
                 </tr>
               </thead>
@@ -380,8 +418,17 @@ const AddVariantForm = () => {
                     <td className="p-3">
                       <input
                         type="number"
-                        name="price"
-                        value={item.price}
+                        name="costPrice"
+                        value={item.costPrice}
+                        onChange={(e) => handleChangeVariationValues(e, index)}
+                        className="outline-none border-gray-200 border p-2 w-full block"
+                      />
+                    </td>
+                    <td className="p-3">
+                      <input
+                        type="number"
+                        name="sellPrice"
+                        value={item.sellPrice}
                         onChange={(e) => handleChangeVariationValues(e, index)}
                         className="outline-none border-gray-200 border p-2 w-full block"
                       />

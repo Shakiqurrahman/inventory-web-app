@@ -1,10 +1,13 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useGetCategoriesQuery } from "../../redux/features/categories/categoriesApiSlice";
+import type { ICategory } from "../../redux/features/categories/categoriesSlice";
 import { changeFormValues } from "../../redux/features/items/itemFormSlice";
 import type { RootState } from "../../redux/store";
 import AddVariantForm from "./AddVariantForm";
 
 const CreateItemPage = () => {
+  const { data: categories } = useGetCategoriesQuery(null);
   const dispatch = useDispatch();
   const { form, attributes, variations } = useSelector(
     (state: RootState) => state.itemForm
@@ -68,12 +71,34 @@ const CreateItemPage = () => {
           />
         </div>
         <div>
-          <label htmlFor="price">Price</label>
+          <label htmlFor="costPrice">Cost Price</label>
           <input
             type="number"
-            name="price"
-            id="price"
-            value={form.price}
+            name="costPrice"
+            id="costPrice"
+            value={form.costPrice}
+            onChange={handleChange}
+            className="border border-gray-300 w-full p-2 outline-none rounded-md"
+          />
+        </div>
+        <div>
+          <label htmlFor="sellPrice">Sell Price</label>
+          <input
+            type="number"
+            name="sellPrice"
+            id="sellPrice"
+            value={form.sellPrice}
+            onChange={handleChange}
+            className="border border-gray-300 w-full p-2 outline-none rounded-md"
+          />
+        </div>
+        <div>
+          <label htmlFor="discount">Discount (%)</label>
+          <input
+            type="number"
+            name="discount"
+            id="discount"
+            value={form.discount}
             onChange={handleChange}
             className="border border-gray-300 w-full p-2 outline-none rounded-md"
           />
@@ -97,9 +122,12 @@ const CreateItemPage = () => {
             onChange={handleChange}
             className="border border-gray-300 w-full p-2 outline-none rounded-md"
           >
-            <option value="Shakil">Shakil</option>
-            <option value="Mahdi">Mahdi</option>
-            <option value="Shakiqur">Shakiqur</option>
+            {form.category === "" && <option>Select Category</option>}
+            {categories?.map((category: ICategory) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
           </select>
         </div>
         <div>
