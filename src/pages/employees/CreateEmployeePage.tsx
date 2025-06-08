@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { createEmployee } from "../../redux/features/employees/employeeSlice";
+import { useCreateEmployeeMutation } from "../../redux/features/employees/employeeApi";
 
 const employeeSchema = z.object({
     name: z.string().min(1, "Company Name must be required"),
@@ -17,7 +17,7 @@ const employeeSchema = z.object({
         .min(1, "Email must be Required")
         .email("Give a valid email."),
     address: z.string().min(1, "Address 1 must be required"),
-    role: z.enum(["Staff", "Manager"], {
+    role: z.enum(["STAFF", "MANAGER"], {
         errorMap: () => ({ message: "Role must be either Staff or Manager" }),
     }),
 });
@@ -25,6 +25,7 @@ const employeeSchema = z.object({
 type employeeForm = z.infer<typeof employeeSchema>;
 
 const CreateEmployeePage = () => {
+    const [createEmployee, { isLoading }] = useCreateEmployeeMutation();
     const {
         register,
         handleSubmit,
@@ -33,15 +34,19 @@ const CreateEmployeePage = () => {
         resolver: zodResolver(employeeSchema),
     });
 
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const onSubmit = (data: employeeForm) => {
+    const onSubmit = async (data: employeeForm) => {
         console.log(data);
 
-        dispatch(createEmployee(data));
-
-        // Navigate to the employees list page or show success message
+        try {
+            await createEmployee(data).unwrap();
+            toast.success("Employee created successfully");
+        } catch (err) {
+            toast.error("Something went wrong");
+            console.error("Error creating employee:", err);
+        }
+        // Navigate to the employees list pagep or show success message
         navigate("/employees");
     };
 
@@ -126,8 +131,8 @@ const CreateEmployeePage = () => {
                         defaultValue="Staff"
                         className="border border-gray-300 w-full p-2 outline-none rounded-md"
                     >
-                        <option value="Staff">Staff</option>
-                        <option value="Manager">Manager</option>
+                        <option value="STAFF">Staff</option>
+                        <option value="MANAGER">Manager</option>
                     </select>
                     {errors.role && (
                         <p className="text-red-500 text-xs">
@@ -140,7 +145,7 @@ const CreateEmployeePage = () => {
                         type="submit"
                         className="cursor-pointer ml-auto bg-blue-500 text-white py-2 px-4 rounded-md"
                     >
-                        Save
+                        {isLoading ? "Saving..." : "Save"}
                     </button>
                 </div>
             </form>

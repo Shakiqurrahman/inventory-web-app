@@ -1,12 +1,8 @@
-import { FaPlus } from "react-icons/fa";
 import { FiTrash } from "react-icons/fi";
 import { IoSearch } from "react-icons/io5";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    toggleCustomerModal,
-    toggleEditCustomerModal,
-} from "../../redux/features/customers/customersSlice";
+import { toggleEditCustomerModal } from "../../redux/features/customers/customersSlice";
 import type { RootState } from "../../redux/store";
 import CreateCustomerModal from "./CreateCustomerModal";
 import EditCustomer from "./EditCustomer";
@@ -30,12 +26,6 @@ const Customerspage = () => {
                             className="outline-0 text-sm rounded-sm w-full"
                         />
                     </div>
-                    <button
-                        onClick={() => dispatch(toggleCustomerModal())}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center text-xs gap-1 cursor-pointer hover:bg-blue-600 duration-200"
-                    >
-                        <FaPlus className="text-lg" /> <span>New Customer</span>
-                    </button>
                 </div>
 
                 <div className="mt-10 overflow-x-auto">

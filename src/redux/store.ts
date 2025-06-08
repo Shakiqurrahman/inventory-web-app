@@ -14,6 +14,7 @@ import { baseApi } from "./api/baseApi";
 import attributesReducer from "./features/attributes/attributeSlice";
 import authReducer from "./features/auth/authSlice";
 import resetPasswordReducer from "./features/auth/resetPasswordSlice";
+import bankDepositeSlice from "./features/bankDeposite/bankDepositeSlice";
 import categoriesReducer from "./features/categories/categoriesSlice";
 import customerReducar from "./features/customers/customersSlice";
 import employeeReducer from "./features/employees/employeeSlice";
@@ -44,6 +45,7 @@ export const store = configureStore({
     employees: employeeReducer,
     resetPassword: resetPasswordReducer,
     expenses: expenseReducer,
+    bankDeposite: bankDepositeSlice,
     itemForm: itemFormReducer,
   },
 

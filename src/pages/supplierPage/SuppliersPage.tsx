@@ -32,7 +32,7 @@ const SuppliersPage = () => {
                     </Link>
                 </div>
 
-                <div className="mt-10 overflow-x-auto">
+                <div className="mt-10 overflow-x-auto text-nowrap">
                     <table className="w-full border-collapse rounded-md text-gray-700">
                         <thead>
                             <tr className="bg-gray-200 text-left *:font-semibold text-sm">

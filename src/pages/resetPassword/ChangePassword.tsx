@@ -4,21 +4,37 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router";
+import { BeatLoader } from "react-spinners";
 import { z } from "zod";
 import logo from "../../assets/logo/logo.png";
+import { useChangePasswordMutation } from "../../redux/features/auth/authApi";
 import { toggleTheme } from "../../redux/features/theme/themeSlice";
 import type { RootState } from "../../redux/store";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 // zod schema
-const loginSchema = z.object({
-    oldPassword: z.string().min(1, "Password is required"),
-});
+
+const loginSchema = z
+    .object({
+        oldPassword: z.string().min(1, "Password is required"),
+        newPassword: z.string().min(1, "New Password is required"),
+        confirmNewPassword: z
+            .string()
+            .min(1, "Confirm New Password is required"),
+    })
+    .refine((data) => data.newPassword === data.confirmNewPassword, {
+        path: ["confirmNewPassword"], // This tells Zod where to assign the error
+        message: "Passwords do not match",
+    });
 
 type loginForm = z.infer<typeof loginSchema>;
 
 const ChangePassword = () => {
     const dispatch = useDispatch();
     const theme = useSelector((state: RootState) => state.theme.value);
+    const [changePassword, { isLoading }] = useChangePasswordMutation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const root = window.document.documentElement;
@@ -45,17 +61,17 @@ const ChangePassword = () => {
         console.log("Login Data: ", data);
 
         try {
-            // const response = await forgetPassword(data.oldPassword).unwrap();
-            // toast.success(response.message);
-            // console.log(response);
-            // if (response.success) {
-            //     navigate("otp", { state: { email: data.oldPassword } });
-            // }
-            // console.log(response);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            toast.error("Please enter a valid email");
-            console.log(error?.message);
+            const response = await changePassword({
+                oldPassword: data.oldPassword,
+                newPassword: data.newPassword,
+            }).unwrap();
+            toast.success(response.message);
+            console.log(response);
+            if (response.success) {
+                navigate("/");
+            }
+        } catch (error) {
+            toast.error(getErrorMessage(error));
         }
     };
 
@@ -90,13 +106,40 @@ const ChangePassword = () => {
                     <div>
                         <input
                             type="text"
-                            placeholder="Enter your Email"
+                            placeholder="Enter your Old Password"
                             {...register("oldPassword")}
                             className="w-full border border-gray-600 outline-0 px-4 py-2 md:py-3 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
                         />
                         {errors.oldPassword && (
-                            <p className="text-red-500 text-xs mt-2">
+                            <p className="text-red-500 text-xs mt-1">
                                 {errors.oldPassword.message}
+                            </p>
+                        )}
+                    </div>
+
+                    <div>
+                        <input
+                            type="text"
+                            placeholder="Enter new Password"
+                            {...register("newPassword")}
+                            className="w-full border border-gray-600 outline-0 px-4 py-2 md:py-3 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
+                        />
+                        {errors.newPassword && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.newPassword.message}
+                            </p>
+                        )}
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            placeholder="Confirm Password"
+                            {...register("confirmNewPassword")}
+                            className="w-full border border-gray-600 outline-0 px-4 py-2 md:py-3 rounded-sm text-sm md:text-base placeholder:text-gray-500 dark:text-gray-200 dark:placeholder:text-gray-400"
+                        />
+                        {errors.confirmNewPassword && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {errors.confirmNewPassword.message}
                             </p>
                         )}
                     </div>
@@ -105,9 +148,19 @@ const ChangePassword = () => {
                         type="submit"
                         className="w-full p-2 rounded-sm cursor-pointer text-sm md:text-base bg-[#1a1a1a] hover:bg-gray-600 text-white dark:bg-gray-600 dark:hover:bg-gray-800 duration-300 disabled:opacity-70"
                     >
-                        Change Password
+                        {isLoading ? (
+                            <BeatLoader size={6} color="#ffffff" />
+                        ) : (
+                            "Change Password"
+                        )}
                     </button>
                 </form>
+                <Link
+                    to={"/"}
+                    className="text-sm text-gray-500 hover:underline p-4"
+                >
+                    Back to homepage
+                </Link>
             </div>
         </div>
     );

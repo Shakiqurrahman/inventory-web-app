@@ -1,16 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 
-type Category = {
-    id?: number;
-    categoryName: string;
-};
+export interface ICategory {
+    id: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+    _count?: { product: number };
+}
 
 type CategoriesState = {
     openCreateModal: boolean;
     openEditModal: boolean;
-    categories: Category[];
-    editCategory: Category | null;
+    categories: ICategory[];
+    editCategory: ICategory | null;
 };
 
 const initialState: CategoriesState = {

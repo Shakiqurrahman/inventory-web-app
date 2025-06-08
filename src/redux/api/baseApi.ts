@@ -6,9 +6,9 @@ import type {
   FetchArgs,
 } from "@reduxjs/toolkit/query";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { logoutUser, setCredentials } from "../features/auth/authSlice";
-import type { RootState } from "../store";
 import { config } from "../../config/config";
+import { logoutUser, setToken } from "../features/auth/authSlice";
+import type { RootState } from "../store";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${config.api_url}`,
@@ -40,14 +40,10 @@ const baseQueryWithRefreshToken: BaseQueryFn<
     const data = await res.json();
 
     if (data?.data) {
-      const user = (api.getState() as RootState).auth.user;
+      const token = data.data;
+      // const user = (api.getState() as RootState).auth.user;
 
-      api.dispatch(
-        setCredentials({
-          user,
-          accessToken: data.data,
-        })
-      );
+      api.dispatch(setToken(token));
 
       result = await baseQuery(args, api, extraOptions);
     } else {
@@ -62,6 +58,6 @@ export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
   refetchOnMountOrArgChange: true,
-  tagTypes: ["user"],
+  tagTypes: ["user", "categories", "profile", "expenses", "employees"],
   endpoints: () => ({}),
 });

@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router";
 import { z } from "zod";
-import { updateEmployee } from "../../redux/features/employees/employeeSlice";
+import { useUpdateEmployeeMutation } from "../../redux/features/employees/employeeApi";
 
 const employeeSchema = z.object({
     name: z.string().min(1, "Company Name must be required"),
@@ -16,7 +16,7 @@ const employeeSchema = z.object({
         .min(1, "Email must be Required")
         .email("Give a valid email."),
     address: z.string().min(1, "Address 1 must be required"),
-    role: z.enum(["Staff", "Manager"], {
+    role: z.enum(["STAFF", "MANAGER"], {
         errorMap: () => ({ message: "Role must be either Staff or Manager" }),
     }),
 });
@@ -24,8 +24,9 @@ const employeeSchema = z.object({
 type employeeForm = z.infer<typeof employeeSchema>;
 
 const EditEmployeePage = () => {
+    const [updateEmployee, { isLoading }] = useUpdateEmployeeMutation();
     const { state } = useLocation();
-    const dispatch = useDispatch();
+    console.log(state);
     const navigate = useNavigate();
 
     // Assuming employees is an object with employee details
@@ -34,7 +35,7 @@ const EditEmployeePage = () => {
         phone: state?.phone || "",
         email: state?.email || "",
         address: state?.address || "",
-        role: state?.role || "Staff",
+        role: state?.role || "STAFF",
     };
 
     const {
@@ -46,13 +47,14 @@ const EditEmployeePage = () => {
         defaultValues: employees,
     });
 
-    const onSubmit = (data: employeeForm) => {
-        console.log(data);
-
-        dispatch(updateEmployee({ id: state?.id, updatedEmployee: data }));
-
-        // Navigate to the employees list page or show success message
-        navigate("/employees");
+    const onSubmit = async(data: employeeForm) => {
+        try {
+            await updateEmployee({ id: state?.id, ...data }).unwrap();
+            toast.success("Employee updated successfully");
+            navigate("/employees");
+        } catch (error) {
+            console.error("Failed to update employee:", error);
+        }
     };
 
     return (
@@ -136,8 +138,8 @@ const EditEmployeePage = () => {
                         defaultValue="Staff"
                         className="border border-gray-300 w-full p-2 outline-none rounded-md"
                     >
-                        <option value="Staff">Staff</option>
-                        <option value="Manager">Manager</option>
+                        <option value="STAFF">Staff</option>
+                        <option value="MANAGER">Manager</option>
                     </select>
                     {errors.role && (
                         <p className="text-red-500 text-xs">
@@ -150,7 +152,7 @@ const EditEmployeePage = () => {
                         type="submit"
                         className="cursor-pointer bg-blue-500 text-white py-2 px-4 rounded-md"
                     >
-                        Update
+                        {isLoading ? "Updating..." : "Update"}
                     </button>
                     <button
                         type="button"
