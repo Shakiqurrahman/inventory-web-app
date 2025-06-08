@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import DatePicker from "react-datepicker";
 import { useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
@@ -7,8 +7,9 @@ import { useDispatch } from "react-redux";
 import { z } from "zod";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import {
-    createBankDeposite,
-    toggleCreateDepositeModal,
+    toggleEditDepositeModal,
+    updateBankDeposite,
+    type IBankDeposite,
 } from "../../redux/features/bankDeposite/bankDepositeSlice";
 
 const bankDepositeSchema = z.object({
@@ -27,7 +28,14 @@ const bankDepositeSchema = z.object({
 
 type bankDepositeForm = z.infer<typeof bankDepositeSchema>;
 
-const CreateBankDepositoryModal = () => {
+interface EditBankDepositoryModalProps {
+    selectedItem: IBankDeposite | null;
+    selectedIndex: number | null;
+}
+const EditBankDepositoryModal: React.FC<EditBankDepositoryModalProps> = ({
+    selectedItem,
+    selectedIndex,
+}) => {
     const {
         register,
         handleSubmit,
@@ -38,18 +46,35 @@ const CreateBankDepositoryModal = () => {
         resolver: zodResolver(bankDepositeSchema),
     });
 
+    useEffect(() => {
+        if (selectedItem) {
+            // Set the form values based on the state passed from the previous page
+            setValue("date", selectedItem.date);
+            setValue("amount", selectedItem.amount);
+            setValue("transectionId", selectedItem.transectionId || "");
+            setValue("bankName", selectedItem.bankName || "");
+            setValue("reason", selectedItem.reason || "");
+            setValue("accountNumber", selectedItem.accountNumber || "");
+        }
+    }, [selectedItem, setValue]);
+
     const dispatch = useDispatch();
     const formRef = useRef<HTMLDivElement>(null);
 
     useOutsideClick(formRef, () => {
-        dispatch(toggleCreateDepositeModal());
+        dispatch(toggleEditDepositeModal());
     });
 
-    const onSubmit = (data: bankDepositeForm) => {
-        // console.log(data);
+    const onSubmit = (data: IBankDeposite) => {
+        if (selectedIndex === null) return;
 
-        dispatch(createBankDeposite(data));
-        dispatch(toggleCreateDepositeModal());
+        dispatch(
+            updateBankDeposite({
+                index: selectedIndex,
+                updatedBankDeposite: data,
+            })
+        );
+        dispatch(toggleEditDepositeModal());
     };
 
     return (
@@ -59,11 +84,9 @@ const CreateBankDepositoryModal = () => {
                 ref={formRef}
             >
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-medium">
-                        Create Bank Deposite
-                    </h2>
+                    <h2 className="text-lg font-medium">Edit Bank Deposite</h2>
                     <button
-                        onClick={() => dispatch(toggleCreateDepositeModal())}
+                        onClick={() => dispatch(toggleEditDepositeModal())}
                         type="button"
                         className="text-gray-500 hover:text-gray-700 cursor-pointer"
                     >
@@ -181,7 +204,7 @@ const CreateBankDepositoryModal = () => {
                             type="submit"
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 cursor-pointer text-sm"
                         >
-                            Create
+                            Update
                         </button>
                     </div>
                 </form>
@@ -190,4 +213,4 @@ const CreateBankDepositoryModal = () => {
     );
 };
 
-export default CreateBankDepositoryModal;
+export default EditBankDepositoryModal;
