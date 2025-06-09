@@ -1,14 +1,24 @@
 import type { ChangeEvent, FormEvent } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { useGetCategoriesQuery } from "../../redux/features/categories/categoriesApiSlice";
 import type { ICategory } from "../../redux/features/categories/categoriesSlice";
-import { changeFormValues } from "../../redux/features/items/itemFormSlice";
+import { useCreateItemMutation } from "../../redux/features/items/itemApiSlice";
+import {
+  changeFormValues,
+  resetItemForm,
+} from "../../redux/features/items/itemFormSlice";
 import type { RootState } from "../../redux/store";
+import { getErrorMessage } from "../../utils/errorHandler";
 import AddVariantForm from "./AddVariantForm";
 
 const CreateItemPage = () => {
-  const { data: categories } = useGetCategoriesQuery(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [createItem, { isLoading }] = useCreateItemMutation();
+  const { data: categories } = useGetCategoriesQuery(null);
   const { form, attributes, variations } = useSelector(
     (state: RootState) => state.itemForm
   );
@@ -25,19 +35,51 @@ const CreateItemPage = () => {
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const { quantity, ...formData } = form;
-    let finalData = JSON.parse(
-      JSON.stringify({ ...formData, stock: quantity })
-    );
-    if (form.isVariantChecked) {
-      finalData = { ...finalData, stock: "" };
+    const { stock, sellPrice, costPrice, discountPercentage, ...formData } =
+      form;
+    let finalData = JSON.parse(JSON.stringify({ ...formData }));
+
+    if (!form.isVariantChecked) {
+      finalData = {
+        ...finalData,
+        sellPrice: parseFloat(sellPrice) || 0,
+        costPrice: parseFloat(costPrice) || 0,
+        discountPercentage: parseFloat(discountPercentage) || 0,
+      };
+      try {
+        await createItem(finalData).unwrap();
+        toast.success("Item Created Successfully");
+        navigate("/items");
+        // reset form
+        const resetForm = {
+          form: {
+            name: "",
+            costPrice: "",
+            sellPrice: "",
+            discountPercentage: "",
+            description: "",
+            categoryId: "",
+            brand: "",
+            stock: "",
+            isVariantChecked: false,
+          },
+          attributes: [],
+          variations: [],
+        };
+        dispatch(resetItemForm(resetForm));
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+      }
     }
+
     if (variations.length > 0) {
       const finalVariations = variations.map((v) => ({
         ...v,
-        stock: v.quantity,
+        stock: parseInt(v.stock) || 0,
+        sellPrice: parseFloat(finalData.sellPrice) || 0,
+        costPrice: parseFloat(finalData.costPrice) || 0,
         attributes: Object.fromEntries(
           v.attributes.map((item) => {
             const [key, value] = item.split(":");
@@ -45,9 +87,43 @@ const CreateItemPage = () => {
           })
         ),
       }));
-      finalData = { ...finalData, attributes, variant: finalVariations };
+      finalData = {
+        ...finalData,
+        sellPrice: parseFloat(sellPrice) || 0,
+        costPrice: parseFloat(costPrice) || 0,
+        attributes,
+        variant: finalVariations,
+      };
+      try {
+        await createItem(finalData).unwrap();
+        toast.success("Item Created Successfully");
+        navigate("/items");
+        // reset form
+        const resetForm = {
+          form: {
+            name: "",
+            costPrice: "",
+            sellPrice: "",
+            discountPercentage: "",
+            description: "",
+            categoryId: "",
+            brand: "",
+            stock: "",
+            isVariantChecked: false,
+          },
+          attributes: [],
+          variations: [],
+        };
+        dispatch(resetItemForm(resetForm));
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+      }
+    } else {
+      finalData = {
+        ...finalData,
+        stock: parseInt(stock) || 0,
+      };
     }
-    console.log(finalData);
   };
 
   return (
@@ -67,6 +143,7 @@ const CreateItemPage = () => {
             id="name"
             value={form.name}
             onChange={handleChange}
+            required
             className="border border-gray-300 w-full p-2 outline-none rounded-md"
           />
         </div>
@@ -78,6 +155,7 @@ const CreateItemPage = () => {
             id="costPrice"
             value={form.costPrice}
             onChange={handleChange}
+            required
             className="border border-gray-300 w-full p-2 outline-none rounded-md"
           />
         </div>
@@ -89,16 +167,17 @@ const CreateItemPage = () => {
             id="sellPrice"
             value={form.sellPrice}
             onChange={handleChange}
+            required
             className="border border-gray-300 w-full p-2 outline-none rounded-md"
           />
         </div>
         <div>
-          <label htmlFor="discount">Discount (%)</label>
+          <label htmlFor="discountPercentage">Discount (%)</label>
           <input
             type="number"
-            name="discount"
-            id="discount"
-            value={form.discount}
+            name="discountPercentage"
+            id="discountPercentage"
+            value={form.discountPercentage}
             onChange={handleChange}
             className="border border-gray-300 w-full p-2 outline-none rounded-md"
           />
@@ -114,15 +193,16 @@ const CreateItemPage = () => {
           ></textarea>
         </div>
         <div>
-          <label htmlFor="category">Category</label>
+          <label htmlFor="categoryId">Category</label>
           <select
-            name="category"
-            id="category"
-            value={form.category}
+            name="categoryId"
+            id="categoryId"
+            value={form.categoryId}
             onChange={handleChange}
+            required={!form.categoryId}
             className="border border-gray-300 w-full p-2 outline-none rounded-md"
           >
-            {form.category === "" && <option>Select Category</option>}
+            {form.categoryId === "" && <option>Select Category</option>}
             {categories?.map((category: ICategory) => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -143,13 +223,14 @@ const CreateItemPage = () => {
         </div>
         {!form.isVariantChecked && (
           <div>
-            <label htmlFor="quantity">Quantity</label>
+            <label htmlFor="stock">Stock</label>
             <input
               type="number"
-              name="quantity"
-              id="quantity"
-              value={form.quantity}
+              name="stock"
+              id="stock"
+              value={form.stock}
               onChange={handleChange}
+              required={!form.isVariantChecked}
               className="border border-gray-300 w-full p-2 outline-none rounded-md"
             />
           </div>
@@ -175,7 +256,8 @@ const CreateItemPage = () => {
         <div>
           <button
             type="submit"
-            className="cursor-pointer ml-auto bg-blue-500 text-white py-2 px-4 rounded-md"
+            disabled={isLoading}
+            className="cursor-pointer ml-auto bg-blue-500 text-white py-2 px-4 rounded-md disabled:bg-blue-500/50"
           >
             Save
           </button>

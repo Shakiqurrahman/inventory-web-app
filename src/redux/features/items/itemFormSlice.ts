@@ -4,11 +4,11 @@ type Form = {
   name: string;
   costPrice: string;
   sellPrice: string;
-  discount: string;
+  discountPercentage: string;
   description: string;
-  category: string;
+  categoryId: string;
   brand: string;
-  quantity: string;
+  stock: string;
   isVariantChecked: boolean;
 };
 
@@ -22,7 +22,7 @@ type Variation = {
   name: string;
   attributes: string[];
   trashAttributes: string[];
-  quantity: string;
+  stock: string;
   costPrice: string;
   sellPrice: string;
 };
@@ -38,11 +38,11 @@ const initialState: ItemFormState = {
     name: "",
     costPrice: "",
     sellPrice: "",
-    discount: "",
+    discountPercentage: "",
     description: "",
-    category: "",
+    categoryId: "",
     brand: "",
-    quantity: "",
+    stock: "",
     isVariantChecked: false,
   },
   attributes: [],
@@ -101,6 +101,12 @@ const itemFormSlice = createSlice({
       const { index, updatedAttribute } = action.payload;
       state.variations[index] = updatedAttribute;
     },
+    resetItemForm: (state, action) => {
+      const { form, attributes, variations } = action.payload;
+      state.form = form;
+      state.attributes = attributes;
+      state.variations = variations;
+    },
   },
 });
 
@@ -118,5 +124,6 @@ export const {
   updateVariationValues,
   removeVariationAttributesFromItem,
   restoreVariationAttributesFromTrash,
+  resetItemForm,
 } = itemFormSlice.actions;
 export default itemFormSlice.reducer;

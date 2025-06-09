@@ -151,7 +151,7 @@ const AddVariantForm = () => {
     const generateVariationValues = variationsArray.map((v) => ({
       name: v.join(", "),
       attributes: v,
-      quantity: "",
+      stock: "",
       costPrice: "",
       sellPrice: "",
     }));
@@ -213,7 +213,7 @@ const AddVariantForm = () => {
     const generateVariationValues = variationsArray.map((v) => ({
       name: v.join(", "),
       attributes: v,
-      quantity: "",
+      stock: "",
       costPrice: "",
       sellPrice: "",
     }));
@@ -341,7 +341,7 @@ const AddVariantForm = () => {
                 <tr className="bg-gray-200 text-left *:font-semibold text-sm">
                   <th className="p-3">Name</th>
                   <th className="p-3">Attributes</th>
-                  <th className="p-3">Quantity</th>
+                  <th className="p-3">Stock</th>
                   <th className="p-3">Cost Price</th>
                   <th className="p-3">Sell Price</th>
                   <th className="p-3 w-[100px]">Delete</th>
@@ -409,8 +409,9 @@ const AddVariantForm = () => {
                     <td className="p-3">
                       <input
                         type="number"
-                        name="quantity"
-                        value={item.quantity}
+                        name="stock"
+                        value={item.stock}
+                        required
                         onChange={(e) => handleChangeVariationValues(e, index)}
                         className="outline-none border-gray-200 border p-2 w-full block"
                       />
