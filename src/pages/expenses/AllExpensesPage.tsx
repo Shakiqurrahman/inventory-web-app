@@ -6,6 +6,7 @@ import { MdOutlineModeEdit } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { Link } from "react-router";
+import Pagination from "../../components/Pagination";
 import {
   useDeleteExpensesMutation,
   useGetExpensesListQuery,
@@ -13,9 +14,16 @@ import {
 import { type IExpense } from "../../redux/features/expenses/expenseSlice";
 import { formatDateToLongDate } from "../../utils/timeFormatHandler";
 
+export interface IMetaInfo {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
 const AllExpensesPage = () => {
   const [page, setPage] = useState(1);
-  console.log("🚀 ~ AllExpensesPage ~ setPage:", setPage)
+  const [showLimit, setShowLimit] = useState(20);
 
   const [searchValue, setSearchValue] = useState("");
   const [search, setSearch] = useState("");
@@ -30,6 +38,7 @@ const AllExpensesPage = () => {
   } = useGetExpensesListQuery(
     {
       page,
+      limit: showLimit,
       search,
     },
     {
@@ -40,7 +49,7 @@ const AllExpensesPage = () => {
   const [deleteExpenses, { isLoading: deleteLoading }] =
     useDeleteExpensesMutation();
 
-  const { data: expenses } = response || {};
+  const { data: expenses, meta } = response || {};
 
   useEffect(() => {
     if (searchValue) {
@@ -205,6 +214,33 @@ const AllExpensesPage = () => {
             )}
           </tbody>
         </table>
+        {!isLoading && (meta as IMetaInfo)?.totalPages > 1 && (
+          <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
+            <p className="text-sm font-medium text-gray-600">
+              Total Expenses : {(meta as IMetaInfo)?.total}
+            </p>
+            <Pagination
+              currentPage={(meta as IMetaInfo)?.page || page}
+              totalPages={(meta as IMetaInfo)?.totalPages}
+              onPageChange={setPage}
+            />
+            <div className="flex items-center gap-2">
+              <p className="text-sm">Show per page :</p>
+              <select
+                onChange={(e) => setShowLimit(Number(e.target.value))}
+                name="pageLimit"
+                id="pageLimit"
+                value={showLimit}
+                className="px-2 py-1 outline-none border border-gray-300 rounded-md"
+              >
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
