@@ -4,7 +4,7 @@ const expensesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getExpensesList: builder.query({
       query: (args = {}) => {
-        const { page, limit, search = "" } = args || {};
+        const { page, limit = 1, search = "" } = args || {};
 
         const queryParams = new URLSearchParams();
         if (search) queryParams.append("search", search);
