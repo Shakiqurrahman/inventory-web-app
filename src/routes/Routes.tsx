@@ -11,11 +11,15 @@ import ErrorPage from "../pages/ErrorPage";
 import AllExpensesPage from "../pages/expenses/AllExpensesPage";
 import CreateExpensePage from "../pages/expenses/CreateExpensePage";
 import EditExpensePage from "../pages/expenses/EditExpensePage";
+import AllItemsPage from "../pages/items/AllItemsPage";
+import CreateItemPage from "../pages/items/CreateItemPage";
 import LoginPage from "../pages/LoginPage";
+import RecivingsPage from "../pages/receivings/RecivingsPage";
 import ChangePassword from "../pages/resetPassword/ChangePassword";
 import NewPassword from "../pages/resetPassword/NewPassword";
 import ResetPasswordOtp from "../pages/resetPassword/ResetPasswordOtp";
 import ResetPasswordPage from "../pages/resetPassword/ResetPasswordPage";
+import SalesPage from "../pages/sales/SalesPage";
 import SaleHistoryPage from "../pages/salesHistory/SaleHistoryPage";
 import EditSupplier from "../pages/supplierPage/EditSupplier";
 import NewSuplier from "../pages/supplierPage/NewSuplier";
@@ -36,6 +40,14 @@ const routes: RouteObject[] = [
             {
                 path: "/",
                 element: <DashboardPage />,
+            },
+            {
+                path: "/items",
+                element: <AllItemsPage />,
+            },
+            {
+                path: "/items/new-item",
+                element: <CreateItemPage />,
             },
             {
                 path: "/categories",
@@ -92,6 +104,14 @@ const routes: RouteObject[] = [
             {
                 path: "/sales-history",
                 element: <SaleHistoryPage />,
+            },
+            {
+                path: "/sales",
+                element: <SalesPage />,
+            },
+            {
+                path: "/receiving",
+                element: <RecivingsPage />,
             },
         ],
     },

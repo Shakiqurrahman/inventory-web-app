@@ -3,16 +3,30 @@ import { FiPlus, FiSearch, FiTrash } from "react-icons/fi";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch } from "react-redux";
-import { toggleCreateDepositeModal } from "../../redux/features/bankDeposite/bankDepositeSlice";
+import {
+    deleteBankDeposite,
+    toggleCreateDepositeModal,
+    toggleEditDepositeModal,
+    type IBankDeposite,
+} from "../../redux/features/bankDeposite/bankDepositeSlice";
 import { useAppSelector } from "../../redux/hook";
+import { formatDateToLongDate } from "../../utils/timeFormatHandler";
 import CreateBankDepositoryModal from "./CreateBankDepositoryModal";
+import EditBankDepositoryModal from "./EditBankDepositeModel";
 
 const BankDeposites = () => {
     const [searchValue, setSearchValue] = useState("");
     const [showclose, setShowClose] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<IBankDeposite | null>(
+        null
+    );
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
     const dispatch = useDispatch();
-    const { openCreateModal } = useAppSelector((state) => state.bankDeposite);
+    const { bankDeposites, openCreateModal, openEditModal } = useAppSelector(
+        (state) => state.bankDeposite
+    );
+    // console.log(bankDeposites);
 
     useEffect(() => {
         if (searchValue) {
@@ -21,6 +35,13 @@ const BankDeposites = () => {
             setShowClose(false);
         }
     }, [setShowClose, searchValue]);
+
+    const handleEdit = (item: IBankDeposite, index: number) => {
+        setSelectedItem(item);
+        setSelectedIndex(index);
+        dispatch(toggleEditDepositeModal());
+    };
+
     return (
         <div className="bg-white p-4 rounded-lg">
             <h1 className="font-medium text-lg mb-4">Bank Deposite</h1>
@@ -73,31 +94,71 @@ const BankDeposites = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="border-b border-gray-300 hover:bg-gray-50 text-sm">
-                            <td className="p-3">1</td>
-                            <td className="p-3">ALGHJBLIJDLKJGLKJ</td>
-                            <td className="p-3">South East Bank ltd</td>
-                            <td className="p-3">5130480069522861</td>
-                            <td className="p-3">10000</td>
-                            <td className="p-3">Personal use</td>
-                            <td className="p-3">20/6/25</td>
-                            <td className="flex items-center gap-1 p-3">
-                                <button className="flex gap-0.5 items-center py-1.5 px-3 bg-blue-500 text-white rounded-sm text-xs cursor-pointer shrink-0">
-                                    <MdOutlineModeEdit className="" />{" "}
-                                    <span>Edit</span>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="bg-red-400 text-white p-1.5 rounded-sm cursor-pointer shrink-0"
+                        {bankDeposites.length > 0 ? (
+                            bankDeposites.map((item, index) => (
+                                <tr
+                                    key={index}
+                                    className="border-b border-gray-300 hover:bg-gray-50 text-sm"
                                 >
-                                    <FiTrash className="text-md" />
-                                </button>
-                            </td>
-                        </tr>
+                                    <td className="p-3">{index + 1}</td>
+                                    <td className="p-3">
+                                        {item.transectionId}
+                                    </td>
+                                    <td className="p-3">{item.bankName}</td>
+                                    <td className="p-3">
+                                        {item.accountNumber}
+                                    </td>
+                                    <td className="p-3">{item.amount}</td>
+                                    <td className="p-3">
+                                        {item.reason ? item.reason : "N/A"}
+                                    </td>
+                                    <td className="p-3">
+                                        {formatDateToLongDate(item.date)}
+                                    </td>
+                                    <td className="flex items-center gap-1 p-3">
+                                        <button
+                                            onClick={() =>
+                                                handleEdit(item, index)
+                                            }
+                                            className="flex gap-0.5 items-center py-1.5 px-3 bg-blue-500 text-white rounded-sm text-xs cursor-pointer shrink-0"
+                                        >
+                                            <MdOutlineModeEdit className="" />{" "}
+                                            <span>Edit</span>
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                dispatch(
+                                                    deleteBankDeposite(index)
+                                                )
+                                            }
+                                            type="button"
+                                            className="bg-red-400 text-white p-1.5 rounded-sm cursor-pointer shrink-0"
+                                        >
+                                            <FiTrash className="text-md" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr className="text-sm">
+                                <td
+                                    colSpan={8}
+                                    className="p-3 text-center text-gray-500"
+                                >
+                                    No categories found
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
             {openCreateModal && <CreateBankDepositoryModal />}
+            {openEditModal && (
+                <EditBankDepositoryModal
+                    selectedItem={selectedItem}
+                    selectedIndex={selectedIndex}
+                />
+            )}
         </div>
     );
 };
