@@ -26,7 +26,6 @@ type employeeForm = z.infer<typeof employeeSchema>;
 const EditEmployeePage = () => {
     const [updateEmployee, { isLoading }] = useUpdateEmployeeMutation();
     const { state } = useLocation();
-    console.log(state);
     const navigate = useNavigate();
 
     // Assuming employees is an object with employee details
@@ -47,7 +46,7 @@ const EditEmployeePage = () => {
         defaultValues: employees,
     });
 
-    const onSubmit = async(data: employeeForm) => {
+    const onSubmit = async (data: employeeForm) => {
         try {
             await updateEmployee({ id: state?.id, ...data }).unwrap();
             toast.success("Employee updated successfully");

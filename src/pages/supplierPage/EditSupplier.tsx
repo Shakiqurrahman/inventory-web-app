@@ -1,11 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router";
+import toast from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router";
 import { z } from "zod";
-import { updateSupplierData } from "../../redux/features/suppliers/supplierSlice";
-import type { RootState } from "../../redux/store";
+import { useUpdateSupplierMutation } from "../../redux/features/suppliers/supplierApi";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const supplierSchema = z.object({
     companyName: z.string().min(1, "Company Name must be required"),
@@ -28,10 +27,7 @@ const supplierSchema = z.object({
 type supplierForm = z.infer<typeof supplierSchema>;
 
 const EditSupplier = () => {
-    const { phone } = useParams();
-    const supplier = useSelector((state: RootState) =>
-        state.supplier.data.find((s) => s.phone === phone)
-    );
+    const { state } = useLocation();
 
     const {
         register,
@@ -39,25 +35,31 @@ const EditSupplier = () => {
         formState: { errors },
     } = useForm<supplierForm>({
         resolver: zodResolver(supplierSchema),
-        defaultValues: supplier,
+        defaultValues: {
+            ...state,
+            comments: state?.comments ?? "",
+            internalNotes: state?.internalNotes ?? "",
+            address2: state?.address2 ?? "",
+        },
     });
-    const dispatch = useDispatch();
+
+    const [updateSupplier, { isLoading }] = useUpdateSupplierMutation();
+
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     if (supplier) {
-    //         reset(supplier);
-    //     }
-    // }, [supplier, reset]);
-
-    const onSubmit = (data: supplierForm) => {
+    const onSubmit = async (data: supplierForm) => {
         console.log(data);
-        dispatch(updateSupplierData(data));
-        navigate("/suppliers");
+        try {
+            await updateSupplier({
+                payload: data,
+                id: state.id,
+            }).unwrap();
+            toast.success("Updated Successfully");
+            navigate("/suppliers");
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        }
     };
-
-    const commentsRef = useRef<HTMLTextAreaElement>(null);
-    const internalNotesRef = useRef<HTMLTextAreaElement>(null);
 
     const handleInput = (event: React.FormEvent<HTMLTextAreaElement>) => {
         const textarea = event.currentTarget;
@@ -175,7 +177,6 @@ const EditSupplier = () => {
                     </label>
                     <textarea
                         {...register("comments")}
-                        ref={commentsRef}
                         onInput={handleInput}
                         name="comments"
                         id="comments"
@@ -189,7 +190,6 @@ const EditSupplier = () => {
                     </label>
                     <textarea
                         {...register("internalNotes")}
-                        ref={internalNotesRef}
                         onInput={handleInput}
                         name="internalNotes"
                         id="internalNotes"
@@ -219,7 +219,7 @@ const EditSupplier = () => {
                         type="submit"
                         className="cursor-pointer ml-auto bg-blue-500 text-white py-2 px-4 rounded-md"
                     >
-                        Save
+                        {isLoading ? "Saving..." : "Save"}
                     </button>
                 </div>
             </form>

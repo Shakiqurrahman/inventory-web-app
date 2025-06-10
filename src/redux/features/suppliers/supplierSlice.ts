@@ -6,6 +6,19 @@ interface supplierState {
     data: SupplierForm[];
 }
 
+export type ISupplier = {
+    id: string;
+    companyName: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    address1: string;
+    address2?: string;
+    comments?: string;
+    internalNotes?: string;
+    account: string;
+};
+
 const initialState: supplierState = {
     data: [],
 };

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router";
+import DropdownMenuList from "../../components/DropdownMenulist";
 
 const SaleHistoryPage = () => {
     const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
@@ -14,6 +15,8 @@ const SaleHistoryPage = () => {
             itemName: "Item A",
             itemBrand: "Brand X",
             itemCategory: "Category Y",
+            status: true,
+            barcode: 4216,
         },
         // Add more sample data as needed
         {
@@ -24,6 +27,8 @@ const SaleHistoryPage = () => {
             itemName: "Item B",
             itemBrand: "Brand Y",
             itemCategory: "Category Z",
+            status: true,
+            barcode: 4217,
         },
         {
             id: 3,
@@ -33,6 +38,8 @@ const SaleHistoryPage = () => {
             itemName: "Item C",
             itemBrand: "Brand Z",
             itemCategory: "Category X",
+            status: false,
+            barcode: 4218,
         },
         {
             id: 4,
@@ -42,6 +49,8 @@ const SaleHistoryPage = () => {
             itemName: "Item D",
             itemBrand: "Brand A",
             itemCategory: "Category B",
+            status: false,
+            barcode: 42169,
         },
         {
             id: 5,
@@ -51,8 +60,13 @@ const SaleHistoryPage = () => {
             itemName: "Item E",
             itemBrand: "Brand B",
             itemCategory: "Category C",
+            status: true,
+            barcode: 4220,
         },
     ];
+
+    const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
+
     return (
         <div>
             <div className="bg-white rounded-md p-2 sm:p-4 sm:px-6">
@@ -72,21 +86,22 @@ const SaleHistoryPage = () => {
                         <thead>
                             <tr className="bg-gray-200 text-left *:font-semibold text-sm">
                                 <th className="p-3">ID</th>
-                                <th className="py-3">Total Price</th>
+                                <th className="p-3">BarCode</th>
                                 <th className="p-3">Payment Method</th>
                                 <th className="p-3">Customer Name</th>
                                 <th className="p-3">Item Name</th>
                                 <th className="p-3">Item Brand</th>
-                                <th className="p-3">Item Category</th>
+                                <th className="py-3">Total Price</th>
+                                <th className="p-3">Status</th>
                                 <th className="p-3">Action</th>
                             </tr>
                         </thead>
                         <tbody className="text-sm">
-                            {data ? (
+                            {data.length > 0 ? (
                                 data.map((sale, index) => (
                                     <tr key={index}>
                                         <td className="p-3">{index + 1}</td>
-                                        <td>{sale.totalPrice}</td>
+                                        <td className="p-3">{sale.barcode}</td>
                                         <td className="p-3">
                                             {sale.paymentMethod}
                                         </td>
@@ -98,17 +113,36 @@ const SaleHistoryPage = () => {
                                             {sale.itemBrand}
                                         </td>
                                         <td className="p-3">
-                                            {sale.itemCategory}
+                                            {sale.totalPrice}
                                         </td>
+                                        <td className="p-3">
+                                            <div
+                                                className={`${
+                                                    sale.status
+                                                        ? "bg-green-100 text-green-500"
+                                                        : "bg-red-100 text-red-500"
+                                                } capitalize text-center text-xs p-1.5 w-[50px] rounded-md`}
+                                            >
+                                                {sale.status ? "paid" : "due"}
+                                            </div>
+                                        </td>
+
                                         <td className="p-3 text-gray-500">
-                                            <div className="flex items-center  border border-gray-300 rounded-sm w-fit">
+                                            <div className="flex items-center border border-gray-300 rounded-sm w-fit">
                                                 <Link
                                                     className="bg-gray-100 p-1 px-2 border-r border-gray-300 hover:bg-gray-200"
                                                     to={"/edit"}
                                                 >
                                                     Edit
                                                 </Link>
-                                                <div className="relative">
+
+                                                <div
+                                                    ref={(el) => {
+                                                        buttonRefs.current[
+                                                            index
+                                                        ] = el;
+                                                    }}
+                                                >
                                                     <button
                                                         className="p-1.5 rounded-sm cursor-pointer shrink-0"
                                                         onClick={() =>
@@ -124,44 +158,39 @@ const SaleHistoryPage = () => {
                                                     >
                                                         <BsThreeDots />
                                                     </button>
-
-                                                    {openMenuIndex ===
-                                                        index && (
-                                                        <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-200 rounded shadow z-10">
-                                                            <button
-                                                                className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                                                                onClick={() =>
-                                                                    setOpenMenuIndex(
-                                                                        null
-                                                                    )
-                                                                }
-                                                            >
-                                                                Print Invoice
-                                                            </button>
-                                                            <button
-                                                                className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                                                                onClick={() =>
-                                                                    setOpenMenuIndex(
-                                                                        null
-                                                                    )
-                                                                }
-                                                            >
-                                                                Return
-                                                            </button>
-                                                        </div>
-                                                    )}
                                                 </div>
+
+                                                <DropdownMenuList
+                                                    anchorEl={
+                                                        buttonRefs.current[
+                                                            index
+                                                        ]
+                                                    }
+                                                    open={
+                                                        openMenuIndex === index
+                                                    }
+                                                >
+                                                    <div className="p-2">
+                                                        Option 1
+                                                    </div>
+                                                    <div className="p-2">
+                                                        Option 2
+                                                    </div>
+                                                    <div className="p-2">
+                                                        Option 3
+                                                    </div>
+                                                </DropdownMenuList>
                                             </div>
                                         </td>
                                     </tr>
                                 ))
                             ) : (
-                                <tr className="border-b border-gray-300 text-sm">
+                                <tr>
                                     <td
-                                        colSpan={6}
-                                        className="p-3 text-center text-gray-500"
+                                        colSpan={9}
+                                        className="text-center py-3 text-gray-500"
                                     >
-                                        No Suppliers found
+                                        No sales history found.
                                     </td>
                                 </tr>
                             )}

@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { setSupplierData } from "../../redux/features/suppliers/supplierSlice";
+import { useCreateSupplierMutation } from "../../redux/features/suppliers/supplierApi";
 
 const supplierSchema = z.object({
     companyName: z.string().min(1, "Company Name must be required"),
@@ -12,7 +12,7 @@ const supplierSchema = z.object({
     phone: z
         .string()
         .min(1, "Phone Number must be required")
-    .regex(/^\d+$/, "Phone number must contain only digits"),
+        .regex(/^\d+$/, "Phone number must contain only digits"),
     email: z
         .string()
         .min(1, "Email must be Required")
@@ -34,13 +34,24 @@ const NewSuplier = () => {
     } = useForm<supplierForm>({
         resolver: zodResolver(supplierSchema),
     });
-    const dispatch = useDispatch();
+
     const navigate = useNavigate();
 
-    const onSubmit = (data: supplierForm) => {
+    const [createSupplier, { isLoading }] = useCreateSupplierMutation();
+
+    const onSubmit = async (data: supplierForm) => {
         console.log(data);
-        dispatch(setSupplierData(data));
-        navigate("/suppliers");
+        try {
+            const res = await createSupplier(data);
+
+            if (res.data?.success) {
+                toast.success(res.data.message);
+            }
+            navigate("/suppliers");
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            toast.error(err.message);
+        }
     };
 
     const commentsRef = useRef<HTMLTextAreaElement>(null);
@@ -204,7 +215,7 @@ const NewSuplier = () => {
                         type="submit"
                         className="cursor-pointer ml-auto bg-blue-500 text-white py-2 px-4 rounded-md"
                     >
-                        Save
+                        {isLoading ? "Saving..." : "Save"}
                     </button>
                 </div>
             </form>

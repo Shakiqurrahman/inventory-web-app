@@ -14,6 +14,7 @@ import EditExpensePage from "../pages/expenses/EditExpensePage";
 import AllItemsPage from "../pages/items/AllItemsPage";
 import CreateItemPage from "../pages/items/CreateItemPage";
 import LoginPage from "../pages/LoginPage";
+
 import RecivingsPage from "../pages/receivings/RecivingsPage";
 import ChangePassword from "../pages/resetPassword/ChangePassword";
 import NewPassword from "../pages/resetPassword/NewPassword";
@@ -66,7 +67,7 @@ const routes: RouteObject[] = [
                 element: <NewSuplier />,
             },
             {
-                path: "/suppliers/edit-supplier/:phone",
+                path: "/suppliers/edit-supplier/",
                 element: <EditSupplier />,
             },
             {

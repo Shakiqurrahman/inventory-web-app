@@ -1,12 +1,18 @@
+import { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
 import { TfiPlus } from "react-icons/tfi";
+import InlineEditor from "./InlineEditor";
 
 const RecivingsPage = () => {
+    const [discount, setDiscount] = useState<string>("0");
+    const [quantity, setQuantity] = useState<string>("0");
+    const [cost, setCost] = useState<string>("0");
+
     return (
         <div className="">
-            <div className="flex gap-2 w-full ">
-                <div className="w-4/6">
+            <div className="lg:flex-row flex-col flex gap-6 lg:gap-2 w-full ">
+                <div className="w-full lg:w-3/5">
                     <div className="p-4 bg-white rounded-md">
                         <div className="flex items-center gap-2 border border-gray-300 rounded-md">
                             <div className="bg-primary p-3 rounded-md">
@@ -19,7 +25,7 @@ const RecivingsPage = () => {
                             />
                         </div>
                     </div>
-                    <div className="mt-3 overflow-x-auto text-nowrap bg-white rounded-md">
+                    <div className="mt-3 overflow-x-auto text-nowrap bg-white rounded-md py-5">
                         <table className="w-full border-collapse rounded-md text-gray-700">
                             <thead>
                                 <tr className=" text-left *:font-semibold text-sm border-b border-gray-300">
@@ -71,9 +77,31 @@ const RecivingsPage = () => {
                                             </li>
                                         </ul>
                                     </td>
-                                    <td className="p-3">12000</td>
-                                    <td className="p-3">0.5</td>
-                                    <td className="p-3">0%</td>
+                                    <td className="p-3">
+                                        <InlineEditor
+                                            label="cost"
+                                            value={cost}
+                                            onChange={(val) => setCost(val)}
+                                            inputType="number"
+                                        />
+                                    </td>
+                                    <td className="p-3">
+                                        <InlineEditor
+                                            label="Quantity"
+                                            value={quantity}
+                                            onChange={(val) => setQuantity(val)}
+                                            inputType="number"
+                                        />
+                                    </td>
+                                    <td className="p-3">
+                                        <InlineEditor
+                                            label="Discount %"
+                                            value={discount}
+                                            onChange={(val) => setDiscount(val)}
+                                            inputType="number"
+                                            suffix="%"
+                                        />
+                                    </td>
                                     <td className="p-3">200</td>
                                 </tr>
                                 <tr className="border-b border-gray-300 last:border-none hover:bg-gray-50 text-sm align-top">
@@ -115,16 +143,38 @@ const RecivingsPage = () => {
                                             </li>
                                         </ul>
                                     </td>
-                                    <td className="p-3">12000</td>
-                                    <td className="p-3">0.5</td>
-                                    <td className="p-3">0%</td>
+                                    <td className="p-3">
+                                        <InlineEditor
+                                            label="cost"
+                                            value={cost}
+                                            onChange={(val) => setCost(val)}
+                                            inputType="number"
+                                        />
+                                    </td>
+                                    <td className="p-3">
+                                        <InlineEditor
+                                            label="Quantity"
+                                            value={quantity}
+                                            onChange={(val) => setQuantity(val)}
+                                            inputType="number"
+                                        />
+                                    </td>
+                                    <td className="p-3">
+                                        <InlineEditor
+                                            label="Discount %"
+                                            value={discount}
+                                            onChange={(val) => setDiscount(val)}
+                                            inputType="number"
+                                            suffix="%"
+                                        />
+                                    </td>
                                     <td className="p-3">200</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div className="w-2/6 rounded-md">
+                <div className="w-full lg:w-2/5 rounded-md">
                     <div className="bg-white p-4 rounded-md">
                         <div>
                             <div className="border border-gray-300 flex rounded-md">

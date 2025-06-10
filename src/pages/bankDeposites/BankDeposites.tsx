@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiPlus, FiSearch, FiTrash } from "react-icons/fi";
 import { MdOutlineModeEdit } from "react-icons/md";
+import { PiHandWithdrawFill } from "react-icons/pi";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch } from "react-redux";
 import {
@@ -44,7 +45,12 @@ const BankDeposites = () => {
 
     return (
         <div className="bg-white p-4 rounded-lg">
-            <h1 className="font-medium text-lg mb-4">Bank Deposite</h1>
+            <div className="flex justify-between py-4">
+                <h1 className="font-medium text-lg mb-4">Bank Deposite</h1>
+                <h1 className="font-medium text-lg mb-4">
+                    Balance: <span>20,000</span>
+                </h1>
+            </div>
             <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
                 <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-1">
                     <FiSearch className="text-lg shrink-0 text-gray-500" />
@@ -70,13 +76,22 @@ const BankDeposites = () => {
                         Search
                     </button>
                 </div>
-                <button
-                    onClick={() => dispatch(toggleCreateDepositeModal())}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center text-xs gap-1 cursor-pointer hover:bg-blue-600 duration-200"
-                >
-                    <FiPlus className="text-lg" />
-                    New Deposite
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => dispatch(toggleCreateDepositeModal())}
+                        className="bg-gray-300 text-gray-600 px-4 py-2 rounded-lg flex items-center text-xs gap-1 cursor-pointer border border-gray-300 hover:border-gray-400 duration-200"
+                    >
+                        <PiHandWithdrawFill className="text-lg" />
+                        Withdraw
+                    </button>
+                    <button
+                        onClick={() => dispatch(toggleCreateDepositeModal())}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center text-xs gap-1 cursor-pointer hover:bg-blue-600 duration-200"
+                    >
+                        <FiPlus className="text-lg" />
+                        New Deposite
+                    </button>
+                </div>
             </div>
 
             <div className="mt-10 overflow-x-auto text-nowrap">
@@ -115,6 +130,7 @@ const BankDeposites = () => {
                                     <td className="p-3">
                                         {formatDateToLongDate(item.date)}
                                     </td>
+
                                     <td className="flex items-center gap-1 p-3">
                                         <button
                                             onClick={() =>
