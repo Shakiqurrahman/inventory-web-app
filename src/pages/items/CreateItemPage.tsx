@@ -44,6 +44,7 @@ const CreateItemPage = () => {
     if (!form.isVariantChecked) {
       finalData = {
         ...finalData,
+        stock: parseInt(stock),
         sellPrice: parseFloat(sellPrice) || 0,
         costPrice: parseFloat(costPrice) || 0,
         discountPercentage: parseFloat(discountPercentage) || 0,

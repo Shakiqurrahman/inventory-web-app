@@ -20,7 +20,7 @@ const Pagination = ({
       <button
         onClick={() => handlePageClick(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-5 py-1.5 bg-blue-500/15 text-blue-500 font-semibold dark:bg-white/30 dark:text-white  rounded disabled:opacity-50 text-sm"
+        className="px-5 py-1.5 bg-blue-500/15 text-blue-500 font-semibold dark:bg-white/30 dark:text-white  rounded disabled:opacity-50 text-sm cursor-pointer disabled:cursor-default"
       >
         Prev
       </button>
@@ -32,7 +32,7 @@ const Pagination = ({
       <button
         onClick={() => handlePageClick(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-5 py-1.5 bg-blue-500/15 text-blue-500 font-semibold  rounded disabled:opacity-50 text-sm"
+        className="px-5 py-1.5 bg-blue-500/15 text-blue-500 font-semibold  rounded disabled:opacity-50 text-sm cursor-pointer disabled:cursor-default"
       >
         Next
       </button>
