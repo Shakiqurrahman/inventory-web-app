@@ -1,36 +1,119 @@
-import { Fragment, useState, type ChangeEvent } from "react";
+import { Fragment, useEffect, useState, type ChangeEvent } from "react";
+import toast from "react-hot-toast";
 import { BsFillTelephonePlusFill } from "react-icons/bs";
 import { FaMinus, FaPlus, FaUserPlus } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { IoIosCloseCircle } from "react-icons/io";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { Link } from "react-router";
+import {
+  useGetVariantByIdOrBarCodeQuery,
+  useGetVariantSuggestionsQuery,
+} from "../../redux/features/sales/salesApi";
+import type {
+  IProductSuggestions,
+  IProductVariant,
+} from "../../types/products";
 
 const SalesPage = () => {
   const [hideDetails, setHideDetails] = useState(false);
   const [searchItemValue, setSearchItemValue] = useState("");
   const [selectedPaymentType, setSelectedPaymentType] = useState("Cash");
+  const [selectedItems, setSelectedItems] = useState<IProductVariant[]>([]);
+  const [variantId, setVarantId] = useState("");
+
+  const {
+    data: suggestions,
+    isLoading: isSuggestionsLoading,
+    isFetching: isSuggestionsFetching,
+  } = useGetVariantSuggestionsQuery(
+    {
+      search: searchItemValue,
+    },
+    { skip: searchItemValue.length < 3 }
+  );
+
+  const { data: item } = useGetVariantByIdOrBarCodeQuery(variantId, {
+    skip: !variantId,
+  });
+
+  useEffect(() => {
+    if (item) {
+      setSelectedItems((prev) => [...prev, item]);
+      setSearchItemValue("");
+      setVarantId("");
+    }
+  }, [item]);
 
   const handleChangeSearchItem = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchItemValue(e.target.value);
   };
+
+  const handleSubmitSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!/^\d{13}$/.test(searchItemValue)) {
+      toast.error("Please enter a valid barcode");
+      return false;
+    } else {
+      setVarantId(searchItemValue);
+      setSearchItemValue("");
+    }
+  };
+
+  const handleSuggestionClick = (id: string) => {
+    setVarantId(id);
+    setSearchItemValue("");
+  };
+
   return (
     <div className="flex flex-wrap lg:flex-nowrap items-start gap-4">
       <div className="w-full">
-        <div className="bg-white p-5 flex">
+        <div className="bg-white p-5 flex relative">
           <Link
             to={"/items/new-item"}
             className="shrink-0 p-3 bg-primary hover:bg-secondary text-white"
           >
             <FiEdit className="text-xl" />
           </Link>
-          <input
-            type="text"
-            value={searchItemValue}
-            onChange={handleChangeSearchItem}
-            placeholder="Enter item name or scan barcode"
-            className="w-full p-3 outline-none text-sm border border-gray-200 block"
-          />
+          <form onSubmit={handleSubmitSearch} className="w-full">
+            <input
+              type="text"
+              value={searchItemValue}
+              onChange={handleChangeSearchItem}
+              placeholder="Enter item name or scan barcode"
+              className="w-full p-3 outline-none text-sm border border-gray-200 block"
+              autoFocus
+            />
+          </form>
+          <div className="bg-white absolute top-full  left-0 w-full z-10 ">
+            {searchItemValue.length >= 3 &&
+              !isSuggestionsLoading &&
+              !isSuggestionsFetching &&
+              suggestions?.length > 0 && (
+                <ul className="border border-gray-200 max-h-[300px] overflow-y-auto">
+                  {suggestions.map((item: IProductSuggestions) => (
+                    <li
+                      key={item.id}
+                      onClick={() => handleSuggestionClick(item.id)}
+                      className="p-3 hover:bg-gray-50 cursor-pointer text-sm grid grid-cols-2 place-items-center gap-2"
+                    >
+                      <div className="space-y-2">
+                        <p>
+                          {item.name} - {item.sellPrice}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Bar Code : {item.barcode}
+                        </p>
+                      </div>
+                      <div className="space-y-2">
+                        <p>Stock : {item.stock}</p>
+                        <p>Sell Price : {item.sellPrice}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+          </div>
         </div>
         <div className="bg-white pt-2 pb-10 mt-4 paper-cut relative">
           <div className="overflow-x-auto">
@@ -54,8 +137,8 @@ const SalesPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {[1, 2].map((_, i) => (
-                  <Fragment key={i}>
+                {selectedItems?.map((item) => (
+                  <Fragment key={item.id}>
                     <tr
                       className={`${
                         !hideDetails ? "" : "border-b border-gray-200"
@@ -69,7 +152,7 @@ const SalesPage = () => {
                           <IoIosCloseCircle className="text-xl" />
                         </button>
                       </td>
-                      <td className="p-3 text-left">index + 1</td>
+                      <td className="p-3 text-left">{item.name}</td>
                       <td className="p-3 flex items-center justify-center">
                         <TbCurrencyTaka />
                         10
@@ -85,11 +168,11 @@ const SalesPage = () => {
                           <ul className="text-[13px]">
                             <li className="flex items-center justify-between gap-2">
                               <span>Category</span>
-                              <span>Shoe</span>
+                              <span>{item.product.category?.name}</span>
                             </li>
                             <li className="flex items-center justify-between gap-2">
                               <span>Brand</span>
-                              <span>Fit & Found</span>
+                              <span>{item.product.brand}</span>
                             </li>
                             <li className="flex items-center justify-between gap-2">
                               <span>Stock</span>
@@ -97,7 +180,11 @@ const SalesPage = () => {
                             </li>
                             <li className="flex items-center justify-between gap-2">
                               <span>Variant</span>
-                              <span>Size:XL</span>
+                              <span>
+                                {Object.entries(item.attributes)
+                                  .map(([key, value]) => `${key} - ${value}`)
+                                  .join(", ")}
+                              </span>
                             </li>
                           </ul>
                         </td>
