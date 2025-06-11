@@ -20,6 +20,7 @@ import customerReducar from "./features/customers/customersSlice";
 import employeeReducer from "./features/employees/employeeSlice";
 import expenseReducer from "./features/expenses/expenseSlice";
 import itemFormReducer from "./features/items/itemFormSlice";
+import salesFormReducer from "./features/sales/salesFormSlice";
 import supplierReducer from "./features/suppliers/supplierSlice";
 import themeReducer from "./features/theme/themeSlice";
 
@@ -47,6 +48,7 @@ export const store = configureStore({
     expenses: expenseReducer,
     bankDeposite: bankDepositeSlice,
     itemForm: itemFormReducer,
+    salesForm: salesFormReducer,
   },
 
   middleware: (getDefaultMiddlewares) =>

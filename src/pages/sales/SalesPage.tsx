@@ -5,21 +5,24 @@ import { FaMinus, FaPlus, FaUserPlus } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { IoIosCloseCircle } from "react-icons/io";
 import { TbCurrencyTaka } from "react-icons/tb";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import {
   useGetVariantByIdOrBarCodeQuery,
   useGetVariantSuggestionsQuery,
 } from "../../redux/features/sales/salesApi";
-import type {
-  IProductSuggestions,
-  IProductVariant,
-} from "../../types/products";
+import { addSelectedItems } from "../../redux/features/sales/salesFormSlice";
+import type { RootState } from "../../redux/store";
+import type { IProductSuggestions } from "../../types/products";
 
 const SalesPage = () => {
+  const dispatch = useDispatch();
+
+  const { salesForm } = useSelector((state: RootState) => state.salesForm);
+
   const [hideDetails, setHideDetails] = useState(false);
   const [searchItemValue, setSearchItemValue] = useState("");
   const [selectedPaymentType, setSelectedPaymentType] = useState("Cash");
-  const [selectedItems, setSelectedItems] = useState<IProductVariant[]>([]);
   const [variantId, setVarantId] = useState("");
 
   const {
@@ -39,11 +42,12 @@ const SalesPage = () => {
 
   useEffect(() => {
     if (item) {
-      setSelectedItems((prev) => [...prev, item]);
+      // setSelectedItems((prev) => [...prev, item]);
+      dispatch(addSelectedItems(item));
       setSearchItemValue("");
       setVarantId("");
     }
-  }, [item]);
+  }, [item, dispatch]);
 
   const handleChangeSearchItem = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchItemValue(e.target.value);
@@ -137,7 +141,7 @@ const SalesPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {selectedItems?.map((item) => (
+                {salesForm.selectedItems?.map((item) => (
                   <Fragment key={item.id}>
                     <tr
                       className={`${
@@ -222,9 +226,34 @@ const SalesPage = () => {
               <option value="Shakiqur">Shakiqur</option>
               <option value="Mahdi">Mahdi</option>
             </select>
+            <div className="flex mt-5 relative">
+              <button
+                type="button"
+                className="shrink-0 bg-primary w-[40px] py-2 text-white flex items-center justify-center cursor-pointer"
+              >
+                <FaPlus />
+              </button>
+              <input
+                type="text"
+                placeholder="Type customer name"
+                className="p-2 border border-gray-200 text-sm outline-none block w-full"
+              />
+              {/* <ul className="absolute max-h-[400px] overflow-y-auto z-[999] top-full shadow left-0 w-full bg-white *:p-3 *:border-b *:border-gray-200 *:hover:bg-gray-100 *:last:border-none *:select-none *:cursor-pointer *:text-sm">
+                <li>
+                  <h1 className="text-gray-700">Shakil Ahmed</h1>
+                  <p className="text-gray-500">01706202696</p>
+                </li>
+              </ul> */}
+            </div>
             <div className="p-3 border border-gray-200 mt-5">
-              <label htmlFor="employee" className="block mb-3">
+              <label
+                htmlFor="employee"
+                className="flex items-center justify-between mb-3"
+              >
                 Customer Details
+                <button type="button" className="cursor-pointer text-gray-500">
+                  <FaMinus />
+                </button>
               </label>
               <div className="flex mb-2">
                 <div className="shrink-0 bg-primary w-[40px] py-2 text-white flex items-center justify-center">
@@ -393,26 +422,13 @@ const SalesPage = () => {
               </button>
             </div>
           </div>
-          <div className="p-3">
-            <textarea
-              name="comments"
-              className="border border-gray-200 p-2.5 placeholder:text-xs text-sm outline-none resize-none block w-full"
-              placeholder="Comments"
-            ></textarea>
-            <div className="flex items-center gap-2 select-none mt-3">
-              <input
-                type="checkbox"
-                name="showComment"
-                id="showComment"
-                className="scale-130"
-              />
-              <label
-                htmlFor="showComment"
-                className="text-gray-500 text-xs w-full cursor-pointer"
-              >
-                Show comments on receipt
-              </label>
-            </div>
+          <div className="text-right mt-5 p-3">
+            <button
+              type="button"
+              className="bg-blue-500 px-4 py-2.5 cursor-pointer text-white text-sm hover:bg-blue-600"
+            >
+              Complete Sale
+            </button>
           </div>
         </div>
       </div>
