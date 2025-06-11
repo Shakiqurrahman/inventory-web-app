@@ -9,7 +9,7 @@ interface SupplierDetailsModalProps {
     title: string;
 }
 
-const SaleHistoryDetails: React.FC<SupplierDetailsModalProps> = ({
+const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
     saleHistoryDetails,
     setShowModal,
     title,
@@ -123,4 +123,4 @@ const SaleHistoryDetails: React.FC<SupplierDetailsModalProps> = ({
     );
 };
 
-export default SaleHistoryDetails;
+export default RecivingHistoydetails;

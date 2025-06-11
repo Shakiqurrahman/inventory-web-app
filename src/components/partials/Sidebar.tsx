@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { BsToggles } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
-import { MdOutlinePowerSettingsNew } from "react-icons/md";
+import { MdCallReceived, MdOutlinePowerSettingsNew } from "react-icons/md";
 import { RiBankFill } from "react-icons/ri";
 import { TbHistory } from "react-icons/tb";
 import {
@@ -275,6 +275,21 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 >
                                     <TbHistory className="text-lg" />
                                     Sales History
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    to={`/receiving-history`}
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                            isActive
+                                                ? "border-primary"
+                                                : "hover:border-primary border-transparent"
+                                        } text-sm`
+                                    }
+                                >
+                                    <MdCallReceived className="text-lg" />
+                                    Receiving History
                                 </NavLink>
                             </li>
                             <li>
