@@ -17,6 +17,8 @@ const SaleHistoryPage = () => {
             itemCategory: "Category Y",
             status: true,
             barcode: 4216,
+            dueAmount: 0,
+            paidAmount: 0,
         },
         // Add more sample data as needed
         {
@@ -29,6 +31,8 @@ const SaleHistoryPage = () => {
             itemCategory: "Category Z",
             status: true,
             barcode: 4217,
+            dueAmount: 0,
+            paidAmount: 0,
         },
         {
             id: 3,
@@ -40,6 +44,8 @@ const SaleHistoryPage = () => {
             itemCategory: "Category X",
             status: false,
             barcode: 4218,
+            dueAmount: 0,
+            paidAmount: 0,
         },
         {
             id: 4,
@@ -51,6 +57,8 @@ const SaleHistoryPage = () => {
             itemCategory: "Category B",
             status: false,
             barcode: 42169,
+            dueAmount: 0,
+            paidAmount: 0,
         },
         {
             id: 5,
@@ -62,6 +70,8 @@ const SaleHistoryPage = () => {
             itemCategory: "Category C",
             status: true,
             barcode: 4220,
+            dueAmount: 0,
+            paidAmount: 0,
         },
     ];
 
@@ -72,13 +82,33 @@ const SaleHistoryPage = () => {
             <div className="bg-white rounded-md p-2 sm:p-4 sm:px-6">
                 <h1 className="font-medium text-lg mb-4">Sale History</h1>
 
-                <div className="border border-gray-300 w-[300px] flex gap-2 items-center p-2 rounded-sm">
-                    <IoSearch className="text-xl text-gray-500" />
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        className="outline-0 text-sm rounded-sm w-full"
-                    />
+                <div className="flex flex-wrap lg:flex-nowrap gap-2">
+                    <div className="border border-gray-300 w-[300px] flex gap-2 items-center p-2 rounded-sm">
+                        <IoSearch className="text-xl text-gray-500" />
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            className="outline-0 text-sm rounded-sm w-full"
+                        />
+                    </div>
+                    <select
+                        className="border border-gray-300 text-sm p-2 rounded-sm outline-0 bg-gray-100"
+                        defaultValue="all_time"
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            console.log("Filter by:", value);
+                            // handle filter logic here
+                        }}
+                    >
+                        <option value="today">Today</option>
+                        <option value="7_days">7 Days</option>
+                        <option value="this_month">This Month</option>
+                        <option value="last_month">Last Month</option>
+                        <option value="6_month">6 Month</option>
+                        <option value="this_year">This Year</option>
+                        <option value="last_year">Last Year</option>
+                        <option value="all_time">All Time</option>
+                    </select>
                 </div>
 
                 <div className="mt-10 overflow-x-auto text-nowrap">
@@ -90,7 +120,8 @@ const SaleHistoryPage = () => {
                                 <th className="p-3">Payment Method</th>
                                 <th className="p-3">Customer Name</th>
                                 <th className="p-3">Item Name</th>
-                                <th className="p-3">Item Brand</th>
+                                <th className="p-3">Due Amount</th>
+                                <th className="p-3">Paid Amount</th>
                                 <th className="py-3">Total Price</th>
                                 <th className="p-3">Status</th>
                                 <th className="p-3">Action</th>
@@ -99,7 +130,10 @@ const SaleHistoryPage = () => {
                         <tbody className="text-sm">
                             {data.length > 0 ? (
                                 data.map((sale, index) => (
-                                    <tr key={index}>
+                                    <tr
+                                        key={index}
+                                        className="hover:bg-gray-100"
+                                    >
                                         <td className="p-3">{index + 1}</td>
                                         <td className="p-3">{sale.barcode}</td>
                                         <td className="p-3">
@@ -110,7 +144,10 @@ const SaleHistoryPage = () => {
                                         </td>
                                         <td className="p-3">{sale.itemName}</td>
                                         <td className="p-3">
-                                            {sale.itemBrand}
+                                            {sale.dueAmount}
+                                        </td>
+                                        <td className="p-3">
+                                            {sale.paidAmount}
                                         </td>
                                         <td className="p-3">
                                             {sale.totalPrice}

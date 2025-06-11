@@ -53,9 +53,9 @@ const CreateBankDepositoryModal = () => {
     };
 
     return (
-        <div className="fixed top-0 left-0 w-full h-screen bg-black/20 flex justify-center items-start z-[999] p-4">
+        <div className="fixed top-0 left-0 w-full h-screen overflow-y-scroll bg-black/20 flex justify-center items-start z-[999] p-4">
             <div
-                className="bg-white rounded-lg p-6 w-full max-w-[400px] mt-20"
+                className="bg-white rounded-lg p-4 w-full max-w-[400px] mt-20 border border-gray-500"
                 ref={formRef}
             >
                 <div className="flex items-center justify-between mb-4">

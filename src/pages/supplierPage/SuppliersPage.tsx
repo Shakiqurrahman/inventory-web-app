@@ -6,6 +6,7 @@ import { FiTrash } from "react-icons/fi";
 import { IoSearch } from "react-icons/io5";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { Link } from "react-router";
+import SupplierDetailsModal from "../../components/detailsModal";
 import {
     useDeleteSupplierMutation,
     useGetSupplierQuery,
@@ -18,6 +19,10 @@ const SuppliersPage = () => {
     console.log(getSupplier);
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [deleteSupplier, { isLoading }] = useDeleteSupplierMutation();
+    const [supplierDetails, setSupplierDetails] = useState<ISupplier | null>(
+        null
+    );
+    const [toggleSupplierDetails, setToggleSupplierDetails] = useState(false);
 
     const handleDelete = async (id: string) => {
         setDeletingId(id);
@@ -47,6 +52,7 @@ const SuppliersPage = () => {
                             className="outline-0 text-sm rounded-sm w-full"
                         />
                     </div>
+
                     <Link
                         to={"new-supplier"}
                         className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center text-xs gap-1 cursor-pointer hover:bg-blue-600 duration-200"
@@ -81,6 +87,10 @@ const SuppliersPage = () => {
                                 getSupplier.map(
                                     (value: ISupplier, idx: number) => (
                                         <tr
+                                            onClick={() => {
+                                                setSupplierDetails(value);
+                                                setToggleSupplierDetails(true);
+                                            }}
                                             key={idx}
                                             className="border-b border-gray-300 hover:bg-gray-50 text-sm"
                                         >
@@ -139,6 +149,13 @@ const SuppliersPage = () => {
                     </table>
                 </div>
             </div>
+            {toggleSupplierDetails && supplierDetails && (
+                <SupplierDetailsModal
+                    Supplier={supplierDetails}
+                    toggleSupplierDetails={setToggleSupplierDetails} // pass setter function
+                    title={"Supplier Information"}
+                />
+            )}
         </div>
     );
 };
