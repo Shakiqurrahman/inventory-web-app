@@ -3,10 +3,19 @@ import { baseApi } from "../../api/baseApi";
 const supplierApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getSupplier: builder.query({
-            query: () => ({
-                url: "/suppliers",
-                method: "GET",
-            }),
+            query: (args = {}) => {
+                const { page, limit = 1, search = "" } = args || {};
+
+                const queryParams = new URLSearchParams();
+                if (search) queryParams.append("search", search);
+                if (page) queryParams.append("page", page);
+                if (limit) queryParams.append("limit", limit);
+
+                return {
+                    url: `/suppliers?${queryParams.toString()}`,
+                    method: "GET",
+                };
+            },
             providesTags: ["suppliers"],
             transformResponse: (response) => response?.data,
         }),

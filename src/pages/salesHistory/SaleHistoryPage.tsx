@@ -1,11 +1,16 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router";
 import DropdownMenuList from "../../components/DropdownMenulist";
+import type { ISaleHistory } from "../../redux/features/salesHistory/saleHistorySlice";
+import SaleHistoryDetails from "./SaleHistoryDetails";
 
 const SaleHistoryPage = () => {
     const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
+    const [showModal, setShowModal] = useState(false);
+    const [saleHistoryDetails, setSaleHistoryDetails] =
+        useState<ISaleHistory | null>(null);
     const data = [
         {
             id: 1,
@@ -16,9 +21,9 @@ const SaleHistoryPage = () => {
             itemBrand: "Brand X",
             itemCategory: "Category Y",
             status: true,
-            barcode: 4216,
-            dueAmount: 0,
-            paidAmount: 0,
+            barcode: "4216",
+            dueAmount: "0",
+            paidAmount: "0",
         },
         // Add more sample data as needed
         {
@@ -30,9 +35,9 @@ const SaleHistoryPage = () => {
             itemBrand: "Brand Y",
             itemCategory: "Category Z",
             status: true,
-            barcode: 4217,
-            dueAmount: 0,
-            paidAmount: 0,
+            barcode: "4217",
+            dueAmount: "0",
+            paidAmount: "0",
         },
         {
             id: 3,
@@ -43,9 +48,9 @@ const SaleHistoryPage = () => {
             itemBrand: "Brand Z",
             itemCategory: "Category X",
             status: false,
-            barcode: 4218,
-            dueAmount: 0,
-            paidAmount: 0,
+            barcode: "4218",
+            dueAmount: "0",
+            paidAmount: "0",
         },
         {
             id: 4,
@@ -56,9 +61,9 @@ const SaleHistoryPage = () => {
             itemBrand: "Brand A",
             itemCategory: "Category B",
             status: false,
-            barcode: 42169,
-            dueAmount: 0,
-            paidAmount: 0,
+            barcode: "42169",
+            dueAmount: "0",
+            paidAmount: "0",
         },
         {
             id: 5,
@@ -69,13 +74,18 @@ const SaleHistoryPage = () => {
             itemBrand: "Brand B",
             itemCategory: "Category C",
             status: true,
-            barcode: 4220,
-            dueAmount: 0,
-            paidAmount: 0,
+            barcode: "4220",
+            dueAmount: "0",
+            paidAmount: "0",
         },
     ];
 
     const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    const handleRefund = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        setOpenMenuIndex(null);
+    };
 
     return (
         <div>
@@ -131,6 +141,10 @@ const SaleHistoryPage = () => {
                             {data.length > 0 ? (
                                 data.map((sale, index) => (
                                     <tr
+                                        onClick={() => {
+                                            setSaleHistoryDetails(sale);
+                                            setShowModal(true);
+                                        }}
                                         key={index}
                                         className="hover:bg-gray-100"
                                     >
@@ -182,15 +196,16 @@ const SaleHistoryPage = () => {
                                                 >
                                                     <button
                                                         className="p-1.5 rounded-sm cursor-pointer shrink-0"
-                                                        onClick={() =>
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
                                                             setOpenMenuIndex(
                                                                 (prev) =>
                                                                     prev ===
                                                                     index
                                                                         ? null
                                                                         : index
-                                                            )
-                                                        }
+                                                            );
+                                                        }}
                                                         type="button"
                                                     >
                                                         <BsThreeDots />
@@ -198,6 +213,9 @@ const SaleHistoryPage = () => {
                                                 </div>
 
                                                 <DropdownMenuList
+                                                    onclose={() =>
+                                                        setOpenMenuIndex(null)
+                                                    }
                                                     anchorEl={
                                                         buttonRefs.current[
                                                             index
@@ -207,14 +225,15 @@ const SaleHistoryPage = () => {
                                                         openMenuIndex === index
                                                     }
                                                 >
+                                                    <button
+                                                        className="p-2"
+                                                        type="button"
+                                                        onClick={handleRefund}
+                                                    >
+                                                        Refund
+                                                    </button>
                                                     <div className="p-2">
-                                                        Option 1
-                                                    </div>
-                                                    <div className="p-2">
-                                                        Option 2
-                                                    </div>
-                                                    <div className="p-2">
-                                                        Option 3
+                                                        Print Invoice
                                                     </div>
                                                 </DropdownMenuList>
                                             </div>
@@ -236,6 +255,13 @@ const SaleHistoryPage = () => {
                 </div>
             </div>
             {/* Future implementation will go here */}
+            {showModal && saleHistoryDetails && (
+                <SaleHistoryDetails
+                    saleHistoryDetails={saleHistoryDetails}
+                    setShowModal={setShowModal} // pass setter function
+                    title={"Supplier Information"}
+                />
+            )}
         </div>
     );
 };

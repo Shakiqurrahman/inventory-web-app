@@ -8,25 +8,31 @@ import {
     deleteBankDeposite,
     toggleCreateDepositeModal,
     toggleEditDepositeModal,
+    toggleWithdrawModal,
     type IBankDeposite,
 } from "../../redux/features/bankDeposite/bankDepositeSlice";
 import { useAppSelector } from "../../redux/hook";
 import { formatDateToLongDate } from "../../utils/timeFormatHandler";
 import CreateBankDepositoryModal from "./CreateBankDepositoryModal";
 import EditBankDepositoryModal from "./EditBankDepositeModel";
+import WithdrawModal from "./WithdrawModal";
 
 const BankDeposites = () => {
-    const [searchValue, setSearchValue] = useState("");
+    const isFetching = false;
     const [showclose, setShowClose] = useState(false);
     const [selectedItem, setSelectedItem] = useState<IBankDeposite | null>(
         null
     );
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+    const [searchValue, setSearchValue] = useState("");
+    const [search, setSearch] = useState("");
+    const [showSearchedFor, setShowSearchedFor] = useState(
+        search ? true : false
+    );
 
     const dispatch = useDispatch();
-    const { bankDeposites, openCreateModal, openEditModal } = useAppSelector(
-        (state) => state.bankDeposite
-    );
+    const { bankDeposites, openCreateModal, openEditModal, openWithdrawModal } =
+        useAppSelector((state) => state.bankDeposite);
     // console.log(bankDeposites);
 
     useEffect(() => {
@@ -43,6 +49,17 @@ const BankDeposites = () => {
         dispatch(toggleEditDepositeModal());
     };
 
+    const handleClearButton = async () => {
+        setSearch("");
+        setSearchValue("");
+        setShowSearchedFor(false);
+    };
+
+    const handleSearch = () => {
+        setShowSearchedFor(true);
+        setSearch(searchValue);
+    };
+
     return (
         <div className="bg-white p-4 rounded-lg">
             <div className="flex justify-between py-4">
@@ -51,34 +68,61 @@ const BankDeposites = () => {
                     Balance: <span>20,000</span>
                 </h1>
             </div>
-            <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
-                <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-1">
-                    <FiSearch className="text-lg shrink-0 text-gray-500" />
-                    <input
-                        type="text"
-                        name="search"
-                        id="search"
-                        value={searchValue}
-                        onChange={(e) => setSearchValue(e.target.value)}
-                        placeholder="Search Expense"
-                        className="placeholder:text-sm size-full outline-none"
-                    />
-                    <button
-                        onClick={() => setSearchValue("")}
-                        className={`bg-gray-200 cursor-pointer hover:bg-gray-300 duration-300  rounded-full p-1 ${
-                            showclose ? "block" : "hidden"
-                        }`}
-                    >
-                        <RxCross2 className="text-sm " />
-                    </button>
 
-                    <button className="bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer text-white py-2 px-3 rounded-lg text-sm">
-                        Search
-                    </button>
+            <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
+                <div>
+                    <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
+                        {showSearchedFor ? (
+                            <div className="flex items-center gap-4 mb-1.5">
+                                <h2 className="text-base font-medium">
+                                    Search for &quot;{search}&quot;
+                                </h2>
+                                <button
+                                    type="button"
+                                    onClick={handleClearButton}
+                                    className="bg-gray-600 text-white  px-4 py-1.5 rounded-full font-medium text-sm cursor-pointer"
+                                >
+                                    {isFetching ? "Searching..." : "Clear"}
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-1">
+                                <FiSearch className="text-lg shrink-0 text-gray-500" />
+                                <input
+                                    type="text"
+                                    name="search"
+                                    id="search"
+                                    value={searchValue}
+                                    onChange={(e) =>
+                                        setSearchValue(e.target.value)
+                                    }
+                                    placeholder="Search Expense"
+                                    className="placeholder:text-sm size-full outline-none"
+                                />
+                                <button
+                                    onClick={() => setSearchValue("")}
+                                    className={`bg-gray-200 cursor-pointer hover:bg-gray-300 duration-300  rounded-full p-1 ${
+                                        showclose ? "block" : "hidden"
+                                    }`}
+                                >
+                                    <RxCross2 className="text-sm " />
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={handleSearch}
+                                    disabled={!searchValue}
+                                    className="bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer text-white py-2 px-3 rounded-r-lg text-sm"
+                                >
+                                    Search
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
                 <div className="flex gap-2">
                     <button
-                        onClick={() => dispatch(toggleCreateDepositeModal())}
+                        onClick={() => dispatch(toggleWithdrawModal())}
                         className="bg-gray-300 text-gray-600 px-4 py-2 rounded-lg flex items-center text-xs gap-1 cursor-pointer border border-gray-300 hover:border-gray-400 duration-200"
                     >
                         <PiHandWithdrawFill className="text-lg" />
@@ -100,6 +144,7 @@ const BankDeposites = () => {
                         <tr className="bg-gray-200 text-left *:font-semibold text-sm">
                             <th className="p-3 w-[60px]">ID</th>
                             <th className="p-3">Transection Number</th>
+                            <th className="p-3">Transection Type</th>
                             <th className="p-3">Bank Name</th>
                             <th className="p-3">Account Number</th>
                             <th className="p-3">Amount</th>
@@ -161,7 +206,7 @@ const BankDeposites = () => {
                                     colSpan={8}
                                     className="p-3 text-center text-gray-500"
                                 >
-                                    No categories found
+                                    No Deposites found
                                 </td>
                             </tr>
                         )}
@@ -175,6 +220,7 @@ const BankDeposites = () => {
                     selectedIndex={selectedIndex}
                 />
             )}
+            {openWithdrawModal && <WithdrawModal />}
         </div>
     );
 };

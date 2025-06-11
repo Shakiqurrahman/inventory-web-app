@@ -15,12 +15,14 @@ type bankDepositeState = {
     bankDeposites: IBankDeposite[];
     openCreateModal: boolean;
     openEditModal: boolean;
+    openWithdrawModal: boolean;
 };
 
 const initialState: bankDepositeState = {
     bankDeposites: [],
     openCreateModal: false,
     openEditModal: false,
+    openWithdrawModal: false,
 };
 
 const bankDepositeSlice = createSlice({
@@ -28,6 +30,10 @@ const bankDepositeSlice = createSlice({
     initialState,
     reducers: {
         createBankDeposite: (state, action) => {
+            state.bankDeposites.push(action.payload);
+            toast.success("Bank Deposite created successfully");
+        },
+        createWithdraw: (state, action) => {
             state.bankDeposites.push(action.payload);
             toast.success("Employee created successfully");
         },
@@ -61,14 +67,19 @@ const bankDepositeSlice = createSlice({
         toggleEditDepositeModal: (state) => {
             state.openEditModal = !state.openEditModal;
         },
+        toggleWithdrawModal: (state) => {
+            state.openWithdrawModal = !state.openWithdrawModal;
+        },
     },
 });
 
 export const {
     toggleCreateDepositeModal,
     toggleEditDepositeModal,
+    toggleWithdrawModal,
     createBankDeposite,
     updateBankDeposite,
     deleteBankDeposite,
+    createWithdraw,
 } = bankDepositeSlice.actions;
 export default bankDepositeSlice.reducer;

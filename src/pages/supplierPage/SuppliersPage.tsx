@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
-import { FiTrash } from "react-icons/fi";
-import { IoSearch } from "react-icons/io5";
+import { FiSearch, FiTrash } from "react-icons/fi";
 import { MdOutlineModeEdit } from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router";
 import SupplierDetailsModal from "../../components/detailsModal";
 import {
@@ -14,7 +14,7 @@ import {
 import { type ISupplier } from "../../redux/features/suppliers/supplierSlice";
 
 const SuppliersPage = () => {
-    const { data: getSupplier, isLoading: getSupplierLoading } =
+    const { data: getSupplier, isLoading: getSupplierLoading,  } =
         useGetSupplierQuery("");
     console.log(getSupplier);
     const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -23,6 +23,32 @@ const SuppliersPage = () => {
         null
     );
     const [toggleSupplierDetails, setToggleSupplierDetails] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
+    const [search, setSearch] = useState("");
+    const [showSearchedFor, setShowSearchedFor] = useState(
+        search ? true : false
+    );
+    const [showclose, setShowClose] = useState(false);
+    const isFetching = false;
+
+    useEffect(() => {
+        if (searchValue) {
+            setShowClose(true);
+        } else {
+            setShowClose(false);
+        }
+    }, [setShowClose, searchValue]);
+
+    const handleSearchButton = async () => {
+        setSearch(searchValue);
+        setShowSearchedFor(true);
+    };
+
+    const handleClearButton = async () => {
+        setSearch("");
+        setSearchValue("");
+        setShowSearchedFor(false);
+    };
 
     const handleDelete = async (id: string) => {
         setDeletingId(id);
@@ -44,13 +70,53 @@ const SuppliersPage = () => {
             <div className="bg-white rounded-md p-2 sm:p-4 sm:px-6">
                 <h1 className="font-medium text-lg mb-4">Suppliers</h1>
                 <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
-                    <div className="border border-gray-300 w-[300px] flex gap-2 items-center p-2 rounded-sm">
-                        <IoSearch className="text-xl text-gray-500" />
-                        <input
-                            type="text"
-                            placeholder="Search"
-                            className="outline-0 text-sm rounded-sm w-full"
-                        />
+                    <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
+                        {showSearchedFor ? (
+                            <div className="flex items-center gap-4 mb-1.5">
+                                <h2 className="text-base font-medium">
+                                    Search for &quot;{search}&quot;
+                                </h2>
+                                <button
+                                    type="button"
+                                    onClick={handleClearButton}
+                                    className="bg-gray-600 text-white  px-4 py-1.5 rounded-full font-medium text-sm cursor-pointer"
+                                >
+                                    {isFetching ? "Searching..." : "Clear"}
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-1">
+                                <FiSearch className="text-lg shrink-0 text-gray-500" />
+                                <input
+                                    type="text"
+                                    name="search"
+                                    id="search"
+                                    value={searchValue}
+                                    onChange={(e) =>
+                                        setSearchValue(e.target.value)
+                                    }
+                                    placeholder="Search Expense"
+                                    className="placeholder:text-sm size-full outline-none"
+                                />
+                                <button
+                                    onClick={() => setSearchValue("")}
+                                    className={`bg-gray-200 cursor-pointer hover:bg-gray-300 duration-300  rounded-full p-1 ${
+                                        showclose ? "block" : "hidden"
+                                    }`}
+                                >
+                                    <RxCross2 className="text-sm " />
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={handleSearchButton}
+                                    disabled={!searchValue}
+                                    className="bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer text-white py-2 px-3 rounded-r-lg text-sm"
+                                >
+                                    Search
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <Link

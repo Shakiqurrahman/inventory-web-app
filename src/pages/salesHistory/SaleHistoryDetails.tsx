@@ -1,23 +1,24 @@
 import { useRef } from "react";
 import { IoClose } from "react-icons/io5";
-import useOutsideClick from "../hooks/useOutsideClick";
-import type { ISupplier } from "../redux/features/suppliers/supplierSlice";
+import useOutsideClick from "../../hooks/useOutsideClick";
+import type { ISaleHistory } from "../../redux/features/salesHistory/saleHistorySlice";
 
 interface SupplierDetailsModalProps {
-    Supplier: ISupplier;
-    toggleSupplierDetails: React.Dispatch<React.SetStateAction<boolean>>;
+    saleHistoryDetails: ISaleHistory;
+    setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
     title: string;
 }
 
-const SupplierDetailsModal: React.FC<SupplierDetailsModalProps> = ({
-    Supplier,
-    toggleSupplierDetails,
+const SaleHistoryDetails: React.FC<SupplierDetailsModalProps> = ({
+    saleHistoryDetails,
+    setShowModal,
     title,
 }) => {
+    console.log(saleHistoryDetails);
     const formRef = useRef<HTMLDivElement>(null);
 
     useOutsideClick(formRef, () => {
-        toggleSupplierDetails(false);
+        setShowModal(false);
     });
     return (
         <div className="overflow-y-auto fixed top-0 left-0 w-full h-screen bg-black/20 flex justify-center items-start z-[999] p-4">
@@ -28,7 +29,7 @@ const SupplierDetailsModal: React.FC<SupplierDetailsModalProps> = ({
                 <div className="flex items-center justify-between">
                     <h2 className="text-lg font-medium">{title}</h2>
                     <button
-                        onClick={() => toggleSupplierDetails(false)} // close modal
+                        onClick={() => setShowModal(false)} // close modal
                         type="button"
                         className="text-gray-500 hover:text-gray-700 cursor-pointer"
                     >
@@ -37,34 +38,16 @@ const SupplierDetailsModal: React.FC<SupplierDetailsModalProps> = ({
                 </div>
                 <hr className="mt-2 mb-5" />
 
-                {/* <ul className="space-y-2 border">
-                    {Supplier &&
-                        Object.entries(Supplier)
-                            .filter(([key]) => key !== "id")
-                            .map(([key, value]) => (
-                                <li
-                                    key={key}
-                                    className="flex justify-between text-sm"
-                                >
-                                    <span className="font-medium capitalize">
-                                        {key.replace(/_/g, " ")}:
-                                    </span>
-                                    <span className="text-gray-700">
-                                        {typeof value === "object"
-                                            ? JSON.stringify(value)
-                                            : String(value)}
-                                    </span>
-                                </li>
-                            ))}
-                </ul> */}
                 <div className="w-full overflow-x-auto">
                     <table className="w-full border border-gray-300">
                         <tbody>
-                            {Supplier &&
-                                Object.entries(Supplier)
+                            {saleHistoryDetails &&
+                                Object.entries(saleHistoryDetails)
                                     .filter(
                                         ([key]) =>
-                                            key !== "id" && key !== "isDeleted"
+                                            key !== "id" &&
+                                            key !== "isDeleted" &&
+                                            key !== "status"
                                     )
                                     .map(([key, value]) => (
                                         <tr
@@ -89,4 +72,4 @@ const SupplierDetailsModal: React.FC<SupplierDetailsModalProps> = ({
     );
 };
 
-export default SupplierDetailsModal;
+export default SaleHistoryDetails;
