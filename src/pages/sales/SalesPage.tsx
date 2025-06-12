@@ -1,25 +1,30 @@
 import { Fragment, useEffect, useState, type ChangeEvent } from "react";
 import toast from "react-hot-toast";
-import { BsFillTelephonePlusFill } from "react-icons/bs";
-import { FaMinus, FaPlus, FaUserPlus } from "react-icons/fa";
+import { FaMinus, FaPlus } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import { IoIosCloseCircle } from "react-icons/io";
 import { TbCurrencyTaka } from "react-icons/tb";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import {
   useGetVariantByIdOrBarCodeQuery,
   useGetVariantSuggestionsQuery,
 } from "../../redux/features/sales/salesApi";
-import type {
-  IProductSuggestions,
-  IProductVariant,
-} from "../../types/products";
+import { addSelectedItems } from "../../redux/features/sales/salesFormSlice";
+import type { RootState } from "../../redux/store";
+import type { IProductSuggestions } from "../../types/products";
+import OrderInformation from "./OrderInformation";
+import SalesInformation from "./SalesInformation";
 
 const SalesPage = () => {
+  const dispatch = useDispatch();
+
+  const {
+    salesForm: { selectedItems },
+  } = useSelector((state: RootState) => state.salesForm);
+
   const [hideDetails, setHideDetails] = useState(false);
   const [searchItemValue, setSearchItemValue] = useState("");
-  const [selectedPaymentType, setSelectedPaymentType] = useState("Cash");
-  const [selectedItems, setSelectedItems] = useState<IProductVariant[]>([]);
   const [variantId, setVarantId] = useState("");
 
   const {
@@ -39,11 +44,12 @@ const SalesPage = () => {
 
   useEffect(() => {
     if (item) {
-      setSelectedItems((prev) => [...prev, item]);
+      // setSelectedItems((prev) => [...prev, item]);
+      dispatch(addSelectedItems(item));
       setSearchItemValue("");
       setVarantId("");
     }
-  }, [item]);
+  }, [item, dispatch]);
 
   const handleChangeSearchItem = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchItemValue(e.target.value);
@@ -205,216 +211,8 @@ const SalesPage = () => {
         </div>
       </div>
       <div className="w-full lg:w-[500px] shrink-0">
-        <div className="bg-white">
-          <h1 className="bg-primary text-white font-medium px-5 py-3">
-            Sales Information
-          </h1>
-          <div className="p-5">
-            <label htmlFor="employee" className="block mb-3">
-              Select Employee <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="employee"
-              id="employee"
-              className="border border-gray-200 outline-none p-2 w-full block bg-gray-100"
-            >
-              <option value="Shakil">Shakil</option>
-              <option value="Shakiqur">Shakiqur</option>
-              <option value="Mahdi">Mahdi</option>
-            </select>
-            <div className="p-3 border border-gray-200 mt-5">
-              <label htmlFor="employee" className="block mb-3">
-                Customer Details
-              </label>
-              <div className="flex mb-2">
-                <div className="shrink-0 bg-primary w-[40px] py-2 text-white flex items-center justify-center">
-                  <FaUserPlus className="text-sm" />
-                </div>
-                <input
-                  type="text"
-                  name="customerName"
-                  className="p-2 border border-gray-200 text-sm outline-none block w-full"
-                  placeholder="Type customer name"
-                />
-              </div>
-              <div className="flex mb-2">
-                <div className="shrink-0 bg-primary w-[40px] py-2 text-white flex items-center justify-center">
-                  <BsFillTelephonePlusFill className="text-sm" />
-                </div>
-                <input
-                  type="number"
-                  name="customerNumber"
-                  className="p-2 border border-gray-200 text-sm outline-none block w-full"
-                  placeholder="Type customer number"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white mt-5 pb-10 paper-cut relative">
-          <div className="p-3">
-            <h1 className="text-gray-500">Order Information:</h1>
-            <div className="flex items-center justify-between gap-2 text-xs sm:text-sm mt-4">
-              <span className="text-gray-600">
-                Discount all Items by Percent:
-              </span>
-              <button
-                type="button"
-                className="text-red-800 font-light italic border-b border-dashed border-red-800 cursor-pointer"
-              >
-                Set Discount
-              </button>
-            </div>
-            <div className="flex items-center justify-between gap-2 text-xs sm:text-sm mt-2">
-              <span className="text-gray-600">Discount Entire Sale:</span>
-              <button
-                type="button"
-                className="text-red-800 font-light italic border-b border-dashed border-red-800 cursor-pointer"
-              >
-                Set Discount
-              </button>
-            </div>
-          </div>
-          <div className="p-3 bg-[#F1FFEC] flex items-center justify-between gap-2">
-            <h1 className="text-gray-600 text-sm sm:text-base font-medium">
-              Sub Total:
-            </h1>
-            <button
-              type="button"
-              className="text-blue-500 border-b border-blue-500 border-dashed flex items-center text-sm cursor-pointer"
-            >
-              <TbCurrencyTaka />
-              0.00
-            </button>
-          </div>
-          <div className="border-t border-b border-gray-300 border-dashed flex">
-            <div className="w-1/2 text-center p-3 border-r border-gray-300 border-dashed">
-              <h1 className="text-base sm:text-lg font-medium mb-2 text-gray-600">
-                Total
-              </h1>
-              <span className="flex items-center text-green-500 justify-center text-lg sm:text-xl font-medium">
-                <TbCurrencyTaka />
-                0.00
-              </span>
-            </div>
-            <div className="w-1/2 text-center p-3">
-              <h1 className="text-base sm:text-lg font-medium mb-2 text-gray-600">
-                Amount Due
-              </h1>
-              <span className="flex items-center text-secondary justify-center text-lg sm:text-xl font-medium">
-                <TbCurrencyTaka />
-                0.00
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 justify-between p-3 text-sm border-b border-gray-300 border-dashed">
-            <button
-              type="button"
-              className="text-red-500 hover:text-red-600 cursor-pointer"
-            >
-              <IoIosCloseCircle className="text-lg" />
-            </button>
-            <span className="text-gray-600">Cash</span>
-            <span className="flex items-center justify-center ml-auto text-gray-600">
-              <TbCurrencyTaka />
-              0.00
-            </span>
-          </div>
-          <div className="p-3 border-b border-dashed border-gray-300">
-            <h1 className="text-sm font-medium text-gray-600">Add payment</h1>
-            <div className="flex gap-1 flex-wrap mt-2">
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentType("Cash")}
-                className={`border text-xs px-4 py-2 cursor-pointer  font-medium ${
-                  selectedPaymentType === "Cash"
-                    ? "bg-primary text-white border-primary"
-                    : "bg-gray-50 border-gray-400 text-gray-600"
-                }`}
-              >
-                Cash
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentType("Card")}
-                className={`border text-xs px-4 py-2 cursor-pointer  font-medium ${
-                  selectedPaymentType === "Card"
-                    ? "bg-primary text-white border-primary"
-                    : "bg-gray-50 border-gray-400 text-gray-600"
-                }`}
-              >
-                Card
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentType("Check")}
-                className={`border text-xs px-4 py-2 cursor-pointer  font-medium ${
-                  selectedPaymentType === "Check"
-                    ? "bg-primary text-white border-primary"
-                    : "bg-gray-50 border-gray-400 text-gray-600"
-                }`}
-              >
-                Check
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentType("bKash")}
-                className={`border text-xs px-4 py-2 cursor-pointer  font-medium ${
-                  selectedPaymentType === "bKash"
-                    ? "bg-primary text-white border-primary"
-                    : "bg-gray-50 border-gray-400 text-gray-600"
-                }`}
-              >
-                bKash
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentType("Other")}
-                className={`border text-xs px-4 py-2 cursor-pointer  font-medium ${
-                  selectedPaymentType === "Other"
-                    ? "bg-primary text-white border-primary"
-                    : "bg-gray-50 border-gray-400 text-gray-600"
-                }`}
-              >
-                Other
-              </button>
-            </div>
-            <div className="flex mt-3">
-              <input
-                type="number"
-                placeholder={`Enter ${selectedPaymentType} Amount`}
-                className="border border-gray-200 p-2.5 outline-none text-sm w-full placeholder:text-xs"
-              />
-              <button
-                type="button"
-                className="text-white bg-primary px-4 py-2.5 hover:bg-secondary border border-primary hover:border-secondary cursor-pointer text-xs sm:text-sm shrink-0"
-              >
-                Add Payment
-              </button>
-            </div>
-          </div>
-          <div className="p-3">
-            <textarea
-              name="comments"
-              className="border border-gray-200 p-2.5 placeholder:text-xs text-sm outline-none resize-none block w-full"
-              placeholder="Comments"
-            ></textarea>
-            <div className="flex items-center gap-2 select-none mt-3">
-              <input
-                type="checkbox"
-                name="showComment"
-                id="showComment"
-                className="scale-130"
-              />
-              <label
-                htmlFor="showComment"
-                className="text-gray-500 text-xs w-full cursor-pointer"
-              >
-                Show comments on receipt
-              </label>
-            </div>
-          </div>
-        </div>
+        <SalesInformation />
+        <OrderInformation />
       </div>
     </div>
   );
