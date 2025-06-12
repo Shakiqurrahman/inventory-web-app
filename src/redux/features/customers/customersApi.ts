@@ -1,45 +1,25 @@
 import { baseApi } from "../../api/baseApi";
 
-const categoriesApi = baseApi.injectEndpoints({
+const customersApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getCustomers: builder.query({
-            query: () => ({
-                url: "/categories",
-                method: "GET",
-            }),
+            query: (args = {}) => {
+                const { page, limit = 1, search = "" } = args || {};
+
+                const queryParams = new URLSearchParams();
+                if (search) queryParams.append("search", search);
+                if (page) queryParams.append("page", page);
+                if (limit) queryParams.append("limit", limit);
+
+                return {
+                    url: `/expenses?${queryParams.toString()}`,
+                    method: "GET",
+                };
+            },
             providesTags: ["categories"],
             transformResponse: (response) => response?.data,
-        }),
-        createCustomers: builder.mutation({
-            query: (userInfo) => ({
-                url: "/categories",
-                method: "POST",
-                body: userInfo,
-            }),
-            invalidatesTags: ["categories"],
-        }),
-
-        deleteCustomers: builder.mutation({
-            query: (id) => ({
-                url: `/categories/${id}`,
-                method: "DELETE",
-            }),
-            invalidatesTags: ["categories"],
-        }),
-        updateCustomers: builder.mutation({
-            query: ({ id, name }) => ({
-                url: `/categories/${id}`,
-                method: "PUT",
-                body: { name },
-            }),
-            invalidatesTags: ["categories"],
         }),
     }),
 });
 
-export const {
-    useGetCustomersQuery,
-    useCreateCustomersMutation,
-    useDeleteCustomersMutation,
-    useUpdateCustomersMutation,
-} = categoriesApi;
+export const { useGetCustomersQuery } = customersApi;
