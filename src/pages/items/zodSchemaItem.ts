@@ -88,26 +88,26 @@ import { z } from "zod";
 // export type ItemFormSchemaType = z.infer<typeof fullItemFormSchema>;
 
 const variationInputSchema = z.object({
-  stock: z.union([z.string(), z.number()]),
-  sellPrice: z.union([z.string(), z.number()]),
-  costPrice: z.union([z.string(), z.number()]),
-  attributes: z
-    .array(z.string())
-    .nonempty("Variation must have at least one attribute"),
+    stock: z.union([z.string(), z.number()]),
+    sellPrice: z.union([z.string(), z.number()]),
+    costPrice: z.union([z.string(), z.number()]),
+    attributes: z
+        .array(z.string())
+        .nonempty("Variation must have at least one attribute"),
 });
 
 export const fullItemFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  costPrice: z.union([z.string(), z.number()]),
-  sellPrice: z.union([z.string(), z.number()]),
-  discountPercentage: z.union([z.string(), z.number()]).optional(),
-  description: z.string().optional(),
-  categoryId: z.string().optional(),
-  brand: z.string().optional(),
-  stock: z.union([z.string(), z.number()]),
-  isVariantChecked: z.boolean(),
-  attributes: z.array(z.string()).optional(),
-  variations: z.array(variationInputSchema).optional(),
+    name: z.string().min(1, "Name is required"),
+    costPrice: z.string().min(1, "Cost Price is required"),
+    sellPrice: z.string().min(1, "Sell Price is required"),
+    discountPercentage: z.string().optional(),
+    description: z.string().optional(),
+    categoryId: z.string().optional(),
+    brand: z.string().optional(),
+    stock: z.string().optional(),
+    isVariantChecked: z.boolean(),
+    attributes: z.array(z.string()).optional(),
+    variations: z.array(variationInputSchema).optional(),
 });
 
 export type ItemFormInput = z.infer<typeof fullItemFormSchema>;

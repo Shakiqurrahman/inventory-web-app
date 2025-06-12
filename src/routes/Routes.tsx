@@ -98,7 +98,7 @@ const routes: RouteObject[] = [
                 element: <AllExpensesPage />,
             },
             {
-                path: "/bank-deposite",
+                path: "/bank-deposit",
                 element: <BankDeposites />,
             },
             {

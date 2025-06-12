@@ -23,6 +23,7 @@ const bankDepositeSchema = z.object({
     accountNumber: z.string().optional(),
     bankName: z.string().min(1, "Bank name must be required"),
     reason: z.string().optional(),
+    transectionType: z.enum(["WITHDRAW", "DEPOSITE"]),
 });
 
 type bankDepositeForm = z.infer<typeof bankDepositeSchema>;
@@ -36,6 +37,15 @@ const CreateBankDepositoryModal = () => {
         watch,
     } = useForm<bankDepositeForm>({
         resolver: zodResolver(bankDepositeSchema),
+        defaultValues: {
+            date: "",
+            amount: 0,
+            transectionId: "",
+            accountNumber: "",
+            bankName: "",
+            reason: "",
+            transectionType: "DEPOSITE",
+        },
     });
 
     const dispatch = useDispatch();
@@ -60,7 +70,7 @@ const CreateBankDepositoryModal = () => {
             >
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-lg font-medium">
-                        Create Bank Deposite
+                        Create Bank Transaction
                     </h2>
                     <button
                         onClick={() => dispatch(toggleCreateDepositeModal())}
@@ -99,6 +109,20 @@ const CreateBankDepositoryModal = () => {
                                 {errors.date.message}
                             </span>
                         )}
+                    </div>
+
+                    <div>
+                        <label className="block mb-2" htmlFor="">
+                            Transection Type
+                        </label>
+                        <select
+                            id="transectionType"
+                            {...register("transectionType")}
+                            className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                        >
+                            <option value="DEPOSITE">Deposite</option>
+                            <option value="WITHDRAW">Withdraw</option>
+                        </select>
                     </div>
                     <div>
                         <label className="block mb-2" htmlFor="">

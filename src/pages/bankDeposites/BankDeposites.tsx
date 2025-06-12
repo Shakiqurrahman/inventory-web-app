@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
 import { FiPlus, FiSearch, FiTrash } from "react-icons/fi";
 import { MdOutlineModeEdit } from "react-icons/md";
-import { PiHandWithdrawFill } from "react-icons/pi";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch } from "react-redux";
 import {
     deleteBankDeposite,
     toggleCreateDepositeModal,
     toggleEditDepositeModal,
-    toggleWithdrawModal,
     type IBankDeposite,
 } from "../../redux/features/bankDeposite/bankDepositeSlice";
 import { useAppSelector } from "../../redux/hook";
 import { formatDateToLongDate } from "../../utils/timeFormatHandler";
 import CreateBankDepositoryModal from "./CreateBankDepositoryModal";
 import EditBankDepositoryModal from "./EditBankDepositeModel";
-import WithdrawModal from "./WithdrawModal";
 
 const BankDeposites = () => {
     const isFetching = false;
@@ -31,8 +28,9 @@ const BankDeposites = () => {
     );
 
     const dispatch = useDispatch();
-    const { bankDeposites, openCreateModal, openEditModal, openWithdrawModal } =
-        useAppSelector((state) => state.bankDeposite);
+    const { bankDeposites, openCreateModal, openEditModal } = useAppSelector(
+        (state) => state.bankDeposite
+    );
     // console.log(bankDeposites);
 
     useEffect(() => {
@@ -63,7 +61,7 @@ const BankDeposites = () => {
     return (
         <div className="bg-white p-4 rounded-lg">
             <div className="flex justify-between py-4">
-                <h1 className="font-medium text-lg mb-4">Bank Deposite</h1>
+                <h1 className="font-medium text-lg mb-4">Bank Deposit</h1>
                 <h1 className="font-medium text-lg mb-4">
                     Balance: <span>20,000</span>
                 </h1>
@@ -122,18 +120,11 @@ const BankDeposites = () => {
                 </div>
                 <div className="flex gap-2">
                     <button
-                        onClick={() => dispatch(toggleWithdrawModal())}
-                        className="bg-gray-300 text-gray-600 px-4 py-2 rounded-lg flex items-center text-xs gap-1 cursor-pointer border border-gray-300 hover:border-gray-400 duration-200"
-                    >
-                        <PiHandWithdrawFill className="text-lg" />
-                        Withdraw
-                    </button>
-                    <button
                         onClick={() => dispatch(toggleCreateDepositeModal())}
                         className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center text-xs gap-1 cursor-pointer hover:bg-blue-600 duration-200"
                     >
                         <FiPlus className="text-lg" />
-                        New Deposite
+                        New Transaction
                     </button>
                 </div>
             </div>
@@ -220,7 +211,6 @@ const BankDeposites = () => {
                     selectedIndex={selectedIndex}
                 />
             )}
-            {openWithdrawModal && <WithdrawModal />}
         </div>
     );
 };

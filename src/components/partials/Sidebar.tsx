@@ -309,7 +309,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                             </li>
                             <li>
                                 <NavLink
-                                    to={`/bank-deposite`}
+                                    to={`/bank-deposit`}
                                     className={({ isActive }) =>
                                         `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
                                             isActive
@@ -319,7 +319,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                     }
                                 >
                                     <RiBankFill className="text-lg" />
-                                    Bank Deposite
+                                    Bank Deposit
                                 </NavLink>
                             </li>
                             <li>
