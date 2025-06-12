@@ -10,9 +10,19 @@ import {
   useGetVariantByIdOrBarCodeQuery,
   useGetVariantSuggestionsQuery,
 } from "../../redux/features/sales/salesApi";
-import { addSelectedItems } from "../../redux/features/sales/salesFormSlice";
+import {
+  addSelectedItems,
+  changeDueAmount,
+  removePayments,
+  removeSelectedItem,
+  updateDiscountAmount,
+  updateDiscountPercentage,
+  updateSelectedItem,
+  updateTotalAmount,
+} from "../../redux/features/sales/salesFormSlice";
 import type { RootState } from "../../redux/store";
 import type { IProductSuggestions } from "../../types/products";
+import InlineEditor from "../receivings/InlineEditor";
 import OrderInformation from "./OrderInformation";
 import SalesInformation from "./SalesInformation";
 
@@ -20,7 +30,7 @@ const SalesPage = () => {
   const dispatch = useDispatch();
 
   const {
-    salesForm: { selectedItems },
+    salesForm: { selectedItems, payments, discountAmount },
   } = useSelector((state: RootState) => state.salesForm);
 
   const [hideDetails, setHideDetails] = useState(false);
@@ -38,18 +48,43 @@ const SalesPage = () => {
     { skip: searchItemValue.length < 3 }
   );
 
-  const { data: item } = useGetVariantByIdOrBarCodeQuery(variantId, {
-    skip: !variantId,
-  });
+  const { data: item, isFetching } = useGetVariantByIdOrBarCodeQuery(
+    variantId,
+    {
+      skip: !variantId,
+    }
+  );
 
   useEffect(() => {
-    if (item) {
-      // setSelectedItems((prev) => [...prev, item]);
-      dispatch(addSelectedItems(item));
+    if (item && !isFetching && variantId) {
+      const extendItem = {
+        ...item,
+        quantity: 1,
+        discount: 0,
+        totalPrice: item.sellPrice * 1,
+      };
+      dispatch(addSelectedItems(extendItem));
       setSearchItemValue("");
       setVarantId("");
     }
-  }, [item, dispatch]);
+  }, [item, dispatch, variantId, isFetching]);
+
+  useEffect(() => {
+    const totalAmount = selectedItems.reduce(
+      (acc, curr) => acc + curr.totalPrice,
+      0
+    );
+    dispatch(updateTotalAmount(totalAmount));
+
+    const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
+    dispatch(changeDueAmount(totalAmount > 0 ? totalAmount - totalPaid : 0));
+    if (selectedItems.length <= 0 && payments.length > 0) {
+      dispatch(removePayments([]));
+    } else if (selectedItems.length <= 0) {
+      dispatch(updateDiscountAmount(0));
+      dispatch(updateDiscountPercentage(0));
+    }
+  }, [selectedItems, payments, dispatch]);
 
   const handleChangeSearchItem = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchItemValue(e.target.value);
@@ -70,6 +105,106 @@ const SalesPage = () => {
     setVarantId(id);
     setSearchItemValue("");
   };
+
+  const handleRemoveSelectedItem = (id: string) => {
+    if (id) {
+      const updateItems = selectedItems.filter((item) => item.id !== id);
+      dispatch(removeSelectedItem(updateItems));
+    }
+  };
+
+  const handleChangeQuantity = (id: string, value: string) => {
+    if (id) {
+      const findItem = selectedItems.find((item) => item.id === id);
+      if (
+        findItem &&
+        parseInt(value) <= findItem.stock &&
+        parseInt(value) > 0
+      ) {
+        const modifyItem = {
+          ...findItem,
+          quantity: parseInt(value),
+          totalPrice:
+            findItem.discount > 0
+              ? parseInt(value) *
+                findItem.sellPrice *
+                (1 - findItem.discount / 100)
+              : findItem.sellPrice * parseInt(value) || 0,
+        };
+        const updateItems = selectedItems.map((item) => {
+          if (item.id === id) {
+            return modifyItem;
+          } else {
+            return item;
+          }
+        });
+        dispatch(updateSelectedItem(updateItems));
+
+        if (discountAmount > 0) {
+          const totalPrice = updateItems.reduce(
+            (acc, curr) => acc + curr.totalPrice,
+            0
+          );
+          dispatch(updateTotalAmount(totalPrice - discountAmount));
+
+          const totalPaid = payments.reduce(
+            (acc, curr) => acc + curr.amount,
+            0
+          );
+          dispatch(changeDueAmount(totalPrice - totalPaid - discountAmount));
+        }
+      } else if (parseInt(value) <= 0) {
+        toast.error("Minimum quantity 1");
+      } else {
+        toast.error(`Available stock ${findItem?.stock}`);
+      }
+    }
+  };
+
+  const handleChangeDiscount = (id: string, value: string) => {
+    if (id) {
+      const findItem = selectedItems.find((item) => item.id === id);
+      if (findItem && parseInt(value) >= 0 && parseInt(value) <= 100) {
+        const modifyItem = {
+          ...findItem,
+          discount: parseFloat(value),
+          totalPrice:
+            parseFloat(value) > 0
+              ? findItem.quantity *
+                findItem.sellPrice *
+                (1 - parseFloat(value) / 100)
+              : findItem.sellPrice * findItem.quantity || 0,
+        };
+        const updateItems = selectedItems.map((item) => {
+          if (item.id === id) {
+            return modifyItem;
+          } else {
+            return item;
+          }
+        });
+        dispatch(updateSelectedItem(updateItems));
+        dispatch(updateDiscountPercentage(0));
+        dispatch(updateDiscountAmount(0));
+      } else {
+        toast.error("Minimum 1 and Maximum 100% discount");
+      }
+    }
+  };
+
+  // const handleSubmit = (e: MouseEvent) => {
+  //   e.preventDefault()
+  //   {
+  //     // saleVariant: selectedItems;
+  //     // employeeId: selectedEmployee;
+  //     // customerId: customerId;
+  //     // customer: customer;
+  //     // payments: payments;
+  //     // totalPrice: totalAmount;
+  //     // paidAmount;
+  //     // dueAmount;
+  //     // isFree: freeSale;
+  //   }
+  // }
 
   return (
     <div className="flex flex-wrap lg:flex-nowrap items-start gap-4">
@@ -143,8 +278,8 @@ const SalesPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {selectedItems?.map((item) => (
-                  <Fragment key={item.id}>
+                {selectedItems?.map((item, idx) => (
+                  <Fragment key={idx}>
                     <tr
                       className={`${
                         !hideDetails ? "" : "border-b border-gray-200"
@@ -153,6 +288,7 @@ const SalesPage = () => {
                       <td className="p-3">
                         <button
                           type="button"
+                          onClick={() => handleRemoveSelectedItem(item.id)}
                           className="text-red-500 hover:text-red-600 cursor-pointer"
                         >
                           <IoIosCloseCircle className="text-xl" />
@@ -161,11 +297,30 @@ const SalesPage = () => {
                       <td className="p-3 text-left">{item.name}</td>
                       <td className="p-3 flex items-center justify-center">
                         <TbCurrencyTaka />
-                        10
+                        {item.sellPrice}
                       </td>
-                      <td className="p-3">1</td>
-                      <td className="p-3">0%</td>
-                      <td className="p-3">10</td>
+                      <td className="p-3">
+                        <span className="">
+                          <InlineEditor
+                            label="Quantity"
+                            value={item.quantity}
+                            onChange={(val) =>
+                              handleChangeQuantity(item.id, val)
+                            }
+                            inputType="number"
+                          />
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <InlineEditor
+                          label="Discount"
+                          value={item.discount}
+                          onChange={(val) => handleChangeDiscount(item.id, val)}
+                          inputType="number"
+                          suffix="%"
+                        />
+                      </td>
+                      <td className="p-3">{item.totalPrice.toFixed(2)}</td>
                     </tr>
                     {!hideDetails && (
                       <tr className="text-sm border-b border-gray-200 hover:bg-gray-50">
@@ -174,22 +329,28 @@ const SalesPage = () => {
                           <ul className="text-[13px]">
                             <li className="flex items-center justify-between gap-2">
                               <span>Category</span>
-                              <span>{item.product.category?.name}</span>
+                              <span>
+                                {item.product.category?.name || "N/A"}
+                              </span>
                             </li>
                             <li className="flex items-center justify-between gap-2">
                               <span>Brand</span>
-                              <span>{item.product.brand}</span>
+                              <span>{item.product.brand || "N/A"}</span>
                             </li>
                             <li className="flex items-center justify-between gap-2">
-                              <span>Stock</span>
-                              <span>1</span>
+                              <span>Available Stock</span>
+                              <span>{item.stock}</span>
                             </li>
                             <li className="flex items-center justify-between gap-2">
                               <span>Variant</span>
                               <span>
-                                {Object.entries(item.attributes)
-                                  .map(([key, value]) => `${key} - ${value}`)
-                                  .join(", ")}
+                                {item.attributes
+                                  ? Object.entries(item.attributes)
+                                      .map(
+                                        ([key, value]) => `${key} - ${value}`
+                                      )
+                                      .join(", ")
+                                  : "N/A"}
                               </span>
                             </li>
                           </ul>
@@ -199,12 +360,14 @@ const SalesPage = () => {
                     )}
                   </Fragment>
                 ))}
-                <tr className="text-lg sm:text-2xl border-b border-gray-200 hover:bg-gray-50">
-                  <td colSpan={6} className="p-3 text-center text-[#EAC841]">
-                    There are no items in the cart{" "}
-                    <span className="text-[#6FD686]">[Sales]</span>
-                  </td>
-                </tr>
+                {selectedItems.length <= 0 && (
+                  <tr className="text-lg sm:text-2xl border-b border-gray-200 hover:bg-gray-50">
+                    <td colSpan={6} className="p-3 text-center text-[#EAC841]">
+                      There are no items in the cart{" "}
+                      <span className="text-[#6FD686]">[Sales]</span>
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
