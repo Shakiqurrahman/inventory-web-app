@@ -70,19 +70,30 @@ const SalesPage = () => {
   }, [item, dispatch, variantId, isFetching]);
 
   useEffect(() => {
-    const totalAmount = selectedItems.reduce(
-      (acc, curr) => acc + curr.totalPrice,
-      0
-    );
-    dispatch(updateTotalAmount(totalAmount));
+    if (discountAmount > 0) {
+      const totalPrice = selectedItems.reduce(
+        (acc, curr) => acc + curr.totalPrice,
+        0
+      );
 
-    const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
-    dispatch(changeDueAmount(totalAmount > 0 ? totalAmount - totalPaid : 0));
-    if (selectedItems.length <= 0 && payments.length > 0) {
-      dispatch(removePayments([]));
-    } else if (selectedItems.length <= 0) {
-      dispatch(updateDiscountAmount(0));
-      dispatch(updateDiscountPercentage(0));
+      const totalPaid = payments.reduce((acc, curr) => acc + curr.amount, 0);
+      dispatch(updateTotalAmount(totalPrice - discountAmount));
+      dispatch(changeDueAmount(totalPrice - totalPaid - discountAmount));
+    } else {
+      const totalAmount = selectedItems.reduce(
+        (acc, curr) => acc + curr.totalPrice,
+        0
+      );
+      dispatch(updateTotalAmount(totalAmount));
+
+      const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
+      dispatch(changeDueAmount(totalAmount > 0 ? totalAmount - totalPaid : 0));
+      if (selectedItems.length <= 0 && payments.length > 0) {
+        dispatch(removePayments([]));
+      } else if (selectedItems.length <= 0) {
+        dispatch(updateDiscountAmount(0));
+        dispatch(updateDiscountPercentage(0));
+      }
     }
   }, [selectedItems, payments, dispatch]);
 
@@ -139,20 +150,6 @@ const SalesPage = () => {
           }
         });
         dispatch(updateSelectedItem(updateItems));
-
-        if (discountAmount > 0) {
-          const totalPrice = updateItems.reduce(
-            (acc, curr) => acc + curr.totalPrice,
-            0
-          );
-          dispatch(updateTotalAmount(totalPrice - discountAmount));
-
-          const totalPaid = payments.reduce(
-            (acc, curr) => acc + curr.amount,
-            0
-          );
-          dispatch(changeDueAmount(totalPrice - totalPaid - discountAmount));
-        }
       } else if (parseInt(value) <= 0) {
         toast.error("Minimum quantity 1");
       } else {
