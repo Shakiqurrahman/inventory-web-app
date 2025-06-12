@@ -90,11 +90,11 @@ const SalesInformation = () => {
               className="p-2 border border-gray-200 text-sm outline-none block w-full"
             />
             {/* <ul className="absolute max-h-[400px] overflow-y-auto z-[999] top-full shadow left-0 w-full bg-white *:p-3 *:border-b *:border-gray-200 *:hover:bg-gray-100 *:last:border-none *:select-none *:cursor-pointer *:text-sm">
-                    <li>
-                      <h1 className="text-gray-700">Shakil Ahmed</h1>
-                      <p className="text-gray-500">01706202696</p>
-                    </li>
-                  </ul> */}
+              <li>
+                <h1 className="text-gray-700">Shakil Ahmed</h1>
+                <p className="text-gray-500">01706202696</p>
+              </li>
+            </ul> */}
           </div>
         )}
         {openNewCustomerBox && (
