@@ -2,14 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef } from "react";
 import DatePicker from "react-datepicker";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { z } from "zod";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import {
-    createBankDeposite,
-    toggleCreateDepositeModal,
-} from "../../redux/features/bankDeposite/bankDepositeSlice";
+import { useCreateBankDepositMutation } from "../../redux/features/bankDeposite/bankDepositeApi";
+import { toggleCreateDepositeModal } from "../../redux/features/bankDeposite/bankDepositeSlice";
 
 const bankDepositeSchema = z.object({
     date: z
@@ -19,11 +18,11 @@ const bankDepositeSchema = z.object({
             message: "Invalid date format",
         }),
     amount: z.coerce.number().min(1, "Amount must be required"),
-    transectionId: z.string().min(1, "Transection ID must be required"),
+    transactionId: z.string().min(1, "Transection ID must be required"),
     accountNumber: z.string().optional(),
     bankName: z.string().min(1, "Bank name must be required"),
     reason: z.string().optional(),
-    transectionType: z.enum(["WITHDRAW", "DEPOSITE"]),
+    transactionType: z.enum(["WITHDRAW", "DEPOSIT"]),
 });
 
 type bankDepositeForm = z.infer<typeof bankDepositeSchema>;
@@ -40,13 +39,15 @@ const CreateBankDepositoryModal = () => {
         defaultValues: {
             date: "",
             amount: 0,
-            transectionId: "",
+            transactionId: "",
             accountNumber: "",
             bankName: "",
             reason: "",
-            transectionType: "DEPOSITE",
+            transactionType: "DEPOSIT",
         },
     });
+
+    const [createBankDeposite, { isLoading }] = useCreateBankDepositMutation();
 
     const dispatch = useDispatch();
     const formRef = useRef<HTMLDivElement>(null);
@@ -55,11 +56,19 @@ const CreateBankDepositoryModal = () => {
         dispatch(toggleCreateDepositeModal());
     });
 
-    const onSubmit = (data: bankDepositeForm) => {
+    const onSubmit = async (data: bankDepositeForm) => {
         // console.log(data);
+        try {
+            const res = await createBankDeposite(data).unwrap();
+            toast.success(res.message);
+            dispatch(toggleCreateDepositeModal());
 
-        dispatch(createBankDeposite(data));
-        dispatch(toggleCreateDepositeModal());
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            dispatch(toggleCreateDepositeModal());
+            toast.error(error?.message || "Failed to create bankDeposite");
+            console.log(error);
+        }
     };
 
     return (
@@ -116,11 +125,11 @@ const CreateBankDepositoryModal = () => {
                             Transection Type
                         </label>
                         <select
-                            id="transectionType"
-                            {...register("transectionType")}
+                            id="transactionType"
+                            {...register("transactionType")}
                             className="border border-gray-300 w-full p-2 outline-none rounded-md"
                         >
-                            <option value="DEPOSITE">Deposite</option>
+                            <option value="DEPOSIT">Deposite</option>
                             <option value="WITHDRAW">Withdraw</option>
                         </select>
                     </div>
@@ -129,15 +138,15 @@ const CreateBankDepositoryModal = () => {
                             Transection ID
                         </label>
                         <input
-                            {...register("transectionId")}
-                            name="transectionId"
+                            {...register("transactionId")}
+                            name="transactionId"
                             type="text"
                             placeholder="Enter transection ID"
                             className="w-full border border-gray-300 rounded-md p-2 outline-none focus:border-blue-500 text-sm"
                         />
-                        {errors.transectionId && (
+                        {errors.transactionId && (
                             <span className="text-red-500 text-xs">
-                                {errors.transectionId.message}
+                                {errors.transactionId.message}
                             </span>
                         )}
                     </div>
@@ -205,7 +214,7 @@ const CreateBankDepositoryModal = () => {
                             type="submit"
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 cursor-pointer text-sm"
                         >
-                            Create
+                            {isLoading ? "Creating..." : "Create"}
                         </button>
                     </div>
                 </form>

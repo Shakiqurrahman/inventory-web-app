@@ -9,4 +9,5 @@ export type ISaleHistory = {
     paymentMethod: string;
     status: boolean;
     totalPrice: string;
+    saleStatus: "PAID" | "DUE";
 };

@@ -1,26 +1,35 @@
 import { useEffect, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FiPlus, FiSearch, FiTrash } from "react-icons/fi";
-import { MdOutlineModeEdit } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 import { useDispatch } from "react-redux";
+import Pagination from "../../components/Pagination";
 import {
-    deleteBankDeposite,
+    useDeleteBankDepositMutation,
+    useGetBankDepositListQuery,
+} from "../../redux/features/bankDeposite/bankDepositeApi";
+import {
     toggleCreateDepositeModal,
-    toggleEditDepositeModal,
     type IBankDeposite,
 } from "../../redux/features/bankDeposite/bankDepositeSlice";
 import { useAppSelector } from "../../redux/hook";
 import { formatDateToLongDate } from "../../utils/timeFormatHandler";
 import CreateBankDepositoryModal from "./CreateBankDepositoryModal";
-import EditBankDepositoryModal from "./EditBankDepositeModel";
+
+export interface IMetaInfo {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
 
 const BankDeposites = () => {
-    const isFetching = false;
+    const [page, setPage] = useState(1);
+    const [showLimit, setShowLimit] = useState(20);
+
     const [showclose, setShowClose] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<IBankDeposite | null>(
-        null
-    );
-    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+
     const [searchValue, setSearchValue] = useState("");
     const [search, setSearch] = useState("");
     const [showSearchedFor, setShowSearchedFor] = useState(
@@ -28,10 +37,26 @@ const BankDeposites = () => {
     );
 
     const dispatch = useDispatch();
-    const { bankDeposites, openCreateModal, openEditModal } = useAppSelector(
-        (state) => state.bankDeposite
+    const { openCreateModal } = useAppSelector((state) => state.bankDeposite);
+
+    const {
+        data: response,
+        isLoading,
+        isFetching,
+    } = useGetBankDepositListQuery(
+        {
+            page,
+            limit: showLimit,
+            search,
+        },
+        {
+            skip: !page,
+        }
     );
-    // console.log(bankDeposites);
+    const [deleteBankDeposit, { isLoading: deleteLoading }] =
+        useDeleteBankDepositMutation();
+
+    const { data: bankDeposites, meta } = response || {};
 
     useEffect(() => {
         if (searchValue) {
@@ -40,12 +65,6 @@ const BankDeposites = () => {
             setShowClose(false);
         }
     }, [setShowClose, searchValue]);
-
-    const handleEdit = (item: IBankDeposite, index: number) => {
-        setSelectedItem(item);
-        setSelectedIndex(index);
-        dispatch(toggleEditDepositeModal());
-    };
 
     const handleClearButton = async () => {
         setSearch("");
@@ -56,6 +75,17 @@ const BankDeposites = () => {
     const handleSearch = () => {
         setShowSearchedFor(true);
         setSearch(searchValue);
+    };
+
+    const handleDelete = async (id: string) => {
+        try {
+            setDeletingId(id);
+            await deleteBankDeposit(id).unwrap();
+            setDeletingId(null);
+        } catch (error) {
+            console.error("Failed to delete deposit:", error);
+            setDeletingId(null);
+        }
     };
 
     return (
@@ -145,52 +175,62 @@ const BankDeposites = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {bankDeposites.length > 0 ? (
-                            bankDeposites.map((item, index) => (
-                                <tr
-                                    key={index}
-                                    className="border-b border-gray-300 hover:bg-gray-50 text-sm"
+                        {isLoading || isFetching ? (
+                            <tr className="text-sm">
+                                <td
+                                    colSpan={9}
+                                    className="p-4 text-center text-gray-500"
                                 >
-                                    <td className="p-3">{index + 1}</td>
-                                    <td className="p-3">
-                                        {item.transectionId}
-                                    </td>
-                                    <td className="p-3">{item.bankName}</td>
-                                    <td className="p-3">
-                                        {item.accountNumber}
-                                    </td>
-                                    <td className="p-3">{item.amount}</td>
-                                    <td className="p-3">
-                                        {item.reason ? item.reason : "N/A"}
-                                    </td>
-                                    <td className="p-3">
-                                        {formatDateToLongDate(item.date)}
-                                    </td>
+                                    Loading...
+                                </td>
+                            </tr>
+                        ) : bankDeposites.length > 0 ? (
+                            bankDeposites.map(
+                                (item: IBankDeposite, index: number) => (
+                                    <tr
+                                        key={index}
+                                        className="border-b border-gray-300 hover:bg-gray-50 text-sm"
+                                    >
+                                        <td className="p-3">{index + 1}</td>
+                                        <td className="p-3">
+                                            {item.transactionId}
+                                        </td>
+                                        <td className="p-3">
+                                            {item.transactionType}
+                                        </td>
+                                        <td className="p-3">{item.bankName}</td>
+                                        <td className="p-3">
+                                            {item.accountNumber}
+                                        </td>
 
-                                    <td className="flex items-center gap-1 p-3">
-                                        <button
-                                            onClick={() =>
-                                                handleEdit(item, index)
-                                            }
-                                            className="flex gap-0.5 items-center py-1.5 px-3 bg-blue-500 text-white rounded-sm text-xs cursor-pointer shrink-0"
-                                        >
-                                            <MdOutlineModeEdit className="" />{" "}
-                                            <span>Edit</span>
-                                        </button>
-                                        <button
-                                            onClick={() =>
-                                                dispatch(
-                                                    deleteBankDeposite(index)
-                                                )
-                                            }
-                                            type="button"
-                                            className="bg-red-400 text-white p-1.5 rounded-sm cursor-pointer shrink-0"
-                                        >
-                                            <FiTrash className="text-md" />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
+                                        <td className="p-3">{item.amount}</td>
+                                        <td className="p-3">
+                                            {item.reason ? item.reason : "N/A"}
+                                        </td>
+                                        <td className="p-3">
+                                            {formatDateToLongDate(item.date)}
+                                        </td>
+
+                                        <td className="p-3 px-6">
+                                            <button
+                                                onClick={() => {
+                                                    if (item.id)
+                                                        handleDelete(item.id);
+                                                }}
+                                                type="button"
+                                                className="bg-red-400 text-white p-1.5 rounded-sm cursor-pointer shrink-0"
+                                            >
+                                                {deleteLoading &&
+                                                item.id === deletingId ? (
+                                                    <AiOutlineLoading3Quarters className="size-4 animate-spin duration-300" />
+                                                ) : (
+                                                    <FiTrash className="text-md" />
+                                                )}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )
+                            )
                         ) : (
                             <tr className="text-sm">
                                 <td
@@ -203,14 +243,37 @@ const BankDeposites = () => {
                         )}
                     </tbody>
                 </table>
+                {!isLoading && (meta as IMetaInfo)?.totalPages > 1 && (
+                    <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
+                        <p className="text-sm font-medium text-gray-600">
+                            Total Expenses : {(meta as IMetaInfo)?.total}
+                        </p>
+                        <Pagination
+                            currentPage={(meta as IMetaInfo)?.page || page}
+                            totalPages={(meta as IMetaInfo)?.totalPages}
+                            onPageChange={setPage}
+                        />
+                        <div className="flex items-center gap-2">
+                            <p className="text-sm">Show per page :</p>
+                            <select
+                                onChange={(e) =>
+                                    setShowLimit(Number(e.target.value))
+                                }
+                                name="pageLimit"
+                                id="pageLimit"
+                                value={showLimit}
+                                className="px-2 py-1 outline-none border border-gray-300 rounded-md"
+                            >
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </section>
+                )}
             </div>
             {openCreateModal && <CreateBankDepositoryModal />}
-            {openEditModal && (
-                <EditBankDepositoryModal
-                    selectedItem={selectedItem}
-                    selectedIndex={selectedIndex}
-                />
-            )}
         </div>
     );
 };
