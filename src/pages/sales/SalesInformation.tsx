@@ -135,8 +135,8 @@ const SalesInformation = () => {
                       key={index}
                       onClick={() => handleChangeCustomerId(cus.id)}
                     >
-                      <h1 className="text-gray-700">{cus.name}</h1>
-                      <p className="text-gray-500">{cus.phone}</p>
+                      <h1 className="text-gray-700">{cus?.name || ""}</h1>
+                      <p className="text-gray-500">{cus?.phone || ""}</p>
                     </li>
                   ))}
                 </ul>

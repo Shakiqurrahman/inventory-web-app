@@ -1,35 +1,38 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 type Payments = {
-    method: string;
-    amount: number;
+  method: string;
+  amount: number;
 };
 
 type ReceivingForm = {
-    selectedEmployee: string;
-    payments: Payments[];
+  supplierId: string;
+  payments: Payments[];
 };
 
 type SalesFormStateTypes = {
-    receivingForm: ReceivingForm;
+  receivingForm: ReceivingForm;
 };
 
 const initialState: SalesFormStateTypes = {
-    receivingForm: {
-        selectedEmployee: "",
-        payments: [],
-    },
+  receivingForm: {
+    supplierId: "",
+    payments: [],
+  },
 };
 
 const receivingFormSlice = createSlice({
-    name: "receivingForm",
-    initialState,
-    reducers: {
-        addPayments: (state, action: PayloadAction<Payments>) => {
-            state.receivingForm.payments.push(action.payload);
-        },
+  name: "receivingForm",
+  initialState,
+  reducers: {
+    addPayments: (state, action: PayloadAction<Payments>) => {
+      state.receivingForm.payments.push(action.payload);
     },
+    setSuppierId: (state, action) => {
+      state.receivingForm.supplierId = action.payload;
+    },
+  },
 });
 
-export const { addPayments } = receivingFormSlice.actions;
+export const { addPayments, setSuppierId } = receivingFormSlice.actions;
 export default receivingFormSlice.reducer;
