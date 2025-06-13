@@ -28,6 +28,7 @@ type SalesForm = {
   freeSale: boolean;
   discountAmount: number;
   discountPercentage: number;
+  freeSaleDueAmount: number;
 };
 
 type SalesFormStateTypes = {
@@ -49,6 +50,7 @@ const initialState: SalesFormStateTypes = {
     freeSale: false,
     discountAmount: 0,
     discountPercentage: 0,
+    freeSaleDueAmount: 0,
   },
 };
 
@@ -116,6 +118,27 @@ const salesFormSlice = createSlice({
         discountAmount: action.payload,
       };
     },
+    resetForm: (state) => {
+      state.salesForm = {
+        selectedItems: [],
+        selectedEmployee: "",
+        customerId: "",
+        customer: {
+          name: "",
+          phone: "",
+        },
+        payments: [],
+        totalAmount: 0,
+        dueAmount: 0,
+        freeSale: false,
+        discountAmount: 0,
+        discountPercentage: 0,
+        freeSaleDueAmount: 0,
+      };
+    },
+    changeFreeSaleDueAmount: (state, action) => {
+      state.salesForm.freeSaleDueAmount = action.payload;
+    },
   },
 });
 export const {
@@ -132,5 +155,7 @@ export const {
   changeDueAmount,
   updateDiscountPercentage,
   updateDiscountAmount,
+  resetForm,
+  changeFreeSaleDueAmount,
 } = salesFormSlice.actions;
 export default salesFormSlice.reducer;

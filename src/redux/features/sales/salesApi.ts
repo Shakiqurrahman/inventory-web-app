@@ -26,10 +26,20 @@ const salesApi = baseApi.injectEndpoints({
       providesTags: ["sales"],
       transformResponse: (response) => response?.data,
     }),
+    createSale: builder.mutation({
+      query: (formData) => ({
+        url: `/sales`,
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["sales"],
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
 export const {
   useGetVariantSuggestionsQuery,
   useGetVariantByIdOrBarCodeQuery,
+  useCreateSaleMutation,
 } = salesApi;

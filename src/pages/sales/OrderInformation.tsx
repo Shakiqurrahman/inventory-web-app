@@ -1,23 +1,37 @@
-import { useState, type ChangeEvent, type KeyboardEvent } from "react";
+import {
+  useState,
+  type ChangeEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+} from "react";
 import toast from "react-hot-toast";
 import { IoIosCloseCircle } from "react-icons/io";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { useCreateSaleMutation } from "../../redux/features/sales/salesApi";
 import {
   addPayments,
   changeDueAmount,
+  changeFreeSaleDueAmount,
   changeFreeSaleValue,
   removePayments,
+  resetForm,
   updateDiscountAmount,
   updateDiscountPercentage,
   updateSelectedItem,
   updateTotalAmount,
 } from "../../redux/features/sales/salesFormSlice";
 import type { RootState } from "../../redux/store";
+import { getErrorMessage } from "../../utils/errorHandler";
 import InlineEditor from "../receivings/InlineEditor";
 
 const OrderInformation = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [createSale, { isLoading: isCreating }] = useCreateSaleMutation();
+
   const {
     salesForm: {
       payments,
@@ -27,6 +41,10 @@ const OrderInformation = () => {
       selectedItems,
       discountAmount,
       discountPercentage,
+      selectedEmployee,
+      customer,
+      customerId,
+      freeSaleDueAmount,
     },
   } = useSelector((state: RootState) => state.salesForm);
 
@@ -37,6 +55,13 @@ const OrderInformation = () => {
 
   const handleChangeFreeSale = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch(changeFreeSaleValue(e.target.checked));
+    if (e.target.checked) {
+      dispatch(changeDueAmount(0));
+      dispatch(changeFreeSaleDueAmount(dueAmount));
+    } else {
+      dispatch(changeDueAmount(freeSaleDueAmount));
+      dispatch(changeFreeSaleDueAmount(0));
+    }
   };
 
   const handleAddPayments = () => {
@@ -126,6 +151,45 @@ const OrderInformation = () => {
       toast.error(
         "You can not discount this item above the max discount of the items in the cart"
       );
+    }
+  };
+
+  const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!selectedEmployee) return toast.error("Select an employee!");
+    if (selectedEmployee && selectedItems.length > 0) {
+      const saleVariants = selectedItems.map((item) => ({
+        variantId: item.id,
+        quantity: item.quantity,
+        price: item.totalPrice,
+      }));
+      const paid = payments.reduce((acc, curr) => acc + curr.amount, 0);
+      const formData = {
+        saleVariant: saleVariants,
+        employeeId: selectedEmployee,
+        customerId: customerId || undefined,
+        customer: customer?.name ? customer : undefined,
+        payments: payments.map((p) => ({
+          ...p,
+          method: p.method.toUpperCase(),
+        })),
+        totalPrice: totalAmount,
+        paidAmount: freeSale ? 0 : paid > totalAmount ? totalAmount : paid,
+        dueAmount: dueAmount,
+        isFree: freeSale,
+        discountAmount: discountAmount,
+        discountPercentage: discountPercentage,
+      };
+      const confirm = window.confirm("Are you sure you want to sale?");
+      if (confirm && formData) {
+        try {
+          const res = await createSale(formData).unwrap();
+          dispatch(resetForm());
+          navigate("/sales/sale-recipt", { state: { id: res?.id } });
+        } catch (error) {
+          toast.error(getErrorMessage(error));
+        }
+      }
     }
   };
 
@@ -327,7 +391,8 @@ const OrderInformation = () => {
       <div className="text-right mt-5 p-3">
         <button
           type="button"
-          disabled={selectedItems.length === 0}
+          disabled={selectedItems.length === 0 || isCreating}
+          onClick={handleSubmit}
           className="bg-blue-500 px-4 py-2.5 cursor-pointer text-white text-sm hover:bg-blue-600 disabled:bg-blue-500/50"
         >
           Complete Sale

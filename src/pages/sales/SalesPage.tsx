@@ -112,9 +112,13 @@ const SalesPage = () => {
     }
   };
 
-  const handleSuggestionClick = (id: string) => {
-    setVarantId(id);
-    setSearchItemValue("");
+  const handleSuggestionClick = (id: string, stock: number) => {
+    if (stock > 0) {
+      setVarantId(id);
+      setSearchItemValue("");
+    } else {
+      toast.error("This item has no available stock!");
+    }
   };
 
   const handleRemoveSelectedItem = (id: string) => {
@@ -188,21 +192,6 @@ const SalesPage = () => {
     }
   };
 
-  // const handleSubmit = (e: MouseEvent) => {
-  //   e.preventDefault()
-  //   {
-  //     // saleVariant: selectedItems;
-  //     // employeeId: selectedEmployee;
-  //     // customerId: customerId;
-  //     // customer: customer;
-  //     // payments: payments;
-  //     // totalPrice: totalAmount;
-  //     // paidAmount;
-  //     // dueAmount;
-  //     // isFree: freeSale;
-  //   }
-  // }
-
   return (
     <div className="flex flex-wrap lg:flex-nowrap items-start gap-4">
       <div className="w-full">
@@ -232,7 +221,7 @@ const SalesPage = () => {
                   {suggestions.map((item: IProductSuggestions) => (
                     <li
                       key={item.id}
-                      onClick={() => handleSuggestionClick(item.id)}
+                      onClick={() => handleSuggestionClick(item.id, item.stock)}
                       className="p-3 hover:bg-gray-50 cursor-pointer text-sm grid grid-cols-2 place-items-center gap-2"
                     >
                       <div className="space-y-2">
