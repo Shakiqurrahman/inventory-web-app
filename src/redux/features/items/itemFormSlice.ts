@@ -13,12 +13,14 @@ type Form = {
 };
 
 type Attribute = {
+  id?: string;
   name: string;
   attributeValues: string[];
   trashValues: string[];
 };
 
 type Variation = {
+  id?: string;
   name: string;
   attributes: string[];
   trashAttributes: string[];
@@ -107,6 +109,12 @@ const itemFormSlice = createSlice({
       state.attributes = attributes;
       state.variations = variations;
     },
+    addInitialAttributes: (state, action) => {
+      state.attributes = action.payload;
+    },
+    addInitialVariations: (state, action) => {
+      state.variations = action.payload;
+    },
   },
 });
 
@@ -125,5 +133,7 @@ export const {
   removeVariationAttributesFromItem,
   restoreVariationAttributesFromTrash,
   resetItemForm,
+  addInitialAttributes,
+  addInitialVariations,
 } = itemFormSlice.actions;
 export default itemFormSlice.reducer;

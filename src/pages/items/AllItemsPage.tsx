@@ -134,7 +134,7 @@ const AllItemsPage = () => {
                         }}
                       >
                         <Link
-                          to={`/expenses/edit-expense/${item.id}`}
+                          to={`/items/edit-item/${item.id}`}
                           className="py-1.5 px-3 bg-[#F2F6F9] text-sm cursor-pointer shrink-0 border border-[#D7DCE5]"
                         >
                           Edit

@@ -6,8 +6,11 @@ import {
   getAttributes,
   type IAttribute,
 } from "../../redux/features/attributes/attributeSlice";
+import type { IProductVariant } from "../../redux/features/items/itemApiSlice";
 import {
   addAttributeToItem,
+  addInitialAttributes,
+  addInitialVariations,
   autoGenerateVariations,
   newAutoGenerateVariations,
   removeAttributeFromItem,
@@ -21,7 +24,15 @@ import {
 import type { RootState } from "../../redux/store";
 import { generateVariations } from "../../utils/generateVariations";
 
-const AddVariantForm = () => {
+type EditVariantFormTypes = {
+  getVariations?: IProductVariant[];
+  prevAttributes?: [];
+};
+
+const EditVariantForm = ({
+  getVariations,
+  prevAttributes,
+}: EditVariantFormTypes) => {
   const dispatch = useDispatch();
 
   const { data, isLoading: attributesLoading } = useGetAttributesQuery(null);
@@ -43,9 +54,41 @@ const AddVariantForm = () => {
   );
 
   useEffect(() => {
+    if (prevAttributes && prevAttributes?.length > 0) {
+      dispatch(addInitialAttributes(prevAttributes));
+    }
+    return () => {
+      dispatch(addInitialAttributes([]));
+    };
+  }, [prevAttributes, dispatch]);
+
+  useEffect(() => {
+    if (
+      getVariations &&
+      getVariations?.length > 0 &&
+      prevAttributes &&
+      prevAttributes?.length > 0
+    ) {
+      const variationsArray = generateVariations(prevAttributes, []);
+      const generateVariationValues = getVariations?.map((v, i) => ({
+        id: v?.id || "",
+        name: v?.name || "",
+        attributes: variationsArray[i],
+        stock: v?.stock || "",
+        costPrice: v?.costPrice || "",
+        sellPrice: v?.sellPrice || "",
+      }));
+      dispatch(addInitialVariations(generateVariationValues));
+    }
+    return () => {
+      dispatch(addInitialVariations([]));
+    };
+  }, [getVariations, prevAttributes, dispatch]);
+
+  useEffect(() => {
     if (data && !attributesLoading) {
       const filterAttributes = data?.map((attr: IAttribute) => ({
-        id: attr.id || "",
+        id: attr?.id || "",
         name: attr.name || "",
         attributeValues: attr.values || "",
       }));
@@ -246,7 +289,6 @@ const AddVariantForm = () => {
   //     toast.error("You have to select an attribute to create");
   //   }
   // };
-
   return (
     <div className="border border-gray-300 rounded-md">
       <h1 className="bg-[#dbdbdb] p-3 font-medium">Variant</h1>
@@ -479,14 +521,14 @@ const AddVariantForm = () => {
           </div>
         )}
         {/* <div>
-          <button
-            type="button"
-            className="mt-5 cursor-pointer text-blue-500 hover:text-blue-600 text-sm"
-            onClick={handleAddVariationField}
-          >
-            Add Item Variation
-          </button>
-        </div> */}
+            <button
+              type="button"
+              className="mt-5 cursor-pointer text-blue-500 hover:text-blue-600 text-sm"
+              onClick={handleAddVariationField}
+            >
+              Add Item Variation
+            </button>
+          </div> */}
         <div className="mt-10">
           <button
             type="button"
@@ -501,4 +543,4 @@ const AddVariantForm = () => {
   );
 };
 
-export default AddVariantForm;
+export default EditVariantForm;

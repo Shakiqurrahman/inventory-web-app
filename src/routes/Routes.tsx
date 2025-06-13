@@ -15,6 +15,7 @@ import AllItemsPage from "../pages/items/AllItemsPage";
 import CreateItemPage from "../pages/items/CreateItemPage";
 import LoginPage from "../pages/LoginPage";
 
+import EditItemPage from "../pages/items/EditItemPage";
 import ItemViewPage from "../pages/items/ItemViewPage";
 import ReceivingsRecipt from "../pages/receivings/ReceivingsRecipt";
 import RecivingsPage from "../pages/receivings/RecivingsPage";
@@ -35,141 +36,145 @@ import AdminProtected from "./protected/AdminProtected";
 import ProtectedResetRoute from "./protected/ProtectedResetRoute";
 
 const routes: RouteObject[] = [
-    {
+  {
+    path: "/",
+    element: (
+      <AdminProtected>
+        <MainLayout />
+      </AdminProtected>
+    ),
+    children: [
+      {
         path: "/",
-        element: (
-            <AdminProtected>
-                <MainLayout />
-            </AdminProtected>
-        ),
-        children: [
-            {
-                path: "/",
-                element: <DashboardPage />,
-            },
-            {
-                path: "/items",
-                element: <AllItemsPage />,
-            },
-            {
-                path: "/items/:itemId",
-                element: <ItemViewPage />,
-            },
-            {
-                path: "/items/new-item",
-                element: <CreateItemPage />,
-            },
-            {
-                path: "/categories",
-                element: <AllCategories />,
-            },
-            {
-                path: "/attributes",
-                element: <AttributesPage />,
-            },
-            {
-                path: "/suppliers",
-                element: <SuppliersPage />,
-            },
-            {
-                path: "/suppliers/new-supplier",
-                element: <NewSuplier />,
-            },
-            {
-                path: "/suppliers/edit-supplier/",
-                element: <EditSupplier />,
-            },
-            {
-                path: "/customers",
-                element: <Customerspage />,
-            },
-            {
-                path: "/employees",
-                element: <AllEmployeesPage />,
-            },
-            {
-                path: "/employees/new-employee",
-                element: <CreateEmployeePage />,
-            },
-            {
-                path: "/employees/edit-employee",
-                element: <EditEmployeePage />,
-            },
-            {
-                path: "/expenses",
-                element: <AllExpensesPage />,
-            },
-            {
-                path: "/bank-deposit",
-                element: <BankDeposites />,
-            },
-            {
-                path: "/expenses/new-expense",
-                element: <CreateExpensePage />,
-            },
-            {
-                path: "/expenses/edit-expense",
-                element: <EditExpensePage />,
-            },
-            {
-                path: "/sales-history",
-                element: <SaleHistoryPage />,
-            },
-            {
-                path: "/sales",
-                element: <SalesPage />,
-            },
-            {
-                path: "/sales/sale-recipt",
-                element: <SaleRecipt />,
-            },
-            {
-                path: "/receiving",
-                element: <RecivingsPage />,
-            },
-            {
-                path: "/receiving/receiving-recipt",
-                element: <ReceivingsRecipt />,
-            },
-            {
-                path: "/store-config",
-                element: <StoreConfigPage />,
-            },
-            {
-                path: "/receiving-history",
-                element: <AllRecivingHistory />,
-            },
-        ],
-    },
-    {
-        path: "/login",
-        element: <LoginPage />,
-    },
-    {
-        path: "/reset-password",
-        element: <ResetPasswordPage />,
-    },
-    {
-        path: "reset-password/otp",
-        element: <ResetPasswordOtp />,
-    },
-    {
-        element: <ProtectedResetRoute />,
-        children: [
-            {
-                path: "new-password",
-                element: <NewPassword />,
-            },
-        ],
-    },
-    {
-        path: "/change-password",
-        element: <ChangePassword />,
-    },
-    {
-        path: "*",
-        element: <ErrorPage />,
-    },
+        element: <DashboardPage />,
+      },
+      {
+        path: "/items",
+        element: <AllItemsPage />,
+      },
+      {
+        path: "/items/:itemId",
+        element: <ItemViewPage />,
+      },
+      {
+        path: "/items/new-item",
+        element: <CreateItemPage />,
+      },
+      {
+        path: "/items/edit-item/:itemId",
+        element: <EditItemPage />,
+      },
+      {
+        path: "/categories",
+        element: <AllCategories />,
+      },
+      {
+        path: "/attributes",
+        element: <AttributesPage />,
+      },
+      {
+        path: "/suppliers",
+        element: <SuppliersPage />,
+      },
+      {
+        path: "/suppliers/new-supplier",
+        element: <NewSuplier />,
+      },
+      {
+        path: "/suppliers/edit-supplier/",
+        element: <EditSupplier />,
+      },
+      {
+        path: "/customers",
+        element: <Customerspage />,
+      },
+      {
+        path: "/employees",
+        element: <AllEmployeesPage />,
+      },
+      {
+        path: "/employees/new-employee",
+        element: <CreateEmployeePage />,
+      },
+      {
+        path: "/employees/edit-employee",
+        element: <EditEmployeePage />,
+      },
+      {
+        path: "/expenses",
+        element: <AllExpensesPage />,
+      },
+      {
+        path: "/bank-deposit",
+        element: <BankDeposites />,
+      },
+      {
+        path: "/expenses/new-expense",
+        element: <CreateExpensePage />,
+      },
+      {
+        path: "/expenses/edit-expense",
+        element: <EditExpensePage />,
+      },
+      {
+        path: "/sales-history",
+        element: <SaleHistoryPage />,
+      },
+      {
+        path: "/sales",
+        element: <SalesPage />,
+      },
+      {
+        path: "/sales/sale-recipt",
+        element: <SaleRecipt />,
+      },
+      {
+        path: "/receiving",
+        element: <RecivingsPage />,
+      },
+      {
+        path: "/receiving/receiving-recipt",
+        element: <ReceivingsRecipt />,
+      },
+      {
+        path: "/store-config",
+        element: <StoreConfigPage />,
+      },
+      {
+        path: "/receiving-history",
+        element: <AllRecivingHistory />,
+      },
+    ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPasswordPage />,
+  },
+  {
+    path: "reset-password/otp",
+    element: <ResetPasswordOtp />,
+  },
+  {
+    element: <ProtectedResetRoute />,
+    children: [
+      {
+        path: "new-password",
+        element: <NewPassword />,
+      },
+    ],
+  },
+  {
+    path: "/change-password",
+    element: <ChangePassword />,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
+  },
 ];
 
 export const router = createBrowserRouter(routes);
