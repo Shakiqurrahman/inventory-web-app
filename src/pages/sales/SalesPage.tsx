@@ -60,7 +60,7 @@ const SalesPage = () => {
       const extendItem = {
         ...item,
         quantity: 1,
-        discount: 0,
+        discount: parseInt(item?.discount) || 0,
         totalPrice: item.sellPrice * 1,
       };
       dispatch(addSelectedItems(extendItem));
