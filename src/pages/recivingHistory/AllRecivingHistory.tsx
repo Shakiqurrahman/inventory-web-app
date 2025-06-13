@@ -142,7 +142,10 @@ const AllRecivingHistory = () => {
                                 data.map((sale, index) => (
                                     <tr
                                         onClick={() => {
-                                            setSaleRecivingDetails(sale);
+                                            setSaleRecivingDetails({
+                                                ...sale,
+                                                saleStatus: "DUE",
+                                            });
                                             setShowModal(true);
                                         }}
                                         key={index}
