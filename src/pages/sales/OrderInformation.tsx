@@ -162,7 +162,10 @@ const OrderInformation = () => {
         variantId: item.id,
         quantity: item.quantity,
         price: item.totalPrice,
-        discountPercentage: item.discount,
+        discountPercentage:
+          typeof item.discount === "string"
+            ? parseFloat(item.discount)
+            : item.discount,
       }));
       const paid = payments.reduce((acc, curr) => acc + curr.amount, 0);
       const formData = {
