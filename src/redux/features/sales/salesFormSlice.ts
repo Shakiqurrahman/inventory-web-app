@@ -80,6 +80,9 @@ const salesFormSlice = createSlice({
         selectedEmployee: action.payload,
       };
     },
+    setCustomerId: (state, action) => {
+      state.salesForm.customerId = action.payload;
+    },
     setCustomer: (state, action) => {
       state.salesForm = { ...state.salesForm, customer: action.payload };
     },
@@ -121,6 +124,7 @@ export const {
   updateSelectedItem,
   updateTotalAmount,
   setSelectedEmployee,
+  setCustomerId,
   setCustomer,
   changeFreeSaleValue,
   addPayments,

@@ -35,8 +35,6 @@ const OrderInformation = () => {
     (totalAmount && totalAmount.toString()) || ""
   );
 
-  console.log(totalAmount);
-
   const handleChangeFreeSale = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch(changeFreeSaleValue(e.target.checked));
   };
