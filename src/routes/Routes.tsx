@@ -16,12 +16,14 @@ import CreateItemPage from "../pages/items/CreateItemPage";
 import LoginPage from "../pages/LoginPage";
 
 import ItemViewPage from "../pages/items/ItemViewPage";
+import ReceivingsRecipt from "../pages/receivings/ReceivingsRecipt";
 import RecivingsPage from "../pages/receivings/RecivingsPage";
 import AllRecivingHistory from "../pages/recivingHistory/AllRecivingHistory";
 import ChangePassword from "../pages/resetPassword/ChangePassword";
 import NewPassword from "../pages/resetPassword/NewPassword";
 import ResetPasswordOtp from "../pages/resetPassword/ResetPasswordOtp";
 import ResetPasswordPage from "../pages/resetPassword/ResetPasswordPage";
+import SaleRecipt from "../pages/sales/SaleRecipt";
 import SalesPage from "../pages/sales/SalesPage";
 import SaleHistoryPage from "../pages/salesHistory/SaleHistoryPage";
 import StoreConfigPage from "../pages/storeConfig/StoreConfigPage";
@@ -118,8 +120,16 @@ const routes: RouteObject[] = [
                 element: <SalesPage />,
             },
             {
+                path: "/sales/sale-recipt",
+                element: <SaleRecipt />,
+            },
+            {
                 path: "/receiving",
                 element: <RecivingsPage />,
+            },
+            {
+                path: "/receiving/receiving-recipt",
+                element: <ReceivingsRecipt />,
             },
             {
                 path: "/store-config",
