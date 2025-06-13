@@ -60,8 +60,11 @@ const SalesPage = () => {
       const extendItem = {
         ...item,
         quantity: 1,
-        discount: parseInt(item?.discount) || 0,
-        totalPrice: item.sellPrice * 1,
+        discount: parseFloat(item?.discountPercentage).toFixed(2) || 0,
+        totalPrice:
+          parseFloat(item?.discountPercentage) > 0
+            ? item.sellPrice * (1 - item?.discountPercentage / 100)
+            : item.sellPrice,
       };
       dispatch(addSelectedItems(extendItem));
       setSearchItemValue("");
