@@ -4,12 +4,18 @@ const expensesApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getSalesHistory: builder.query({
             query: (args = {}) => {
-                const { page, limit = 1, search = "" } = args || {};
+                const {
+                    page,
+                    limit = 1,
+                    search = "",
+                    dateRange = "all_time",
+                } = args || {};
 
                 const queryParams = new URLSearchParams();
                 if (search) queryParams.append("search", search);
                 if (page) queryParams.append("page", page);
                 if (limit) queryParams.append("limit", limit);
+                if (dateRange) queryParams.append("dateRange", dateRange);
 
                 return {
                     url: `/sales?${queryParams.toString()}`,

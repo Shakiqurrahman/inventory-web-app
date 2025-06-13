@@ -23,6 +23,7 @@ const SaleHistoryPage = () => {
     const [showclose, setShowClose] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [search, setSearch] = useState("");
+    const [dateFilter, setDateFilter] = useState("all_time");
 
     const {
         data: response,
@@ -33,6 +34,7 @@ const SaleHistoryPage = () => {
             page,
             limit: showLimit,
             search,
+            dateRange: dateFilter,
         },
         {
             skip: !page,
@@ -177,50 +179,71 @@ const SaleHistoryPage = () => {
                     </select>
                 </div> */}
 
-                {showSearchedFor ? (
-                    <div className="flex items-center gap-4 mb-1.5">
-                        <h2 className="text-base font-medium">
-                            Search for &quot;{search}&quot;
-                        </h2>
-                        <button
-                            type="button"
-                            onClick={handleClearButton}
-                            className="bg-gray-600 text-white  px-4 py-1.5 rounded-full font-medium text-sm cursor-pointer"
-                        >
-                            {isFetching ? "Searching..." : "Clear"}
-                        </button>
-                    </div>
-                ) : (
-                    <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-1">
-                        <FiSearch className="text-lg shrink-0 text-gray-500" />
-                        <input
-                            type="text"
-                            name="search"
-                            id="search"
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                            placeholder="Search Expense"
-                            className="placeholder:text-sm size-full outline-none"
-                        />
-                        <button
-                            onClick={() => setSearchValue("")}
-                            className={`bg-gray-200 cursor-pointer hover:bg-gray-300 duration-300  rounded-full p-1 ${
-                                showclose ? "block" : "hidden"
-                            }`}
-                        >
-                            <RxCross2 className="text-sm " />
-                        </button>
+                <div className="flex gap-4 flex-wrap lg:flex-nowrap items-center">
+                    {showSearchedFor ? (
+                        <div className="flex items-center gap-4 mb-1.5">
+                            <h2 className="text-base font-medium">
+                                Search for &quot;{search}&quot;
+                            </h2>
+                            <button
+                                type="button"
+                                onClick={handleClearButton}
+                                className="bg-gray-600 text-white  px-4 py-1.5 rounded-full font-medium text-sm cursor-pointer"
+                            >
+                                {isFetching ? "Searching..." : "Clear"}
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-1">
+                            <FiSearch className="text-lg shrink-0 text-gray-500" />
+                            <input
+                                type="text"
+                                name="search"
+                                id="search"
+                                value={searchValue}
+                                onChange={(e) => setSearchValue(e.target.value)}
+                                placeholder="Search Expense"
+                                className="placeholder:text-sm size-full outline-none"
+                            />
+                            <button
+                                onClick={() => setSearchValue("")}
+                                className={`bg-gray-200 cursor-pointer hover:bg-gray-300 duration-300  rounded-full p-1 ${
+                                    showclose ? "block" : "hidden"
+                                }`}
+                            >
+                                <RxCross2 className="text-sm " />
+                            </button>
 
-                        <button
-                            type="button"
-                            onClick={handleSearchButton}
-                            disabled={!searchValue}
-                            className="bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer text-white py-2 px-3 rounded-r-lg text-sm"
-                        >
-                            Search
-                        </button>
-                    </div>
-                )}
+                            <button
+                                type="button"
+                                onClick={handleSearchButton}
+                                disabled={!searchValue}
+                                className="bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer text-white py-2 px-3 rounded-r-lg text-sm"
+                            >
+                                Search
+                            </button>
+                        </div>
+                    )}
+                    <select
+                        className="border border-gray-300 text-sm p-2 rounded-sm outline-0 bg-gray-100"
+                        defaultValue="all_time"
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setDateFilter(value);
+                            console.log("Filter by:", value);
+                            // handle filter logic here
+                        }}
+                    >
+                        <option value="today">Today</option>
+                        <option value="7_days">7 Days</option>
+                        <option value="this_month">This Month</option>
+                        <option value="last_month">Last Month</option>
+                        <option value="6_months">6 Months</option>
+                        <option value="this_year">This Year</option>
+                        <option value="last_year">Last Year</option>
+                        <option value="all_time">All Time</option>
+                    </select>
+                </div>
 
                 <div className="mt-10 overflow-x-auto text-nowrap">
                     <table className="w-full border-collapse rounded-md text-gray-700">
