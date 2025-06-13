@@ -16,7 +16,7 @@ import CreateItemPage from "../pages/items/CreateItemPage";
 import LoginPage from "../pages/LoginPage";
 
 import ItemViewPage from "../pages/items/ItemViewPage";
-import ReceivingsRecipt from "../pages/receivings/receivingsRecipt";
+import ReceivingsRecipt from "../pages/receivings/ReceivingsRecipt";
 import RecivingsPage from "../pages/receivings/RecivingsPage";
 import AllRecivingHistory from "../pages/recivingHistory/AllRecivingHistory";
 import ChangePassword from "../pages/resetPassword/ChangePassword";
