@@ -3,12 +3,13 @@ import toast from "react-hot-toast";
 
 export interface IBankDeposite {
     id?: string;
-    transectionId: string;
+    transactionId: string;
     bankName: string;
     accountNumber?: string;
     amount: number;
     reason?: string;
     date: string;
+    transactionType: "DEPOSIT" | "WITHDRAW";
 }
 
 type bankDepositeState = {
