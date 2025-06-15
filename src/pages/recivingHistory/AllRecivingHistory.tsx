@@ -3,14 +3,12 @@ import { BsThreeDots } from "react-icons/bs";
 import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router";
 import DropdownMenuList from "../../components/DropdownMenulist";
-import type { ISaleHistory } from "../../redux/features/salesHistory/saleHistorySlice";
-import RecivingHistoydetails from "./RecivingHistoydetails";
 
 const AllRecivingHistory = () => {
     const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
-    const [showModal, setShowModal] = useState(false);
-    const [saleRecivingDetails, setSaleRecivingDetails] =
-        useState<ISaleHistory | null>(null);
+    // const [showModal, setShowModal] = useState(false);
+    // const [saleRecivingDetails, setSaleRecivingDetails] =
+    //     useState<ISaleHistory | null>(null);
     const data = [
         {
             id: 1,
@@ -141,13 +139,14 @@ const AllRecivingHistory = () => {
                             {data.length > 0 ? (
                                 data.map((sale, index) => (
                                     <tr
-                                        onClick={() => {
-                                            setSaleRecivingDetails({
-                                                ...sale,
-                                                saleStatus: "DUE",
-                                            });
-                                            setShowModal(true);
-                                        }}
+                                        // onClick={() => {
+                                        //     setSaleRecivingDetails({
+                                        //         ...sale,
+                                        //         saleStatus: "DUE",
+                                        //     } as ISaleHistory);
+
+                                        //     setShowModal(true);
+                                        // }}
                                         key={index}
                                         className="hover:bg-gray-100"
                                     >
@@ -258,13 +257,13 @@ const AllRecivingHistory = () => {
                 </div>
             </div>
             {/* Future implementation will go here */}
-            {showModal && saleRecivingDetails && (
+            {/* {showModal && saleRecivingDetails && (
                 <RecivingHistoydetails
                     saleHistoryDetails={saleRecivingDetails}
                     setShowModal={setShowModal} // pass setter function
                     title={"Reciving Information"}
                 />
-            )}
+            )} */}
         </div>
     );
 };

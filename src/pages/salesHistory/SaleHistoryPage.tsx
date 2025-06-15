@@ -40,6 +40,7 @@ const SaleHistoryPage = () => {
             skip: !page,
         }
     );
+    console.log(response);
 
     const { data: SalesHistory, meta } = response || {};
 
@@ -250,10 +251,9 @@ const SaleHistoryPage = () => {
                         <thead>
                             <tr className="bg-gray-200 text-left *:font-semibold text-sm">
                                 <th className="p-3">ID</th>
-                                <th className="p-3">BarCode</th>
+                                <th className="p-3">Invoice ID</th>
                                 <th className="p-3">Payment Method</th>
                                 <th className="p-3">Customer Name</th>
-                                <th className="p-3">Item Name</th>
                                 <th className="p-3">Due Amount</th>
                                 <th className="p-3">Paid Amount</th>
                                 <th className="py-3">Total Price</th>
@@ -284,16 +284,15 @@ const SaleHistoryPage = () => {
                                         >
                                             <td className="p-3">{index + 1}</td>
                                             <td className="p-3">
-                                                {sale.barcode}
+                                                {sale.invoiceId}
                                             </td>
                                             <td className="p-3">
-                                                {sale.paymentMethod}
+                                                {sale.payments[0]?.method}
                                             </td>
                                             <td className="p-3">
-                                                {sale.customerName}
-                                            </td>
-                                            <td className="p-3">
-                                                {sale.itemName}
+                                                {sale.customer
+                                                    ? sale.customer.name
+                                                    : "N/A"}
                                             </td>
                                             <td className="p-3">
                                                 {sale.dueAmount}
@@ -311,7 +310,7 @@ const SaleHistoryPage = () => {
                                                         "PAID"
                                                             ? "bg-green-100 text-green-500"
                                                             : "bg-red-100 text-red-500"
-                                                    } capitalize text-center text-xs p-1.5 w-[50px] rounded-md`}
+                                                    } capitalize text-center text-xs p-1.5 w-[80px] rounded-md`}
                                                 >
                                                     {sale.saleStatus}
                                                 </div>

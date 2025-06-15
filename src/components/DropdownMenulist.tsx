@@ -65,7 +65,8 @@ const DropdownMenuList = ({
             window.removeEventListener("scroll", handleScroll, true);
             window.removeEventListener("resize", handleResize);
         };
-    });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, anchorEl]);
 
     if (!open || !anchorEl) return null;
 

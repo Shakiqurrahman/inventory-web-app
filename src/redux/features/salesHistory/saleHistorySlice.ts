@@ -1,7 +1,7 @@
 export type ISaleHistory = {
     id?: number;
-    barcode: string;
-    customerName: string;
+    invoiceId: string;
+    customer: { id?: number; name: string; phone: string };
     dueAmount: string;
     itemBrand: string;
     itemName: string;
@@ -10,4 +10,5 @@ export type ISaleHistory = {
     status: boolean;
     totalPrice: string;
     saleStatus: "PAID" | "DUE";
+    payments: { amount: number; method: string }[];
 };
