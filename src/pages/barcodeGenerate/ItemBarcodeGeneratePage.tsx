@@ -78,10 +78,10 @@ const ItemBarcodeGeneratePage = () => {
                 marginTop={0}
               />
             </div>
-            <div className="flex flex-wrap gap-[2px] px-1 justify-between -mt-1 relative z-[99]">
-              <span>P: ৳{data?.sellPrice}</span>
-              {data?.attributes?.length > 0 &&
-                data?.attributes?.map(
+            {data?.attributes?.length > 0 ? (
+              <div className="flex flex-wrap gap-[2px] px-1 justify-between -mt-1 relative z-[99]">
+                <span>P: ৳{data?.sellPrice}</span>
+                {data?.attributes?.map(
                   (
                     attr: {
                       [key: string]: string;
@@ -96,7 +96,12 @@ const ItemBarcodeGeneratePage = () => {
                     );
                   }
                 )}
-            </div>
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-[2px] px-1 justify-center -mt-1 relative z-[99]">
+                <span>Price: ৳{data?.sellPrice}</span>
+              </div>
+            )}
           </div>
         ))}
       </div>
