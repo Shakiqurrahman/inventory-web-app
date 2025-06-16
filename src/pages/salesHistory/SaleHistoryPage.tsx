@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";
+import { IoIosReturnLeft } from "react-icons/io";
+import { LuPrinter } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router";
 import DropdownMenuList from "../../components/DropdownMenulist";
@@ -370,16 +372,20 @@ const SaleHistoryPage = () => {
                                                         }
                                                     >
                                                         <button
-                                                            className="p-2"
+                                                            className="p-2 flex items-center gap-2"
                                                             type="button"
                                                             onClick={
                                                                 handleRefund
                                                             }
                                                         >
-                                                            Refund
+                                                            <IoIosReturnLeft />
+                                                            <span>Return</span>
                                                         </button>
-                                                        <div className="p-2">
-                                                            Print Invoice
+                                                        <div className="p-2 flex items-center gap-2">
+                                                            <LuPrinter />
+                                                            <span>
+                                                                Print Invoice
+                                                            </span>
                                                         </div>
                                                     </DropdownMenuList>
                                                 </div>
