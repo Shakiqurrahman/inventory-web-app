@@ -83,7 +83,7 @@ const ProfileModal = ({ user }: IProps) => {
             <button
               type="button"
               onClick={handleLogout}
-              className="flex gap-2 items-center text-sm text-red-700 hover:bg-gray-200 p-3 w-full"
+              className="flex gap-2 items-center text-sm text-red-700 hover:bg-gray-200 p-3 w-full cursor-pointer"
             >
               <MdOutlinePowerSettingsNew className="text-lg" />
               Logout

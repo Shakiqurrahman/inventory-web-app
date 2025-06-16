@@ -34,10 +34,11 @@ export type IProductVariant = {
 };
 
 export type IProductSuggestions = {
-    id: string;
-    name: string;
-    barcode: string;
-    stock: number;
-    sellPrice: number;
-    attributes: Record<string, string>;
-  };
+  id: string;
+  name: string;
+  barcode: string;
+  stock: number;
+  sellPrice: number;
+  costPrice: number;
+  attributes: Record<string, string>;
+};

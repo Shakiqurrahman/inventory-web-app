@@ -12,6 +12,7 @@ import { useNavigate } from "react-router";
 import { useCreateSaleMutation } from "../../redux/features/sales/salesApi";
 import {
   addPayments,
+  changeCorporateSale,
   changeDueAmount,
   changeFreeSaleDueAmount,
   changeFreeSaleValue,
@@ -45,6 +46,7 @@ const OrderInformation = () => {
       customer,
       customerId,
       freeSaleDueAmount,
+      isCorporateSale,
     },
   } = useSelector((state: RootState) => state.salesForm);
 
@@ -161,7 +163,7 @@ const OrderInformation = () => {
       const saleVariants = selectedItems.map((item) => ({
         variantId: item.id,
         quantity: item.quantity,
-        price: item.totalPrice,
+        price: item.sellPrice,
         discountPercentage:
           typeof item.discount === "string"
             ? parseFloat(item.discount)
@@ -183,6 +185,7 @@ const OrderInformation = () => {
         isFree: freeSale,
         discountAmount: discountAmount,
         discountPercentage: discountPercentage,
+        isCorporateSale: isCorporateSale,
       };
       const confirm = window.confirm("Are you sure you want to sale?");
       if (confirm && formData) {
@@ -401,6 +404,24 @@ const OrderInformation = () => {
         >
           Complete Sale
         </button>
+      </div>
+      <div className="p-4">
+        <div className="flex items-center gap-2 select-none mt-3">
+          <input
+            type="checkbox"
+            name="showComment"
+            id="showComment"
+            className="scale-130"
+            checked={isCorporateSale}
+            onChange={(e) => dispatch(changeCorporateSale(e.target.checked))}
+          />
+          <label
+            htmlFor="showComment"
+            className="text-gray-500 text-xs w-full cursor-pointer"
+          >
+            Corporate Sale
+          </label>
+        </div>
       </div>
     </div>
   );

@@ -29,6 +29,7 @@ type SalesForm = {
   discountAmount: number;
   discountPercentage: number;
   freeSaleDueAmount: number;
+  isCorporateSale: boolean;
 };
 
 type SalesFormStateTypes = {
@@ -51,6 +52,7 @@ const initialState: SalesFormStateTypes = {
     discountAmount: 0,
     discountPercentage: 0,
     freeSaleDueAmount: 0,
+    isCorporateSale: false,
   },
 };
 
@@ -134,10 +136,14 @@ const salesFormSlice = createSlice({
         discountAmount: 0,
         discountPercentage: 0,
         freeSaleDueAmount: 0,
+        isCorporateSale: false,
       };
     },
     changeFreeSaleDueAmount: (state, action) => {
       state.salesForm.freeSaleDueAmount = action.payload;
+    },
+    changeCorporateSale: (state, action) => {
+      state.salesForm.isCorporateSale = action.payload;
     },
   },
 });
@@ -157,5 +163,6 @@ export const {
   updateDiscountAmount,
   resetForm,
   changeFreeSaleDueAmount,
+  changeCorporateSale,
 } = salesFormSlice.actions;
 export default salesFormSlice.reducer;

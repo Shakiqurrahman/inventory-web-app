@@ -35,7 +35,6 @@ import { useReactToPrint } from "react-to-print";
 const ItemBarcodeGeneratePage = () => {
   const { state } = useLocation();
   const data = state?.item;
-  console.log(state);
   const printRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
     contentRef: printRef,

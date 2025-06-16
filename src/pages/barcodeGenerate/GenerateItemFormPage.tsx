@@ -60,8 +60,6 @@ const GenerateItemFormPage = () => {
     ? variants?.find((v: VariantType) => v?.id === selectedVariant) || null
     : null;
 
-  console.log(selectedVariantObj);
-
   const handleGenerate = () => {
     const generateItem = {
       item: selectedVariantObj,

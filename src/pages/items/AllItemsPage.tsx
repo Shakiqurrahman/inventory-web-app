@@ -107,7 +107,7 @@ const AllItemsPage = () => {
                 id="search"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Search Expense"
+                placeholder="Search Item"
                 className="placeholder:text-sm size-full outline-none"
               />
               <button

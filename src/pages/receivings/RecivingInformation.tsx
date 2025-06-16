@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { IoIosCloseCircle } from "react-icons/io";
-import { MdCancel } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router";
 import { setSuppierId } from "../../redux/features/receiving/receivingFormSlice";
@@ -51,9 +50,9 @@ export const RecivingInformation = () => {
     <div className="bg-white">
       <h1 className="bg-primary text-white font-medium px-5 py-3">Supplier</h1>
 
-      <button className="text-gray-500 cursor-pointer flex gap-1 items-center mx-auto p-2 rounded-lg text-xs mb-2 mt-4 bg-red-100 border border-red-300">
+      {/* <button className="text-gray-500 cursor-pointer flex gap-1 items-center mx-auto p-2 rounded-lg text-xs mb-2 mt-4 bg-red-100 border border-red-300">
         <MdCancel /> Cancel Receiveing.
-      </button>
+      </button> */}
 
       <div className="p-5">
         {!supplierId && (

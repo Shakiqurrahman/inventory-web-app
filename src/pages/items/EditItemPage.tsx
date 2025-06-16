@@ -64,6 +64,9 @@ const EditItemPage = () => {
       navigate("/not-found");
     }
     if (itemData && !isGettingItemData) {
+      const findStock = itemData?.variant?.find(
+        (v: IProductVariant) => v?.attributes
+      );
       const defaultValues = {
         name: itemData?.name || "",
         costPrice: itemData?.costPrice?.toString() || "",
@@ -73,13 +76,12 @@ const EditItemPage = () => {
         categoryId: itemData?.categoryId || "",
         brand: itemData?.brand || "",
         stock:
-          !itemData?.isVariantChecked && itemData?.variant?.length === 1
-            ? itemData?.variant[0]?.stock?.toString()
+          !itemData?.isVariantChecked && itemData?.variant?.length > 0
+            ? findStock.stock?.toString()
             : itemData?.stock?.toString() || "",
         isVariantChecked: itemData?.isVariantChecked || false,
       };
       reset(defaultValues);
-      console.log(itemData);
     }
   }, [itemData, isGettingItemData, reset, navigate]);
 
@@ -110,10 +112,11 @@ const EditItemPage = () => {
         discountPercentage:
           (discountPercentage && parseFloat(discountPercentage)) || 0,
       };
-      console.log(finalData);
       try {
-        const res = await updateItem({ itemData: finalData, itemId }).unwrap();
-        console.log(res);
+        await updateItem({
+          itemData: finalData,
+          itemId: itemId,
+        }).unwrap();
         toast.success("Item Updated Successfully");
         navigate("/items");
         // reset form
@@ -165,7 +168,6 @@ const EditItemPage = () => {
         (item: IProductVariant) =>
           item?.attributes && typeof item?.attributes === "object"
       );
-      console.log(filterAutoAddedVariant, "filter");
 
       const updatedVariations = [
         ...finalVariations,
@@ -188,9 +190,11 @@ const EditItemPage = () => {
         attributes,
         variant: updatedVariations,
       };
-      console.log(finalData);
       try {
-        await updateItem(finalData).unwrap();
+        await updateItem({
+          itemData: finalData,
+          itemId: itemId,
+        }).unwrap();
         toast.success("Item Updated Successfully");
         navigate("/items");
         // reset form
