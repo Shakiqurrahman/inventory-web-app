@@ -107,6 +107,23 @@ const CreateEmployeePage = () => {
                     )}
                 </div>
                 <div>
+                    <label htmlFor="phone">
+                        Salary <span className="text-red-600">*</span>
+                    </label>
+                    <input
+                        {...register("phone")}
+                        type="text"
+                        name="phone"
+                        id="phone"
+                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                    />
+                    {errors.phone && (
+                        <p className="text-red-500 text-xs">
+                            {errors.phone.message}
+                        </p>
+                    )}
+                </div>
+                <div>
                     <label htmlFor="address">Address</label>
                     <textarea
                         {...register("address")}
