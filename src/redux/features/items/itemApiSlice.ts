@@ -81,6 +81,14 @@ const itemsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["items"],
     }),
+    updateItem: builder.mutation({
+      query: (itemData) => ({
+        url: "/products",
+        method: "PUT",
+        body: itemData,
+      }),
+      invalidatesTags: ["items"],
+    }),
     deleteItem: builder.mutation({
       query: (itemId) => ({
         url: `products/${itemId}`,
@@ -102,6 +110,7 @@ const itemsApi = baseApi.injectEndpoints({
 export const {
   useGetItemsQuery,
   useCreateItemMutation,
+  useUpdateItemMutation,
   useDeleteItemMutation,
   useGetSingleItemQuery,
 } = itemsApi;

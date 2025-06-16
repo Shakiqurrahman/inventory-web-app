@@ -8,20 +8,25 @@ import { useGetCategoriesQuery } from "../../redux/features/categories/categorie
 import type { ICategory } from "../../redux/features/categories/categoriesSlice";
 import {
   useGetSingleItemQuery,
+  useUpdateItemMutation,
   type IProductVariant,
 } from "../../redux/features/items/itemApiSlice";
-import { changeFormValues } from "../../redux/features/items/itemFormSlice";
+import {
+  changeFormValues,
+  resetItemForm,
+} from "../../redux/features/items/itemFormSlice";
 import type { RootState } from "../../redux/store";
+import { getErrorMessage } from "../../utils/errorHandler";
 import EditVariantForm from "./EditVariantForm";
 import { fullItemFormSchema, type ItemFormInput } from "./zodSchemaItem";
 
 const EditItemPage = () => {
   const { itemId } = useParams();
 
-  console.log(itemId);
-
   const { data: itemData, isLoading: isGettingItemData } =
     useGetSingleItemQuery(itemId, { skip: !itemId });
+
+  const [updateItem, { isLoading }] = useUpdateItemMutation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -105,31 +110,31 @@ const EditItemPage = () => {
         discountPercentage:
           (discountPercentage && parseFloat(discountPercentage)) || 0,
       };
-      //   try {
-      //     await createItem(finalData).unwrap();
-      //     toast.success("Item Created Successfully");
-      //     navigate("/items");
-      //     // reset form
-      //     const resetForm = {
-      //       form: {
-      //         name: "",
-      //         costPrice: "",
-      //         sellPrice: "",
-      //         discountPercentage: "",
-      //         description: "",
-      //         categoryId: "",
-      //         brand: "",
-      //         stock: "",
-      //         isVariantChecked: false,
-      //       },
-      //       attributes: [],
-      //       variations: [],
-      //     };
-      //     dispatch(resetItemForm(resetForm));
-      //     reset();
-      //   } catch (error) {
-      //     toast.error(getErrorMessage(error));
-      //   }
+      try {
+        await updateItem(finalData).unwrap();
+        toast.success("Item Updated Successfully");
+        navigate("/items");
+        // reset form
+        const resetForm = {
+          form: {
+            name: "",
+            costPrice: "",
+            sellPrice: "",
+            discountPercentage: "",
+            description: "",
+            categoryId: "",
+            brand: "",
+            stock: "",
+            isVariantChecked: false,
+          },
+          attributes: [],
+          variations: [],
+        };
+        dispatch(resetItemForm(resetForm));
+        reset();
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+      }
     }
 
     if (isVariantChecked && variations.length <= 0) {
@@ -153,27 +158,16 @@ const EditItemPage = () => {
           })
         ),
       }));
-      //   const updatedVariations = itemData?.variant
-      //     .map((apiVar: IProductVariant) => {
-      //       const matched = finalVariations.find((v) => v.id === apiVar.id);
 
-      //       if (matched) {
-      //         return {
-      //           ...apiVar,
-      //           stock: matched.stock,
-      //           sellPrice: matched.sellPrice,
-      //           costPrice: matched.costPrice,
-      //           attributes: matched.attributes, // this is the parsed object
-      //         };
-      //       }
-
-      //       // If no match found, keep API data as is
-      //       return apiVar;
-      //     });
+      const filterAutoAddedVariant = itemData?.variant?.filter(
+        (item: IProductVariant) =>
+          item?.attributes && typeof item?.attributes === "object"
+      );
+      console.log(filterAutoAddedVariant, "filter");
 
       const updatedVariations = [
         ...finalVariations,
-        ...(itemData?.variant ?? [])
+        ...(filterAutoAddedVariant ?? [])
           .filter(
             (apiItem: IProductVariant) =>
               !finalVariations.some((localItem) => localItem.id === apiItem.id)
@@ -193,31 +187,31 @@ const EditItemPage = () => {
         variant: updatedVariations,
       };
       console.log(finalData);
-      //   try {
-      //     await createItem(finalData).unwrap();
-      //     toast.success("Item Created Successfully");
-      //     navigate("/items");
-      //     // reset form
-      //     const resetForm = {
-      //       form: {
-      //         name: "",
-      //         costPrice: "",
-      //         sellPrice: "",
-      //         discountPercentage: "",
-      //         description: "",
-      //         categoryId: "",
-      //         brand: "",
-      //         stock: "",
-      //         isVariantChecked: false,
-      //       },
-      //       attributes: [],
-      //       variations: [],
-      //     };
-      //     reset();
-      //     dispatch(resetItemForm(resetForm));
-      //   } catch (error) {
-      //     toast.error(getErrorMessage(error));
-      //   }
+      try {
+        await updateItem(finalData).unwrap();
+        toast.success("Item Updated Successfully");
+        navigate("/items");
+        // reset form
+        const resetForm = {
+          form: {
+            name: "",
+            costPrice: "",
+            sellPrice: "",
+            discountPercentage: "",
+            description: "",
+            categoryId: "",
+            brand: "",
+            stock: "",
+            isVariantChecked: false,
+          },
+          attributes: [],
+          variations: [],
+        };
+        reset();
+        dispatch(resetItemForm(resetForm));
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+      }
     } else {
       finalData = {
         ...finalData,
@@ -388,7 +382,7 @@ const EditItemPage = () => {
         <div>
           <button
             type="submit"
-            // disabled={isLoading}
+            disabled={isLoading}
             className="cursor-pointer ml-auto bg-blue-500 text-white py-2 px-4 rounded-md disabled:bg-blue-500/50"
           >
             Update

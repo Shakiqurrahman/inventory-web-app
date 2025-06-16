@@ -35,15 +35,15 @@ const persistedAuthReducer = persistReducer(
   authReducer
 );
 
-const persistedSalesFormReducer = persistReducer(
-  createPersistConfig("sales"),
-  salesFormReducer
-);
+// const persistedSalesFormReducer = persistReducer(
+//   createPersistConfig("sales"),
+//   salesFormReducer
+// );
 
-const persistedReceivingFormReducer = persistReducer(
-  createPersistConfig("receiving"),
-  recivingFormReduer
-);
+// const persistedReceivingFormReducer = persistReducer(
+//   createPersistConfig("receiving"),
+//   recivingFormReduer
+// );
 
 export const store = configureStore({
   reducer: {
@@ -59,8 +59,8 @@ export const store = configureStore({
     expenses: expenseReducer,
     bankDeposite: bankDepositeSlice,
     itemForm: itemFormReducer,
-    salesForm: persistedSalesFormReducer,
-    receivingForm: persistedReceivingFormReducer,
+    salesForm: salesFormReducer,
+    receivingForm: recivingFormReduer,
   },
 
   middleware: (getDefaultMiddlewares) =>
