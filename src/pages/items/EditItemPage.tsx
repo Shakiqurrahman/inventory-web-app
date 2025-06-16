@@ -110,8 +110,10 @@ const EditItemPage = () => {
         discountPercentage:
           (discountPercentage && parseFloat(discountPercentage)) || 0,
       };
+      console.log(finalData);
       try {
-        await updateItem(finalData).unwrap();
+        const res = await updateItem({ itemData: finalData, itemId }).unwrap();
+        console.log(res);
         toast.success("Item Updated Successfully");
         navigate("/items");
         // reset form

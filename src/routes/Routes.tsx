@@ -15,6 +15,7 @@ import AllItemsPage from "../pages/items/AllItemsPage";
 import CreateItemPage from "../pages/items/CreateItemPage";
 import LoginPage from "../pages/LoginPage";
 
+import GenerateItemFormPage from "../pages/barcodeGenerate/GenerateItemFormPage";
 import ItemBarcodeGeneratePage from "../pages/barcodeGenerate/ItemBarcodeGeneratePage";
 import EditItemPage from "../pages/items/EditItemPage";
 import ItemViewPage from "../pages/items/ItemViewPage";
@@ -151,7 +152,11 @@ const routes: RouteObject[] = [
         element: <AllRecivingHistory />,
       },
       {
-        path: "/barcode-generate",
+        path: "/generate-item-barcode/:itemId",
+        element: <GenerateItemFormPage />,
+      },
+      {
+        path: "/print-item-barcode",
         element: <ItemBarcodeGeneratePage />,
       },
     ],

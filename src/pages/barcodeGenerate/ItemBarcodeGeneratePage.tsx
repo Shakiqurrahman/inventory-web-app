@@ -1,119 +1,107 @@
 import { useRef } from "react";
 import Barcode from "react-barcode";
-import { FiPrinter } from "react-icons/fi";
-import { TbCurrencyTaka } from "react-icons/tb";
+import { useLocation } from "react-router";
+import { useReactToPrint } from "react-to-print";
+
+// const pageStyle = `
+// @page {
+//     size: 38mm 25mm;
+// margin: 0;
+// };
+
+// @media all {
+
+//     .pageBreak {
+//         display: none
+//     }
+
+// }
+
+// @media print {
+
+// body {
+//     margin: 0;
+//     padding: 0;
+//   }
+
+//     .pageBreak {
+//         page-break-before: always;
+//     }
+
+// }
+
+// `;
 
 const ItemBarcodeGeneratePage = () => {
-    const printRef = useRef<HTMLDivElement>(null);
+  const { state } = useLocation();
+  const data = state?.item;
+  console.log(state);
+  const printRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    // pageStyle,
+  });
 
-    const handlePrint = () => {
-        const printContent = printRef.current;
-        const originalContent = document.body.innerHTML;
+  const labels = Array.from({ length: state?.printQuantity });
 
-        if (printContent) {
-            const receiptHTML = printContent.innerHTML;
+  return (
+    <div className="p-4">
+      <button
+        onClick={handlePrint}
+        className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Print Labels
+      </button>
 
-            document.body.innerHTML = receiptHTML;
-            window.print();
-            document.body.innerHTML = originalContent;
-            window.location.reload(); // To restore event listeners and app state
-        }
-    };
-
-    return (
-        <div className="bg-white p-4">
-            <div className="flex flex-wrap sm:flex-nowrap gap-2 items-center sm:justify-between">
-                <h1 className="text-lg font-medium w-full sm:w-auto">
-                    Print Barcodes
-                </h1>
-                <button
-                    onClick={handlePrint}
-                    className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-5 py-2.5 cursor-pointer sm:ml-auto flex items-center gap-2"
-                >
-                    <FiPrinter /> Print Barcode
-                </button>
-                {/* <button className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-5 py-2.5 cursor-pointer flex items-center gap-2">
-          Download PDF
-        </button> */}
+      <div
+        // ref={printRef}
+        className="flex flex-wrap gap-2 print:gap-0 print:p-0"
+      >
+        {labels.map((_, index) => (
+          <div
+            ref={printRef}
+            key={index}
+            className="w-[144px] h-[95px] flex flex-col text-[10px] font-sans print:border-none print:break-inside-avoid bg-white"
+          >
+            <div className="p-1">
+              <div className="font-semibold text-center -mb-3 relative z-[99]">
+                Fit & Found
+              </div>
             </div>
-            <div className="mt-10">
-                <div className="w-[406px]" ref={printRef}>
-                    <div className="w-full mb-5 py-10">
-                        <h1 className="border-b p-2">Product description:</h1>
-                        <div className="grid grid-cols-2 *:odd:border-r *:border-b">
-                            <div className="flex items-center gap-2 p-2 text-sm">
-                                <span>Price:</span>
-                                <span className="flex items-center">
-                                    200 <TbCurrencyTaka className="text-base" />
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2 p-2 text-sm">
-                                <span>Color:</span>
-                                <span className="flex items-center">Red</span>
-                            </div>
-                        </div>
-                        <div className="flex justify-center mt-3">
-                            <Barcode
-                                width={2}
-                                format="CODE128A"
-                                height={60}
-                                textMargin={2}
-                                value="1000000000009"
-                            />
-                        </div>
-                    </div>
-                    <div className="w-full mb-5 py-10">
-                        <h1 className="border-b p-2">Product description:</h1>
-                        <div className="grid grid-cols-2 *:odd:border-r *:border-b">
-                            <div className="flex items-center gap-2 p-2 text-sm">
-                                <span>Price:</span>
-                                <span className="flex items-center">
-                                    200 <TbCurrencyTaka className="text-base" />
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2 p-2 text-sm">
-                                <span>Color:</span>
-                                <span className="flex items-center">Red</span>
-                            </div>
-                        </div>
-                        <div className="flex justify-center mt-3">
-                            <Barcode
-                                width={2}
-                                format="CODE128A"
-                                height={60}
-                                textMargin={2}
-                                value="0000330000"
-                            />
-                        </div>
-                    </div>
-                    <div className="w-full mb-5 py-10">
-                        <h1 className="border-b p-2">Product description:</h1>
-                        <div className="grid grid-cols-2 *:odd:border-r *:border-b">
-                            <div className="flex items-center gap-2 p-2 text-sm">
-                                <span>Price:</span>
-                                <span className="flex items-center">
-                                    200 <TbCurrencyTaka className="text-base" />
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2 p-2 text-sm">
-                                <span>Color:</span>
-                                <span className="flex items-center">Red</span>
-                            </div>
-                        </div>
-                        <div className="flex justify-center mt-3">
-                            <Barcode
-                                width={2}
-                                format="CODE128A"
-                                height={60}
-                                textMargin={2}
-                                value="000002220000"
-                            />
-                        </div>
-                    </div>
-                </div>
+            <div>
+              <Barcode
+                value={data?.barcode}
+                width={1}
+                height={30}
+                fontSize={10}
+                displayValue={true}
+                marginTop={0}
+              />
             </div>
-        </div>
-    );
+            <div className="flex flex-wrap gap-[2px] px-1 justify-between -mt-1 relative z-[99]">
+              <span>P: ৳{data?.sellPrice}</span>
+              {data?.attributes?.length > 0 &&
+                data?.attributes?.map(
+                  (
+                    attr: {
+                      [key: string]: string;
+                    },
+                    i: number
+                  ) => {
+                    const [key, value] = Object.entries(attr)[0];
+                    return (
+                      <span key={i}>
+                        {key.charAt(0).toUpperCase()}: {value}
+                      </span>
+                    );
+                  }
+                )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default ItemBarcodeGeneratePage;
