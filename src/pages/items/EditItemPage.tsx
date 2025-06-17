@@ -162,6 +162,7 @@ const EditItemPage = () => {
             return [key, value];
           })
         ),
+        trashAttributes: v.trashAttributes || [],
       }));
 
       const filterAutoAddedVariant = itemData?.variant?.filter(
@@ -179,6 +180,9 @@ const EditItemPage = () => {
           .map((missingItem: IProductVariant) => ({
             ...missingItem,
             isDeleted: true,
+            trashAttributes: missingItem?.trashAttributes
+              ? missingItem?.trashAttributes
+              : [],
           })),
       ];
 
