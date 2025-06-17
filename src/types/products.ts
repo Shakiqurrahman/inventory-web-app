@@ -24,6 +24,7 @@ export type IProductVariant = {
   stock: number;
   sellPrice: number;
   costPrice: number;
+  discountPercentage: number;
   attributes: Record<string, string>;
   productId: string;
   isDeleted: boolean;
@@ -46,6 +47,20 @@ export type ISaleVariant = {
   variant: IProductVariant;
   variantId: string;
   subTotal: number;
+};
+
+export type IReceiveVariant = {
+  createdAt: string;
+  id: string;
+  discountPercentage: number;
+  dueAmount: number;
+  price: number;
+  quantity: number;
+  receivingId: string;
+  subTotal: number;
+  updatedAt: string;
+  variantId: string;
+  variant: IProductVariant;
 };
 
 export type IProductSuggestions = {

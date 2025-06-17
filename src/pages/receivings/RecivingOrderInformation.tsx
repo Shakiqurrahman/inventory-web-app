@@ -142,6 +142,8 @@ const RecivingOrderInformation = () => {
         price: v?.costPrice,
         subTotal: v?.totalPrice,
       }));
+      const allQuantites = variants.every((v) => v.quantity > 0);
+      if (!allQuantites) return toast.error("Select quantity!");
       const totalPaid = payments.reduce((acc, curr) => acc + curr.amount, 0);
       const formData = {
         supplierId: supplierId,

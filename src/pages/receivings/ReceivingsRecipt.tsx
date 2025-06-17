@@ -3,41 +3,56 @@ import Barcode from "react-barcode";
 import { FiPrinter } from "react-icons/fi";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { useLocation } from "react-router";
+import { useReactToPrint } from "react-to-print";
+import { useGetReceiveByIdQuery } from "../../redux/features/receiving/receivingApi";
+import type { Payments } from "../../redux/features/sales/salesFormSlice";
+import { useGetStoreConfigDataQuery } from "../../redux/features/storeConfig/storeConfigApi";
+import type { IReceiveVariant } from "../../types/products";
 
 const ReceivingsRecipt = () => {
   const { state } = useLocation();
-  console.log(state);
+  const { data: storeData, isLoading: loadingStore } =
+    useGetStoreConfigDataQuery(null);
+  const { data: receiveData, isLoading: receiveLoading } =
+    useGetReceiveByIdQuery(state?.id, {
+      skip: !state?.id,
+    });
+  console.log(receiveData);
   const printRef = useRef<HTMLDivElement>(null);
-  const items = [
-    { qty: 3, description: "Blue Cotton T-Shirt", unitPrice: 20 },
-    { qty: 2, description: "Women's Leather Handbag", unitPrice: 80 },
-    { qty: 5, description: "Pair of Running Shoes", unitPrice: 50 },
-    { qty: 4, description: "Ceramic Coffee Mug", unitPrice: 10 },
-  ];
 
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.qty * item.unitPrice,
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+  });
+
+  const subTotal = receiveData?.recieveVariant?.reduce(
+    (acc: number, curr: IReceiveVariant) => acc + curr.subTotal,
     0
   );
-  const taxRate = 0.05;
-  const taxAmount = subtotal * taxRate;
-  const total = subtotal + taxAmount;
 
-  const handlePrint = () => {
-    const printContent = printRef.current;
-    const originalContent = document.body.innerHTML;
+  const totalPaid = receiveData?.payments?.reduce(
+    (acc: number, curr: Payments) => acc + curr?.amount,
+    0
+  );
+  const dueAmount = receiveData?.totalPrice - totalPaid;
 
-    if (printContent) {
-      const receiptHTML = printContent.innerHTML;
+  const formatDate = (isoString: string): string => {
+    const date = new Date(isoString);
+    const isValid = !isNaN(date.getTime());
 
-      document.body.innerHTML = receiptHTML;
-      window.print();
-      document.body.innerHTML = originalContent;
-      window.location.reload(); // To restore event listeners and app state
-    }
+    const finalDate = isValid ? date : new Date();
+    const day = String(finalDate.getDate()).padStart(2, "0");
+    const month = String(finalDate.getMonth() + 1).padStart(2, "0");
+    const year = finalDate.getFullYear();
+
+    return `${day}-${month}-${year}`;
   };
 
-  return (
+  if (!loadingStore && !receiveLoading && (!receiveData || !storeData))
+    return <div className="p-4 bg-white">Not data found.</div>;
+
+  return loadingStore || receiveLoading ? (
+    <div className="p-4 bg-white">Loading...</div>
+  ) : (
     <div>
       <div className="w-full flex justify-end">
         <button
@@ -56,17 +71,17 @@ const ReceivingsRecipt = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="font-semibold text-lg">Fit & Found</h1>
-            <p>
-              1234 Company St,
-              <br />
-              Company Town, ST 12345
-            </p>
+            <h1 className="font-semibold text-lg">{storeData?.companyName}</h1>
+            <p>Address: {storeData?.companyAddress}</p>
+            <p>Mobile No. {storeData?.mobileNo}</p>
+            {storeData?.companyWebsite && (
+              <p>Website: {storeData?.companyWebsite}</p>
+            )}
           </div>
           <div>
             <Barcode
               className="w-[150px]"
-              value="Reciving data"
+              value={receiveData?.invoiceId}
               fontSize={40}
             />
           </div>
@@ -74,32 +89,28 @@ const ReceivingsRecipt = () => {
 
         {/* Title */}
         <h2 className="text-center text-xl font-bold tracking-widest text-blue-800 mb-6">
-          SALES RECEIPT
+          RECEIVING RECEIPT
         </h2>
 
         {/* Billing Info */}
         <div className="flex justify-between mb-6">
           <div>
             <p className="font-semibold text-blue-800">Billed To</p>
-            <p className="font-medium">Customer Name</p>
             <p>
-              1234 Customer St,
-              <br />
-              Customer Town, ST 12345
+              <span className="font-medium">Supplier Name:</span>{" "}
+              {receiveData?.supplier?.fullName || ""}
+            </p>
+            <p>
+              <span className="font-medium">Mobile No:</span>{" "}
+              {receiveData?.supplier?.phone || ""}
             </p>
           </div>
           <div>
             <p className="flex justify-between">
               <span className="text-blue-800 font-semibold mr-2">
-                Receipt #
-              </span>{" "}
-              0000457
-            </p>
-            <p className="flex justify-between">
-              <span className="text-blue-800 font-semibold mr-2">
                 Receipt date
               </span>{" "}
-              11-04-2023
+              {formatDate(receiveData?.receivingDate)}
             </p>
           </div>
         </div>
@@ -115,20 +126,24 @@ const ReceivingsRecipt = () => {
             </tr>
           </thead>
           <tbody>
-            {items.map((item, idx) => (
-              <tr key={idx} className="bg-gray-100">
-                <td className="py-2 px-3">{item.qty}</td>
-                <td className="py-2 px-3">{item.description}</td>
-                <td className="py-2 px-3 flex items-center gap-0.5">
-                  <TbCurrencyTaka />
-                  {item.unitPrice.toFixed(2)}
-                </td>
-                <td className="py-2 px-3">
-                  <TbCurrencyTaka className="inline mr-1" />
-                  {(item.qty * item.unitPrice).toFixed(2)}
-                </td>
-              </tr>
-            ))}
+            {receiveData?.recieveVariant?.map(
+              (item: IReceiveVariant, idx: number) => (
+                <tr key={idx} className="bg-gray-100">
+                  <td className="py-2 px-3">{item.quantity}</td>
+                  <td className="py-2 px-3">{item.variant.name}</td>
+                  <td className="py-2 px-3">
+                    <div className="flex items-center gap-0.5">
+                      <TbCurrencyTaka />
+                      {item.price.toFixed(2)}
+                    </div>
+                  </td>
+                  <td className="py-2 px-3">
+                    <TbCurrencyTaka className="inline mr-1" />
+                    {item?.subTotal?.toFixed(2)}
+                  </td>
+                </tr>
+              )
+            )}
           </tbody>
         </table>
 
@@ -138,21 +153,50 @@ const ReceivingsRecipt = () => {
             <div className="flex justify-between mb-1">
               <span>Subtotal</span>
               <span className="flex items-center gap-0.5">
-                <TbCurrencyTaka /> {subtotal.toFixed(2)}
+                <TbCurrencyTaka /> {subTotal > 0 ? subTotal.toFixed(2) : 0}
               </span>
             </div>
-            <div className="flex justify-between mb-1">
-              <span>Sales Tax (5%)</span>
-              <span className="flex items-center gap-0.5">
-                <TbCurrencyTaka />
-                {taxAmount.toFixed(2)}
-              </span>
+            {receiveData?.discountPercentage > 0 && (
+              <div className="flex justify-between mb-1">
+                <span>Discount (%)</span>
+                <span className="flex items-center gap-0.5">
+                  {receiveData?.discountPercentage.toFixed(2)}
+                </span>
+              </div>
+            )}
+            {receiveData?.discountAmount > 0 && (
+              <div className="flex justify-between mb-1">
+                <span>Discount</span>
+                <span className="flex items-center gap-0.5">
+                  <TbCurrencyTaka /> {receiveData?.discountAmount.toFixed(2)}
+                </span>
+              </div>
+            )}
+            {receiveData?.payments?.map((p: Payments, i: number) => (
+              <div key={i} className="flex justify-between">
+                <span className="capitalize">{p?.method}</span>
+                <span>{p?.amount?.toFixed(1)}</span>
+              </div>
+            ))}
+            {receiveData?.dueAmount && (
+              <div className="flex justify-between">
+                <span>Due</span>
+                <span>
+                  {receiveData?.dueAmount > 0
+                    ? receiveData?.dueAmount.toFixed(1)
+                    : 0}
+                </span>
+              </div>
+            )}
+            <div className="flex justify-between">
+              <span>Change</span>
+              <span>{dueAmount < 0 ? dueAmount.toFixed(1) : 0}</span>
             </div>
             <div className="flex justify-between font-bold border-t border-blue-700 pt-2 mt-2 text-blue-800">
               <span>Total (USD)</span>
               <span className="flex items-center gap-0.5">
                 <TbCurrencyTaka />
-                {total.toFixed(2)}
+                {receiveData?.totalPrice?.toFixed(2)}
               </span>
             </div>
           </div>
