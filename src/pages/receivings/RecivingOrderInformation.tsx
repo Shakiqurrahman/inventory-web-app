@@ -156,14 +156,17 @@ const RecivingOrderInformation = () => {
         discountPercentage: discountPercentage,
         receivingDate: receivingDate ? new Date(receivingDate) : undefined,
       };
-      try {
-        const res = await createReceive(formData).unwrap();
-        dispatch(resetForm());
-        navigate("/receiving/receiving-recipt", {
-          state: { id: res?.id },
-        });
-      } catch (error) {
-        toast.error(getErrorMessage(error));
+      const confirm = window.confirm("Are you sure you want to complete?");
+      if (confirm) {
+        try {
+          const res = await createReceive(formData).unwrap();
+          dispatch(resetForm());
+          navigate("/receiving/receiving-recipt", {
+            state: { id: res?.id },
+          });
+        } catch (error) {
+          toast.error(getErrorMessage(error));
+        }
       }
     } else {
       toast.error("Select a Supplier!");

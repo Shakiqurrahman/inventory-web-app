@@ -35,6 +35,14 @@ const salesApi = baseApi.injectEndpoints({
       invalidatesTags: ["sales"],
       transformResponse: (response) => response?.data,
     }),
+    getSaleById: builder.query({
+      query: (saleId) => ({
+        url: `/sales/${saleId}`,
+        method: "GET",
+      }),
+      providesTags: ["sales"],
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
@@ -42,4 +50,5 @@ export const {
   useGetVariantSuggestionsQuery,
   useGetVariantByIdOrBarCodeQuery,
   useCreateSaleMutation,
+  useGetSaleByIdQuery,
 } = salesApi;

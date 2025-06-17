@@ -11,7 +11,16 @@ const receivingApi = baseApi.injectEndpoints({
       invalidatesTags: ["receivings"],
       transformResponse: (response) => response?.data,
     }),
+    getReceiveById: builder.query({
+      query: (receiveId) => ({
+        url: `/receivings/${receiveId}`,
+        method: "GET",
+      }),
+      providesTags: ["receivings"],
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
-export const { useCreateReceiveMutation } = receivingApi;
+export const { useCreateReceiveMutation, useGetReceiveByIdQuery } =
+  receivingApi;
