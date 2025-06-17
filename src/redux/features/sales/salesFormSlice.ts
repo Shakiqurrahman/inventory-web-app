@@ -6,7 +6,7 @@ type Customer = {
   phone: string;
 };
 
-type Payments = {
+export type Payments = {
   method: string;
   amount: number;
 };

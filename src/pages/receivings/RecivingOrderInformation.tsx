@@ -140,6 +140,7 @@ const RecivingOrderInformation = () => {
         variantId: v?.id,
         quantity: v?.quantity,
         price: v?.costPrice,
+        subTotal: v?.totalPrice,
       }));
       const totalPaid = payments.reduce((acc, curr) => acc + curr.amount, 0);
       const formData = {
