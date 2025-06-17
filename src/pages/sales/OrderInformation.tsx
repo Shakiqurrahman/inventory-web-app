@@ -164,6 +164,7 @@ const OrderInformation = () => {
         variantId: item.id,
         quantity: item.quantity,
         price: item.sellPrice,
+        subTotal: item?.totalPrice,
         discountPercentage:
           typeof item.discount === "string"
             ? parseFloat(item.discount)

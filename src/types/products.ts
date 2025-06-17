@@ -33,6 +33,21 @@ export type IProductVariant = {
   product: Product;
 };
 
+export type ISaleVariant = {
+  createdAt: string;
+  discountPercentage: number;
+  dueAmount: number;
+  id: string;
+  isFree: boolean;
+  price: number;
+  quantity: number;
+  saleId: string;
+  updatedAt: string;
+  variant: IProductVariant;
+  variantId: string;
+  subTotal: number;
+};
+
 export type IProductSuggestions = {
   id: string;
   name: string;
