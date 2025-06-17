@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { z } from "zod";
 import { useCreateEmployeeMutation } from "../../redux/features/employees/employeeApi";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const employeeSchema = z.object({
     name: z.string().min(1, "Company Name must be required"),
@@ -20,6 +21,7 @@ const employeeSchema = z.object({
     role: z.enum(["STAFF", "MANAGER"], {
         errorMap: () => ({ message: "Role must be either Staff or Manager" }),
     }),
+    salary: z.string().optional(),
 });
 
 type employeeForm = z.infer<typeof employeeSchema>;
@@ -37,14 +39,16 @@ const CreateEmployeePage = () => {
     const navigate = useNavigate();
 
     const onSubmit = async (data: employeeForm) => {
-        console.log(data);
+        const { salary, ...restData } = data;
 
         try {
-            await createEmployee(data).unwrap();
+            await createEmployee({
+                ...restData,
+                salary: salary ? parseFloat(salary) : undefined,
+            }).unwrap();
             toast.success("Employee created successfully");
         } catch (err) {
-            toast.error("Something went wrong");
-            console.error("Error creating employee:", err);
+            toast.error(getErrorMessage(err));
         }
         // Navigate to the employees list pagep or show success message
         navigate("/employees");
@@ -107,21 +111,14 @@ const CreateEmployeePage = () => {
                     )}
                 </div>
                 <div>
-                    <label htmlFor="phone">
-                        Salary <span className="text-red-600">*</span>
-                    </label>
+                    <label htmlFor="salary">Salary</label>
                     <input
-                        {...register("phone")}
-                        type="text"
-                        name="phone"
-                        id="phone"
+                        {...register("salary")}
+                        type="number"
+                        name="salary"
+                        id="salary"
                         className="border border-gray-300 w-full p-2 outline-none rounded-md"
                     />
-                    {errors.phone && (
-                        <p className="text-red-500 text-xs">
-                            {errors.phone.message}
-                        </p>
-                    )}
                 </div>
                 <div>
                     <label htmlFor="address">Address</label>

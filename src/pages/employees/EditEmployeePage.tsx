@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router";
 import { z } from "zod";
 import { useUpdateEmployeeMutation } from "../../redux/features/employees/employeeApi";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const employeeSchema = z.object({
     name: z.string().min(1, "Company Name must be required"),
@@ -19,6 +20,7 @@ const employeeSchema = z.object({
     role: z.enum(["STAFF", "MANAGER"], {
         errorMap: () => ({ message: "Role must be either Staff or Manager" }),
     }),
+    salary: z.string().optional(),
 });
 
 type employeeForm = z.infer<typeof employeeSchema>;
@@ -35,6 +37,7 @@ const EditEmployeePage = () => {
         email: state?.email || "",
         address: state?.address || "",
         role: state?.role || "STAFF",
+        salary: state?.salary || "",
     };
 
     const {
@@ -47,12 +50,18 @@ const EditEmployeePage = () => {
     });
 
     const onSubmit = async (data: employeeForm) => {
+        const { salary, ...restData } = data;
+
         try {
-            await updateEmployee({ id: state?.id, ...data }).unwrap();
+            await updateEmployee({
+                id: state?.id,
+                salary: salary ? parseFloat(salary) : undefined,
+                ...restData,
+            }).unwrap();
             toast.success("Employee updated successfully");
             navigate("/employees");
         } catch (error) {
-            console.error("Failed to update employee:", error);
+            toast.error(getErrorMessage(error));
         }
     };
 
@@ -111,6 +120,16 @@ const EditEmployeePage = () => {
                             {errors.phone.message}
                         </p>
                     )}
+                </div>
+                <div>
+                    <label htmlFor="salary">Salary</label>
+                    <input
+                        {...register("salary")}
+                        type="number"
+                        name="salary"
+                        id="salary"
+                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                    />
                 </div>
                 <div>
                     <label htmlFor="address">Address</label>

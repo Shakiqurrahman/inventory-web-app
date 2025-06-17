@@ -7,6 +7,7 @@ export type IEmployee = {
     email: string;
     phone: string;
     address: string;
+    salary: number;
     role: "STAFF" | "MANAGER";
 };
 

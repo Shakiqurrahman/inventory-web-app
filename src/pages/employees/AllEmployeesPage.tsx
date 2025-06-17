@@ -71,6 +71,7 @@ const AllEmployeesPage = () => {
                             <th className="p-3">Name</th>
                             <th className="p-3">Email</th>
                             <th className="p-3">Phone Number</th>
+                            <th className="p-3">Salary</th>
                             <th className="p-3 w-[200px]">Role</th>
                             <th className="p-3 w-[200px]">Action</th>
                         </tr>
@@ -79,7 +80,7 @@ const AllEmployeesPage = () => {
                         {isLoading ? (
                             <tr className="text-sm">
                                 <td
-                                    colSpan={6}
+                                    colSpan={7}
                                     className="p-3 text-center text-gray-500"
                                 >
                                     Loading...
@@ -99,6 +100,9 @@ const AllEmployeesPage = () => {
                                         </td>
                                         <td className="p-3">
                                             {employee.phone}
+                                        </td>
+                                        <td className="p-3">
+                                            {employee.salary || "N/A"}
                                         </td>
                                         <td className="p-3 capitalize">
                                             {employee.role.toLowerCase() ||
@@ -136,7 +140,7 @@ const AllEmployeesPage = () => {
                         ) : (
                             <tr className="border-b border-gray-300 text-sm">
                                 <td
-                                    colSpan={6}
+                                    colSpan={7}
                                     className="p-3 text-center text-gray-500"
                                 >
                                     No employees found

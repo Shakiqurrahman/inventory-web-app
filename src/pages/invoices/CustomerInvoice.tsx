@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import Barcode from "react-barcode";
 import { FiPrinter } from "react-icons/fi";
 import { IoSearch } from "react-icons/io5";
+import { TbCurrencyTaka } from "react-icons/tb";
 
 const CustomerInvoice = () => {
     const [searchValue, setSearchValue] = useState("");
@@ -28,6 +29,22 @@ const CustomerInvoice = () => {
         { description: "Consectetur", price: 4.4 },
         { description: "Adipiscing elit", price: 5.5 },
     ];
+
+    const items2 = [
+        { qty: 3, description: "Blue Cotton T-Shirt", unitPrice: 20 },
+        { qty: 2, description: "Women's Leather Handbag", unitPrice: 80 },
+        { qty: 5, description: "Pair of Running Shoes", unitPrice: 50 },
+        { qty: 4, description: "Ceramic Coffee Mug", unitPrice: 10 },
+    ];
+
+    const subtotal = items2.reduce(
+        (sum, item) => sum + item.qty * item.unitPrice,
+        0
+    );
+
+    const taxRate = 0.05;
+    const taxAmount = subtotal * taxRate;
+    const total2 = subtotal + taxAmount;
 
     const total = items.reduce((acc, item) => acc + item.price, 0);
     const cash = 20;
@@ -126,6 +143,130 @@ const CustomerInvoice = () => {
                             width={2}
                             height={50}
                         />
+                    </div>
+                </div>
+            </div>
+
+            <div className="mt-5">
+                <div
+                    ref={printRef}
+                    className="max-w-3xl mx-auto bg-white border border-gray-300 p-8 font-sans text-sm text-gray-800"
+                >
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-6">
+                        <div>
+                            <h1 className="font-semibold text-lg">
+                                Fit & Found
+                            </h1>
+                            <p>
+                                1234 Company St,
+                                <br />
+                                Company Town, ST 12345
+                            </p>
+                        </div>
+                        <div>
+                            <Barcode
+                                className="w-[150px]"
+                                value="Reciving data"
+                                fontSize={40}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Title */}
+                    <h2 className="text-center text-xl font-bold tracking-widest text-blue-800 mb-6">
+                        SALES RECEIPT
+                    </h2>
+
+                    {/* Billing Info */}
+                    <div className="flex justify-between mb-6">
+                        <div>
+                            <p className="font-semibold text-blue-800">
+                                Billed To
+                            </p>
+                            <p className="font-medium">Customer Name</p>
+                            <p>
+                                1234 Customer St,
+                                <br />
+                                Customer Town, ST 12345
+                            </p>
+                        </div>
+                        <div>
+                            <p className="flex justify-between">
+                                <span className="text-blue-800 font-semibold mr-2">
+                                    Receipt #
+                                </span>{" "}
+                                0000457
+                            </p>
+                            <p className="flex justify-between">
+                                <span className="text-blue-800 font-semibold mr-2">
+                                    Receipt date
+                                </span>{" "}
+                                11-04-2023
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Table */}
+                    <table className="w-full text-left mb-6 border-separate border-spacing-y-1">
+                        <thead className="bg-blue-800 text-white text-sm">
+                            <tr>
+                                <th className="py-2 px-3">QTY</th>
+                                <th className="py-2 px-3">Description</th>
+                                <th className="py-2 px-3">Unit Price</th>
+                                <th className="py-2 px-3">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {items2.map((item, idx) => (
+                                <tr key={idx} className="bg-gray-100">
+                                    <td className="py-2 px-3">{item.qty}</td>
+                                    <td className="py-2 px-3">
+                                        {item.description}
+                                    </td>
+                                    <td className="py-2 px-3 flex items-center gap-0.5">
+                                        <TbCurrencyTaka />
+                                        {item.unitPrice.toFixed(2)}
+                                    </td>
+                                    <td className="py-2 px-3">
+                                        <TbCurrencyTaka className="inline mr-1" />
+                                        {(item.qty * item.unitPrice).toFixed(2)}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+
+                    {/* Totals */}
+                    <div className="flex justify-end">
+                        <div className="w-1/3">
+                            <div className="flex justify-between mb-1">
+                                <span>Subtotal</span>
+                                <span className="flex items-center gap-0.5">
+                                    <TbCurrencyTaka /> {subtotal.toFixed(2)}
+                                </span>
+                            </div>
+                            <div className="flex justify-between mb-1">
+                                <span>Sales Tax (5%)</span>
+                                <span className="flex items-center gap-0.5">
+                                    <TbCurrencyTaka />
+                                    {taxAmount.toFixed(2)}
+                                </span>
+                            </div>
+                            <div className="flex justify-between font-bold border-t border-blue-700 pt-2 mt-2 text-blue-800">
+                                <span>Total (USD)</span>
+                                <span className="flex items-center gap-0.5">
+                                    <TbCurrencyTaka />
+                                    {total2.toFixed(2)}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Footer Notes */}
+                    <div className="mt-8">
+                        <p className="text-blue-800 font-semibold">Notes</p>
+                        <p>Thank you for your business!</p>
                     </div>
                 </div>
             </div>
