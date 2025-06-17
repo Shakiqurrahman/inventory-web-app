@@ -5,12 +5,115 @@ import { SlPeople } from "react-icons/sl";
 import { TfiCloudDown, TfiHarddrive, TfiShoppingCart } from "react-icons/tfi";
 import { Link } from "react-router";
 
+import {
+  ArcElement,
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  Title,
+  Tooltip,
+} from "chart.js";
+import { Bar, Pie } from "react-chartjs-2";
+
+// Register necessary components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  ArcElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 const DashboardPage = () => {
+  const labels = [
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+  ];
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: "Weekly Sales",
+        data: [65, 59, 80, 81, 56, 55, 40],
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(255, 205, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+          "rgba(201, 203, 207, 0.2)",
+        ],
+        borderColor: [
+          "rgb(255, 99, 132)",
+          "rgb(255, 159, 64)",
+          "rgb(255, 205, 86)",
+          "rgb(75, 192, 192)",
+          "rgb(54, 162, 235)",
+          "rgb(153, 102, 255)",
+          "rgb(201, 203, 207)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+  const piedata = {
+    labels: ["Sale", "Corporate Sale", "Return", "Due"],
+    datasets: [
+      {
+        label: "My First Dataset",
+        data: [65, 59, 80, 81],
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(255, 205, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+        ],
+        borderColor: [
+          "rgb(255, 99, 132)",
+          "rgb(255, 159, 64)",
+          "rgb(255, 205, 86)",
+          "rgb(75, 192, 192)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+  const config = {
+    data: data,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  };
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      tooltip: {
+        enabled: true,
+      },
+    },
+  };
   return (
     <div>
       <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5">
         <Link
-          to={"/sales"}
+          to={"/sales-history"}
           className="flex justify-between items-center p-1 bg-white shadow-md"
         >
           <div className="ml-4">
@@ -64,7 +167,7 @@ const DashboardPage = () => {
       </h1>
       <div className="grid gap-5 sm:grid-cols-2">
         <Link
-          to={"/"}
+          to={"/sales"}
           className="p-3 flex gap-5 items-center bg-white hover:bg-primary hover:text-white duration-200 rounded-sm"
         >
           <TfiShoppingCart className="text-2xl" />
@@ -72,7 +175,7 @@ const DashboardPage = () => {
           <h1 className="text-xs font-light">Start a New Sale</h1>
         </Link>
         <Link
-          to={"/"}
+          to={"/receiving"}
           className="p-3 flex gap-5 items-center bg-white hover:bg-primary hover:text-white duration-200 rounded-sm"
         >
           <TfiCloudDown className="text-2xl" />
@@ -80,7 +183,7 @@ const DashboardPage = () => {
           <h1 className="text-xs font-light">Start a New Receiving</h1>
         </Link>
         <Link
-          to={"/"}
+          to={"/reports"}
           className="p-3 flex gap-5 items-center bg-white hover:bg-primary hover:text-white duration-200 rounded-sm"
         >
           <PiClock className="text-2xl" />
@@ -88,13 +191,21 @@ const DashboardPage = () => {
           <h1 className="text-xs font-light">Today's closeout report</h1>
         </Link>
         <Link
-          to={"/"}
+          to={"/reports"}
           className="p-3 flex gap-5 items-center bg-white hover:bg-primary hover:text-white duration-200 rounded-sm"
         >
           <PiClock className="text-2xl" />
           <span className="h-5 w-px bg-gray-300"></span>
           <h1 className="text-xs font-light">Today's detailed sales report</h1>
         </Link>
+      </div>
+      <div className="flex flex-wrap md:flex-nowrap gap-5 mt-5">
+        <div className="w-full md:w-2/3 bg-white p-4">
+          <Bar {...config} />
+        </div>
+        <div className="w-full md:w-1/3 bg-white p-4">
+          <Pie data={piedata} options={options} />
+        </div>
       </div>
     </div>
   );
