@@ -6,7 +6,7 @@ const expensesApi = baseApi.injectEndpoints({
             query: (args = {}) => {
                 const {
                     page,
-                    limit = 1,
+                    limit = 20,
                     search = "",
                     dateRange = "all_time",
                 } = args || {};

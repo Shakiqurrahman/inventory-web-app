@@ -4,31 +4,36 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 * {
-  font-family: "Poppins", sans-serif;
+    font-family: "Poppins", sans-serif;
 }
 
 @theme {
-  --color-primary: #fab161;
-  --color-secondary: #b47220;
+    --color-primary: #fab161;
+    --color-secondary: #b47220;
 }
 
 .paper-cut::after {
-  content: " ";
-  display: block;
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  height: 36px;
-  background: -webkit-linear-gradient(#ffffff 0%, transparent 0%),
-    -webkit-linear-gradient(135deg, #e5e7eb 33.33%, transparent 33.33%) 0 0%,
-    #e5e7eb -webkit-linear-gradient(45deg, #e5e7eb 33.33%, #ffffff 33.33%) 0 0%;
-  background: -o-linear-gradient(#ffffff 0%, transparent 0%),
-    -o-linear-gradient(135deg, #e5e7eb 33.33%, transparent 33.33%) 0 0%,
-    #e5e7eb -o-linear-gradient(45deg, #e5e7eb 33.33%, #ffffff 33.33%) 0 0%;
-  background: -moz-linear-gradient(#ffffff 0%, transparent 0%),
-    -moz-linear-gradient(135deg, #e5e7eb 33.33%, transparent 33.33%) 0 0%,
-    #e5e7eb -moz-linear-gradient(45deg, #e5e7eb 33.33%, #ffffff 33.33%) 0 0%;
-  background-repeat: repeat-x;
-  background-size: 0px 100%, 14px 27px, 14px 27px;
+    content: " ";
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 36px;
+    background: -webkit-linear-gradient(#ffffff 0%, transparent 0%),
+        -webkit-linear-gradient(135deg, #e5e7eb 33.33%, transparent 33.33%) 0 0%,
+        #e5e7eb -webkit-linear-gradient(45deg, #e5e7eb 33.33%, #ffffff 33.33%) 0
+            0%;
+    background: -o-linear-gradient(#ffffff 0%, transparent 0%),
+        -o-linear-gradient(135deg, #e5e7eb 33.33%, transparent 33.33%) 0 0%,
+        #e5e7eb -o-linear-gradient(45deg, #e5e7eb 33.33%, #ffffff 33.33%) 0 0%;
+    background: -moz-linear-gradient(#ffffff 0%, transparent 0%),
+        -moz-linear-gradient(135deg, #e5e7eb 33.33%, transparent 33.33%) 0 0%,
+        #e5e7eb -moz-linear-gradient(45deg, #e5e7eb 33.33%, #ffffff 33.33%) 0 0%;
+    background-repeat: repeat-x;
+    background-size: 0px 100%, 14px 27px, 14px 27px;
+}
+
+button {
+    cursor: pointer;
 }

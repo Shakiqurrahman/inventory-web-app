@@ -1,22 +1,24 @@
 import { useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import type { ISaleHistory } from "../../redux/features/salesHistory/saleHistorySlice";
+import type { IReceiveHistory } from "../../redux/features/receivingHistory/receivingHIstorySlice";
 
 interface SupplierDetailsModalProps {
-    saleHistoryDetails: ISaleHistory;
+    receivingHistoryDetails: IReceiveHistory;
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
     title: string;
 }
 
 const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
-    saleHistoryDetails,
+    receivingHistoryDetails,
     setShowModal,
     title,
 }) => {
     const formRef = useRef<HTMLDivElement>(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [editableData, setEditableData] = useState({ ...saleHistoryDetails });
+    const [editableData, setEditableData] = useState({
+        ...receivingHistoryDetails,
+    });
 
     useOutsideClick(formRef, () => {
         setShowModal(false);

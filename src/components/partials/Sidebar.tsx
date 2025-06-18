@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { BsToggles } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
+import { LiaDonateSolid } from "react-icons/lia";
 import { MdCallReceived, MdOutlinePowerSettingsNew } from "react-icons/md";
 import { RiBankFill } from "react-icons/ri";
 import { TbHistory } from "react-icons/tb";
@@ -348,7 +349,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                         } text-sm`
                                     }
                                 >
-                                    <TfiIdBadge className="text-lg" />
+                                    <LiaDonateSolid className="text-lg" />
                                     Employee Salary
                                 </NavLink>
                             </li>
