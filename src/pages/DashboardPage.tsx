@@ -16,8 +16,11 @@ import {
   Tooltip,
 } from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
+import {
+  useGetDashboardOverviewQuery,
+  useGetWeeklySalesQuery,
+} from "../redux/features/dashboard/dashboardApi";
 
-// Register necessary components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,21 +32,16 @@ ChartJS.register(
 );
 
 const DashboardPage = () => {
-  const labels = [
-    "Saturday",
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-  ];
+  const { data: dashboardOverview } = useGetDashboardOverviewQuery(null);
+  const { data: weeklySales = [] } = useGetWeeklySalesQuery(null);
+
+  const labels = weeklySales.map((item) => item.day);
   const data = {
     labels: labels,
     datasets: [
       {
         label: "Weekly Sales",
-        data: [65, 59, 80, 81, 56, 55, 40],
+        data: weeklySales.map((item) => item.salesAmount),
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(255, 159, 64, 0.2)",
@@ -117,7 +115,9 @@ const DashboardPage = () => {
           className="flex justify-between items-center p-1 bg-white shadow-md"
         >
           <div className="ml-4">
-            <h1 className="text-3xl font-medium text-blue-500 mb-2">32</h1>
+            <h1 className="text-3xl font-medium text-blue-500 mb-2">
+              {dashboardOverview?.totalSales || 0}
+            </h1>
             <p>Total Sales</p>
           </div>
           <div className="flex justify-center items-center size-26 bg-blue-500 text-white">
@@ -129,7 +129,9 @@ const DashboardPage = () => {
           className="flex justify-between items-center p-1 bg-white shadow-md"
         >
           <div className="ml-4">
-            <h1 className="text-3xl font-medium text-[#6FD64B] mb-2">12</h1>
+            <h1 className="text-3xl font-medium text-[#6FD64B] mb-2">
+              {dashboardOverview?.totalCustomers || 0}
+            </h1>
             <p>Total Customers</p>
           </div>
           <div className="flex justify-center items-center size-26 bg-[#6FD64B] text-white">
@@ -141,7 +143,9 @@ const DashboardPage = () => {
           className="flex justify-between items-center p-1 bg-white shadow-md"
         >
           <div className="ml-4">
-            <h1 className="text-3xl font-medium text-[#FB5D5D] mb-2">20</h1>
+            <h1 className="text-3xl font-medium text-[#FB5D5D] mb-2">
+              {dashboardOverview?.totalProducts || 0}
+            </h1>
             <p>Total Items</p>
           </div>
           <div className="flex justify-center items-center size-26 bg-[#FB5D5D] text-white">
@@ -153,7 +157,9 @@ const DashboardPage = () => {
           className="flex justify-between items-center p-1 bg-white shadow-md"
         >
           <div className="ml-4">
-            <h1 className="text-3xl font-medium text-[#F7941D] mb-2">32</h1>
+            <h1 className="text-3xl font-medium text-[#F7941D] mb-2">
+              {dashboardOverview?.totalEmployees || 0}
+            </h1>
             <p>Total Employees</p>
           </div>
           <div className="flex justify-center items-center size-26 bg-[#F7941D] text-white">

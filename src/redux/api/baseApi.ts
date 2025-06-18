@@ -73,6 +73,7 @@ export const baseApi = createApi({
     "bankDeposit",
     "saleHistory",
     "receivings",
+    "dashboard",
     "receivingsHistory",
     
   ],
