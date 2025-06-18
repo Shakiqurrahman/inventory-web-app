@@ -3,10 +3,25 @@ import { baseApi } from "../../api/baseApi";
 const expensesApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getReceivingHistory: builder.query({
-            query: () => ({
-                url: "/receivings",
-                method: "GET",
-            }),
+            query: (args = {}) => {
+                const {
+                    page,
+                    limit = 20,
+                    search = "",
+                    dateRange = "all_time",
+                } = args || {};
+
+                const queryParams = new URLSearchParams();
+                if (search) queryParams.append("search", search);
+                if (page) queryParams.append("page", page);
+                if (limit) queryParams.append("limit", limit);
+                if (dateRange) queryParams.append("dateRange", dateRange);
+
+                return {
+                    url: `/receivings?${queryParams.toString()}`,
+                    method: "GET",
+                };
+            },
             providesTags: ["receivingsHistory"],
             transformResponse: (response) => response?.data,
         }),
