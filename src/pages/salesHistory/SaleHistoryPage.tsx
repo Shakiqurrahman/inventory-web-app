@@ -30,7 +30,7 @@ const SaleHistoryPage = () => {
   const [showLimit, setShowLimit] = useState(20);
   const dispatch = useDispatch();
   const { openReturnModal } = useAppSelector((state) => state.saleHistory);
-  const [selectedSale, setSelectedSale] = useState<ISaleHistory | null>(null);
+  const [selectedSale, setSelectedSale] = useState("");
 
   const [showclose, setShowClose] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -255,7 +255,7 @@ const SaleHistoryPage = () => {
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setSelectedSale(sale); // set selected sale
+                              setSelectedSale(sale.id); // set selected sale
                               dispatch(toggleReturnModal()); // open modal
                             }}
                           >
@@ -324,7 +324,7 @@ const SaleHistoryPage = () => {
         />
       )}
       {openReturnModal && selectedSale && (
-        <ReturnSaleModal selectedSale={selectedSale} />
+        <ReturnSaleModal saleId={selectedSale} />
       )}
     </div>
   );

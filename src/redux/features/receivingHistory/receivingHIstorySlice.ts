@@ -3,7 +3,7 @@ import type { IReceiveVariant } from "../../../types/products";
 import type { ISupplier } from "../suppliers/supplierSlice";
 
 export type IReceiveHistory = {
-  id?: number;
+  id: string;
   invoiceId: string;
   customer: { id?: number; name: string; phone: string };
   dueAmount: number;

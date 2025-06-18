@@ -48,6 +48,14 @@ const expensesApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["saleHistory"],
     }),
+    getSalesHistoryById: builder.query({
+      query: (saleId) => ({
+        url: `/sales/${saleId}`,
+        method: "GET",
+      }),
+      providesTags: ["saleHistory"],
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
@@ -56,4 +64,5 @@ export const {
   useDeleteSalesHistoryMutation,
   useUpdateSalesHistoryMutation,
   useReturnSalesMutation,
+  useGetSalesHistoryByIdQuery,
 } = expensesApi;
