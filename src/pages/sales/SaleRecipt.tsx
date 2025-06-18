@@ -124,10 +124,12 @@ const SaleRecipt = () => {
             <span>{p?.amount?.toFixed(1)}</span>
           </div>
         ))}
-        {saleData?.dueAmount !== undefined && saleData?.dueAmount >= 0 && (
+        {typeof saleData?.dueAmount === "number" && (
           <div className="flex justify-between">
             <span>Due</span>
-            <span>{saleData.dueAmount.toFixed(1)}</span>
+            <span>
+              {saleData.dueAmount > 0 ? saleData.dueAmount.toFixed(1) : "0.0"}
+            </span>
           </div>
         )}
         <div className="flex justify-between">
@@ -284,10 +286,14 @@ const SaleRecipt = () => {
                 <span>{p?.amount?.toFixed(1)}</span>
               </div>
             ))}
-            {saleData?.dueAmount !== undefined && saleData?.dueAmount >= 0 && (
+            {typeof saleData?.dueAmount === "number" && (
               <div className="flex justify-between">
                 <span>Due</span>
-                <span>{saleData.dueAmount.toFixed(1)}</span>
+                <span>
+                  {saleData.dueAmount > 0
+                    ? saleData.dueAmount.toFixed(1)
+                    : "0.0"}
+                </span>
               </div>
             )}
             <div className="flex justify-between">

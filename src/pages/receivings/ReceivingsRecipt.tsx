@@ -177,13 +177,13 @@ const ReceivingsRecipt = () => {
                 <span>{p?.amount?.toFixed(1)}</span>
               </div>
             ))}
-            {receiveData?.dueAmount !== undefined && (
+            {typeof receiveData?.dueAmount === "number" && (
               <div className="flex justify-between">
                 <span>Due</span>
                 <span>
-                  {receiveData?.dueAmount > 0
-                    ? receiveData?.dueAmount.toFixed(1)
-                    : 0}
+                  {receiveData.dueAmount > 0
+                    ? receiveData.dueAmount.toFixed(1)
+                    : "0.0"}
                 </span>
               </div>
             )}
