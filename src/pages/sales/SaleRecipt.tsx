@@ -51,6 +51,7 @@ const SaleRecipt = () => {
   };
 
   const border = "*".repeat(40);
+  console.log(saleData);
 
   if (!loadingStore && !saleLoading && (!saleData || !storeData))
     return <div className="p-4 bg-white">Not data found.</div>;
@@ -124,12 +125,10 @@ const SaleRecipt = () => {
             <span>{p?.amount?.toFixed(1)}</span>
           </div>
         ))}
-        {saleData?.dueAmount && (
+        {saleData?.dueAmount !== undefined && saleData?.dueAmount >= 0 && (
           <div className="flex justify-between">
             <span>Due</span>
-            <span>
-              {saleData?.dueAmount > 0 ? saleData?.dueAmount.toFixed(1) : 0}
-            </span>
+            <span>{saleData.dueAmount.toFixed(1)}</span>
           </div>
         )}
         <div className="flex justify-between">
@@ -286,12 +285,10 @@ const SaleRecipt = () => {
                 <span>{p?.amount?.toFixed(1)}</span>
               </div>
             ))}
-            {saleData?.dueAmount && (
+            {saleData?.dueAmount !== undefined && saleData?.dueAmount >= 0 && (
               <div className="flex justify-between">
                 <span>Due</span>
-                <span>
-                  {saleData?.dueAmount > 0 ? saleData?.dueAmount.toFixed(1) : 0}
-                </span>
+                <span>{saleData.dueAmount.toFixed(1)}</span>
               </div>
             )}
             <div className="flex justify-between">
