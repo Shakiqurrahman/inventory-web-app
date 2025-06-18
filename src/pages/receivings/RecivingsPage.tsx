@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState, type ChangeEvent } from "react";
 import toast from "react-hot-toast";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
+import { ImSpinner8 } from "react-icons/im";
 import { IoIosCloseCircle } from "react-icons/io";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { useDispatch } from "react-redux";
@@ -53,12 +54,13 @@ const RecivingsPage = () => {
     { skip: searchItemValue.length < 3 }
   );
 
-  const { data: item, isFetching } = useGetVariantByIdOrBarCodeQuery(
-    variantId,
-    {
-      skip: !variantId,
-    }
-  );
+  const {
+    data: item,
+    isFetching,
+    isLoading,
+  } = useGetVariantByIdOrBarCodeQuery(variantId, {
+    skip: !variantId,
+  });
 
   useEffect(() => {
     if (item && !isFetching && variantId) {
@@ -289,7 +291,7 @@ const RecivingsPage = () => {
                   <th className="p-3">Total</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className={`relative `}>
                 {recieveVariant?.length > 0 ? (
                   recieveVariant?.map((item, i) => (
                     <Fragment key={i}>
@@ -371,6 +373,12 @@ const RecivingsPage = () => {
                       <span className="text-[#6FD686]">[Receiving]</span>
                     </td>
                   </tr>
+                )}
+
+                {(isLoading || isFetching) && (
+                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-white/40">
+                    <ImSpinner8 className="animate-spin duration-300 size-7 text-primary" />
+                  </div>
                 )}
               </tbody>
             </table>

@@ -20,7 +20,7 @@ const SupplierInvoice = () => {
 
   const { data: storeData } = useGetStoreConfigDataQuery(null);
 
-  const [getSaleData, { isFetching: receiveFetching }] =
+  const [getReceiveData, { isFetching: receiveFetching }] =
     useLazyGetReceiveByIdQuery();
 
   const handlePrint = useReactToPrint({
@@ -29,9 +29,14 @@ const SupplierInvoice = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (searchValue) {
+    if (!/^\d{13}$/.test(searchValue)) {
+      toast.error("Please enter a valid Invoice Id");
+      setSearchValue("");
+      setReceiveData(null);
+      return false;
+    } else {
       try {
-        const res = await getSaleData(searchValue).unwrap();
+        const res = await getReceiveData(searchValue).unwrap();
         setSearchValue("");
         setReceiveData(res);
         setShowNotFoundData(false);

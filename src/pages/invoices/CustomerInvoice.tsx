@@ -28,7 +28,12 @@ const CustomerInvoice = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (searchValue) {
+    if (!/^\d{13}$/.test(searchValue)) {
+      toast.error("Please enter a valid Invoice Id");
+      setSearchValue("");
+      setSaleData(null);
+      return false;
+    } else {
       try {
         const res = await getSaleData(searchValue).unwrap();
         setSearchValue("");
