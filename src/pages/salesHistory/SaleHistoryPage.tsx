@@ -14,6 +14,7 @@ import {
     type ISaleHistory,
 } from "../../redux/features/salesHistory/saleHistorySlice";
 import { useAppSelector } from "../../redux/hook";
+import { formatDateToLongDate } from "../../utils/timeFormatHandler";
 import ReturnSaleModal from "./ReturnSaleModal";
 import SaleHistoryDetails from "./SaleHistoryDetails";
 
@@ -161,6 +162,7 @@ const SaleHistoryPage = () => {
                         <thead>
                             <tr className="bg-gray-200 text-left *:font-semibold text-sm">
                                 <th className="p-3">ID</th>
+                                <th className="p-3">Date</th>
                                 <th className="p-3">Invoice ID</th>
                                 <th className="p-3">Customer Name</th>
                                 <th className="p-3">Corporate Sale</th>
@@ -193,6 +195,11 @@ const SaleHistoryPage = () => {
                                             className="hover:bg-gray-100"
                                         >
                                             <td className="p-3">{index + 1}</td>
+                                            <td className="p-3">
+                                                {formatDateToLongDate(
+                                                    sale.createdAt
+                                                )}
+                                            </td>
                                             <td className="p-3">
                                                 {sale.invoiceId}
                                             </td>

@@ -16,6 +16,7 @@ export type ISaleHistory = {
     payments: { amount: number; method: string }[];
     saleVariant: ISaleVariant[];
     isCorporateSale: boolean;
+    createdAt: string;
 };
 
 type saleHistoryState = {
