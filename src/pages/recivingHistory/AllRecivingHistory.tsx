@@ -30,9 +30,7 @@ const AllRecivingHistory = () => {
     (state) => state.receiveHistory
   );
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
-  const [selectedSale, setSelectedSale] = useState<IReceiveHistory | null>(
-    null
-  );
+  const [selectedReceive, setSelectedReceive] = useState("");
 
   const [page, setPage] = useState(1);
   const [showLimit, setShowLimit] = useState(20);
@@ -177,7 +175,6 @@ const AllRecivingHistory = () => {
                         defaultValue="all_time"
                         onChange={(e) => {
                             const value = e.target.value;
-                            console.log("Filter by:", value);
                             // handle filter logic here
                         }}
                     >
@@ -243,7 +240,6 @@ const AllRecivingHistory = () => {
             onChange={(e) => {
               const value = e.target.value;
               setDateFilter(value);
-              console.log("Filter by:", value);
               // handle filter logic here
             }}
           >
@@ -358,7 +354,7 @@ const AllRecivingHistory = () => {
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setSelectedSale(receiving); // set selected sale
+                                setSelectedReceive(receiving?.id); // set selected sale
                                 dispatch(toggleReceiveReturnModal()); // open modal
                               }}
                             >
@@ -427,8 +423,8 @@ const AllRecivingHistory = () => {
           title={"Reciving Information"}
         />
       )}
-      {openReceiveReturnModal && selectedSale && (
-        <ReturnReceiveModal selectedReceive={selectedSale} />
+      {openReceiveReturnModal && selectedReceive && (
+        <ReturnReceiveModal receiveId={selectedReceive} />
       )}
     </div>
   );

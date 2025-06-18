@@ -48,6 +48,14 @@ const expensesApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["receivingsHistory"],
     }),
+    getReceiveHistoryById: builder.query({
+      query: (receiveId) => ({
+        url: `/receivings/${receiveId}`,
+        method: "GET",
+      }),
+      providesTags: ["saleHistory"],
+      transformResponse: (response) => response?.data,
+    }),
   }),
 });
 
@@ -56,4 +64,5 @@ export const {
   useDeleteReceivingHistoryMutation,
   useUpdateReceivingHistoryMutation,
   useReturnReceivesMutation,
+  useGetReceiveHistoryByIdQuery,
 } = expensesApi;
