@@ -18,6 +18,7 @@ import bankDepositeSlice from "./features/bankDeposite/bankDepositeSlice";
 import categoriesReducer from "./features/categories/categoriesSlice";
 import customerReducar from "./features/customers/customersSlice";
 import employeeReducer from "./features/employees/employeeSlice";
+import employeeSalarySlice from "./features/employeeSalary/employeeSalarySlice";
 import expenseReducer from "./features/expenses/expenseSlice";
 import itemFormReducer from "./features/items/itemFormSlice";
 import recivingFormReduer from "./features/receiving/receivingFormSlice";
@@ -65,6 +66,7 @@ export const store = configureStore({
         receivingForm: recivingFormReduer,
         saleHistory: saleHistoryReducer,
         receiveHistory: receiveHistory,
+        employeeSalary: employeeSalarySlice,
     },
 
     middleware: (getDefaultMiddlewares) =>

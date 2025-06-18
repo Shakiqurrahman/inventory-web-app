@@ -1,39 +1,43 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FiPlus, FiSearch, FiTrash } from "react-icons/fi";
 import { MdOutlineModeEdit } from "react-icons/md";
-import { Link } from "react-router";
+import { useDispatch } from "react-redux";
 import {
-    useDeleteEmployeeMutation,
-    useGetEmployeeListQuery,
-} from "../../redux/features/employees/employeeApi";
-import { type IEmployee } from "../../redux/features/employees/employeeSlice";
+    deleteEmployeeSalary,
+    toggleCreateEmployeeSalaryModal,
+    toggleEditEmployeeSalaryModal,
+    type IEmployeeSalary,
+} from "../../redux/features/employeeSalary/employeeSalarySlice";
+import { useAppSelector } from "../../redux/hook";
+import { formatDateToLongDate } from "../../utils/timeFormatHandler";
+import EditSalarymodal from "./EditSalarymodal";
+import NewSalarymodal from "./NewSalarymodal";
+
+type SelectedDataType = {
+    index: number;
+    employee: IEmployeeSalary;
+};
 
 const EmployeeSalaryList = () => {
-    const [deletingId, setDeletingId] = useState<string | null>(null);
-    const { data: getEmployeeList, isLoading } = useGetEmployeeListQuery(null);
-    const [deleteEmployee, { isLoading: isDeleting }] =
-        useDeleteEmployeeMutation();
+    // const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [seletedData, setSelectedData] = useState<SelectedDataType | null>(
+        null
+    );
+
+    const dispatch = useDispatch();
+    const {
+        openCreateEmployeeSalaryModal,
+        openEdotEmployeeSalaryModal,
+        employeeSalary,
+    } = useAppSelector((state) => state.employeeSalary);
 
     const [searchQuery, setSearchQuery] = useState("");
 
-    const filteredEmployees = getEmployeeList?.filter((employee: IEmployee) => {
-        const query = searchQuery.toLowerCase();
-        return (
-            (employee.name?.toLowerCase().includes(query) ?? false) ||
-            (employee.email?.toLowerCase().includes(query) ?? false) ||
-            (employee.phone?.toLowerCase().includes(query) ?? false) ||
-            (employee.role?.toLowerCase().includes(query) ?? false)
-        );
-    });
-
-    const handleDelete = async (id: string) => {
-        setDeletingId(id);
+    const handleDelete = (id: number) => {
         try {
-            await deleteEmployee(id).unwrap();
+            dispatch(deleteEmployeeSalary(id));
             toast.success("Employee deleted successfully");
-            setDeletingId(null);
         } catch (err) {
             console.error("Failed to delete employee", err);
         }
@@ -55,13 +59,14 @@ const EmployeeSalaryList = () => {
                         className="placeholder:text-sm size-full outline-none"
                     />
                 </div>
-                <Link
-                    to={"/employees/new-employee"}
+                <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center text-xs gap-1 cursor-pointer hover:bg-blue-600 duration-200"
+                    type="button"
+                    onClick={() => dispatch(toggleCreateEmployeeSalaryModal())}
                 >
                     <FiPlus className="text-lg" />
-                    New Employee
-                </Link>
+                    Give Salary
+                </button>
             </div>
             <div className="mt-10 overflow-x-auto">
                 <table className="w-full border-collapse rounded-md text-gray-700">
@@ -78,7 +83,7 @@ const EmployeeSalaryList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {isLoading ? (
+                        {/* {isLoading ? (
                             <tr className="text-sm">
                                 <td
                                     colSpan={7}
@@ -87,58 +92,64 @@ const EmployeeSalaryList = () => {
                                     Loading...
                                 </td>
                             </tr>
-                        ) : filteredEmployees?.length > 0 ? (
-                            filteredEmployees?.map(
-                                (employee: IEmployee, index: number) => (
-                                    <tr
-                                        className="border-b border-gray-300 hover:bg-gray-50 text-sm"
-                                        key={index}
-                                    >
-                                        <td className="p-3">{index + 1}</td>
-                                        <td className="p-3 text-nowrap">
-                                            13 May, 2024
-                                        </td>
-                                        <td className="p-3 text-nowrap">
-                                            {employee.name}
-                                        </td>
-                                        <td className="p-3">20000</td>
-                                        <td className="p-3">
-                                            Shakiqur {index + 1}
-                                        </td>
-                                        <td className="p-3">xyz</td>
-                                        <td className="p-3 capitalize">
-                                            {employee.role.toLowerCase() ||
-                                                "N/A"}
-                                        </td>
-                                        <td className="flex items-center gap-1 p-3">
-                                            <Link
-                                                to={`edit-employee`}
-                                                state={{
-                                                    ...employee,
-                                                }}
-                                                className="flex gap-0.5 items-center py-1.5 px-3 bg-blue-500 text-white rounded-sm text-xs cursor-pointer shrink-0"
-                                            >
-                                                <MdOutlineModeEdit className="" />{" "}
-                                                <span>Edit</span>
-                                            </Link>
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    handleDelete(employee.id)
-                                                }
-                                                className="bg-red-400 text-white p-1.5 rounded-sm cursor-pointer shrink-0"
-                                            >
-                                                {isDeleting &&
-                                                employee.id === deletingId ? (
-                                                    <AiOutlineLoading3Quarters className="animate-spin duration-300" />
-                                                ) : (
-                                                    <FiTrash className="text-base" />
-                                                )}
-                                            </button>
-                                        </td>
-                                    </tr>
-                                )
-                            )
+                        ) : */}
+                        {employeeSalary?.length > 0 ? (
+                            employeeSalary?.map((employee, index: number) => (
+                                <tr
+                                    className="border-b border-gray-300 hover:bg-gray-50 text-sm"
+                                    key={index}
+                                >
+                                    <td className="p-3">{index + 1}</td>
+                                    <td className="p-3 text-nowrap">
+                                        {formatDateToLongDate(employee.date)}
+                                    </td>
+                                    <td className="p-3 text-nowrap">
+                                        {employee.amount}
+                                    </td>
+                                    <td className="p-3">
+                                        {employee.bonusAmount}
+                                    </td>
+                                    <td className="p-3">{employee.employee}</td>
+                                    <td className="p-3">
+                                        {employee.reason
+                                            ? employee.reason
+                                            : "N/A"}
+                                    </td>
+                                    <td className="p-3 capitalize">
+                                        {employee.approvedBy}
+                                    </td>
+                                    <td className="flex items-center gap-1 p-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setSelectedData({
+                                                    index,
+                                                    employee,
+                                                });
+                                                dispatch(
+                                                    toggleEditEmployeeSalaryModal()
+                                                );
+                                            }}
+                                            className="flex gap-0.5 items-center py-1.5 px-3 bg-blue-500 text-white rounded-sm text-xs cursor-pointer shrink-0"
+                                        >
+                                            <MdOutlineModeEdit className="" />{" "}
+                                            <span>Edit</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDelete(index)}
+                                            className="bg-red-400 text-white p-1.5 rounded-sm cursor-pointer shrink-0"
+                                        >
+                                            {/* {isDeleting &&
+                                            employee.id === deletingId ? (
+                                                <AiOutlineLoading3Quarters className="animate-spin duration-300" />
+                                            ) : ( */}
+                                            <FiTrash className="text-base" />
+                                            {/* )} */}
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
                         ) : (
                             <tr className="border-b border-gray-300 text-sm">
                                 <td
@@ -152,6 +163,11 @@ const EmployeeSalaryList = () => {
                     </tbody>
                 </table>
             </div>
+
+            {openCreateEmployeeSalaryModal && <NewSalarymodal />}
+            {openEdotEmployeeSalaryModal && seletedData && (
+                <EditSalarymodal seletedData={seletedData} />
+            )}
         </div>
     );
 };
