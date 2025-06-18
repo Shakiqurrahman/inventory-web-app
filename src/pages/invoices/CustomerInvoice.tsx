@@ -13,6 +13,7 @@ import type { ISaleVariant } from "../../types/products";
 import { getErrorMessage } from "../../utils/errorHandler";
 
 const CustomerInvoice = () => {
+  const [showNotFoundData, setShowNotFoundData] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const printRef = useRef<HTMLDivElement>(null);
   const [saleData, setSaleData] = useState<ISaleHistory | null>(null);
@@ -32,9 +33,11 @@ const CustomerInvoice = () => {
         const res = await getSaleData(searchValue).unwrap();
         setSearchValue("");
         setSaleData(res);
+        setShowNotFoundData(false);
       } catch (error) {
         toast.error(getErrorMessage(error));
         setSaleData(null);
+        setShowNotFoundData(true);
       }
     }
   };
@@ -350,7 +353,7 @@ const CustomerInvoice = () => {
               <p>Thank you for your business!</p>
             </div>
           </div>
-        ) : !saleData ? (
+        ) : showNotFoundData && !saleData ? (
           <div className="text-center">No data found!</div>
         ) : (
           ""
