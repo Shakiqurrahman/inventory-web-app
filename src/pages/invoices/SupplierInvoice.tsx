@@ -13,6 +13,7 @@ import type { IReceiveVariant } from "../../types/products";
 import { getErrorMessage } from "../../utils/errorHandler";
 
 const SupplierInvoice = () => {
+  const [showNotFoundData, setShowNotFoundData] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const printRef = useRef<HTMLDivElement>(null);
   const [receiveData, setReceiveData] = useState<IReceiveHistory | null>(null);
@@ -33,9 +34,11 @@ const SupplierInvoice = () => {
         const res = await getSaleData(searchValue).unwrap();
         setSearchValue("");
         setReceiveData(res);
+        setShowNotFoundData(false);
       } catch (error) {
         toast.error(getErrorMessage(error));
         setReceiveData(null);
+        setShowNotFoundData(true);
       }
     }
   };
@@ -256,7 +259,10 @@ const SupplierInvoice = () => {
               <p>Thank you for your business!</p>
             </div>
           </div>
-        ) : !receiveFetching && !receiveData ? (
+        ) : (
+          ""
+        )}
+        {showNotFoundData && !receiveFetching && !receiveData ? (
           <div className="text-center">No data found!</div>
         ) : (
           ""
