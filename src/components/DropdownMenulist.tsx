@@ -73,7 +73,7 @@ const DropdownMenuList = ({
     return createPortal(
         <div
             ref={dropdownRef}
-            className="fixed bg-white shadow-lg w-[200px] border border-gray-200 z-50 flex flex-col *:border-b *:border-gray-200 *:text-left *:last:border-transparent *:hover:bg-gray-50 *:cursor-pointer *:text-sm *:text-gray-700 -translate-x-full"
+            className="fixed bg-white shadow-lg w-[150px] border border-gray-200 z-50 flex flex-col *:border-b *:border-gray-200 *:text-left *:last:border-transparent *:hover:bg-gray-50 *:cursor-pointer *:text-sm *:text-gray-700 -translate-x-full"
             style={{
                 top: position.top,
                 left: position.left,
