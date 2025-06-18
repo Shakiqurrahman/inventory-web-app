@@ -184,7 +184,7 @@ const ReturnSaleModal: React.FC<ReturnSaleModalProps> = ({ selectedSale }) => {
         ref={formRef}
         className="bg-white rounded-lg p-6 w-full max-w-[650px] mt-20 relative"
       >
-        <h3 className="mb-5 text-lg font-medium">Return item</h3>
+        <h3 className="mb-5 text-lg font-medium">Return items</h3>
         <button
           type="button"
           className="absolute top-0 right-0 p-4"

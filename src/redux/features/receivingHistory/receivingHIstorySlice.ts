@@ -3,43 +3,72 @@ import type { IReceiveVariant } from "../../../types/products";
 import type { ISupplier } from "../suppliers/supplierSlice";
 
 export type IReceiveHistory = {
-    id?: number;
-    invoiceId: string;
-    customer: { id?: number; name: string; phone: string };
-    dueAmount: string;
-    itemBrand: string;
-    itemName: string;
-    paidAmount: string;
-    paymentMethod: string;
-    status: boolean;
-    totalPrice: string;
-    saleStatus: "PAID" | "DUE";
-    payments: { amount: number; method: string }[];
-    recieveVariant: IReceiveVariant[];
-    isCorporateSale: boolean;
-    createdAt: string;
-    supplier: ISupplier;
+  id?: number;
+  invoiceId: string;
+  customer: { id?: number; name: string; phone: string };
+  dueAmount: number;
+  itemBrand: string;
+  itemName: string;
+  paidAmount: number;
+  paymentMethod: string;
+  status: boolean;
+  totalPrice: number;
+  saleStatus: "PAID" | "DUE";
+  payments: { amount: number; method: string }[];
+  recieveVariant: IReceiveVariant[];
+  isCorporateSale: boolean;
+  createdAt: string;
+  supplier: ISupplier;
 };
 
 type receiveHistoryState = {
-    openReceiveReturnModal: boolean;
-    selectedSale: object;
+  openReceiveReturnModal: boolean;
+  selectedReceives: IReceiveVariant[];
+  removedItems: IReceiveVariant[];
+  refundAmount: string;
+  reason: string;
 };
 
 const initialState: receiveHistoryState = {
-    openReceiveReturnModal: false,
-    selectedSale: {},
+  openReceiveReturnModal: false,
+  selectedReceives: [],
+  removedItems: [],
+  refundAmount: "",
+  reason: "",
 };
 
 const receiveHistorySlice = createSlice({
-    name: "saleHistory",
-    initialState,
-    reducers: {
-        toggleReceiveReturnModal: (state) => {
-            state.openReceiveReturnModal = !state.openReceiveReturnModal;
-        },
+  name: "saleHistory",
+  initialState,
+  reducers: {
+    toggleReceiveReturnModal: (state) => {
+      state.openReceiveReturnModal = !state.openReceiveReturnModal;
+      if (state.openReceiveReturnModal) {
+        state.removedItems = [];
+        state.reason = "";
+        state.refundAmount = "";
+      }
     },
+    addSelectedReceives: (state, action) => {
+      state.selectedReceives = action.payload;
+    },
+    addRemovedItems: (state, action) => {
+      state.removedItems = action.payload;
+    },
+    changeRefundAmount: (state, action) => {
+      state.refundAmount = action.payload;
+    },
+    changeReason: (state, action) => {
+      state.reason = action.payload;
+    },
+  },
 });
 
-export const { toggleReceiveReturnModal } = receiveHistorySlice.actions;
+export const {
+  toggleReceiveReturnModal,
+  addRemovedItems,
+  addSelectedReceives,
+  changeReason,
+  changeRefundAmount,
+} = receiveHistorySlice.actions;
 export default receiveHistorySlice.reducer;
