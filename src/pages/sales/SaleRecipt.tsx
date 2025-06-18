@@ -51,7 +51,6 @@ const SaleRecipt = () => {
   };
 
   const border = "*".repeat(40);
-  console.log(saleData);
 
   if (!loadingStore && !saleLoading && (!saleData || !storeData))
     return <div className="p-4 bg-white">Not data found.</div>;
