@@ -18,6 +18,7 @@ import {
 import { Bar, Pie } from "react-chartjs-2";
 import {
   useGetDashboardOverviewQuery,
+  useGetPieChartDataQuery,
   useGetWeeklySalesQuery,
 } from "../redux/features/dashboard/dashboardApi";
 
@@ -33,6 +34,7 @@ ChartJS.register(
 
 const DashboardPage = () => {
   const { data: dashboardOverview } = useGetDashboardOverviewQuery(null);
+  const { data: pieChartData } = useGetPieChartDataQuery(null);
   const { data: weeklySales = [] } = useGetWeeklySalesQuery(null);
 
   const labels = weeklySales.map((item) => item.day);
@@ -68,8 +70,13 @@ const DashboardPage = () => {
     labels: ["Sale", "Corporate Sale", "Return", "Due"],
     datasets: [
       {
-        label: "My First Dataset",
-        data: [65, 59, 80, 81],
+        label: "Sales Amount",
+        data: [
+          pieChartData?.sale,
+          pieChartData?.corporateSale,
+          pieChartData?.return,
+          pieChartData?.due,
+        ],
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(255, 159, 64, 0.2)",

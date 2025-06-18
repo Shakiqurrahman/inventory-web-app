@@ -1,4 +1,8 @@
-import type { IDashboardOverview, IWeeklySale } from "../../../types/dashboard";
+import type {
+  IDashboardOverview,
+  IPieChartData,
+  IWeeklySale,
+} from "../../../types/dashboard";
 import { baseApi } from "../../api/baseApi";
 
 const dashboardApi = baseApi.injectEndpoints({
@@ -24,8 +28,22 @@ const dashboardApi = baseApi.injectEndpoints({
         return (response as { data: IWeeklySale[] }).data;
       },
     }),
+
+    getPieChartData: builder.query<IPieChartData, null>({
+      query: () => ({
+        url: `/dashboard/pie-chart-info`,
+        method: "GET",
+      }),
+      providesTags: ["dashboard"],
+      transformResponse: (response: unknown): IPieChartData => {
+        return (response as { data: IPieChartData }).data;
+      },
+    }),
   }),
 });
 
-export const { useGetDashboardOverviewQuery, useGetWeeklySalesQuery } =
-  dashboardApi;
+export const {
+  useGetDashboardOverviewQuery,
+  useGetWeeklySalesQuery,
+  useGetPieChartDataQuery,
+} = dashboardApi;
