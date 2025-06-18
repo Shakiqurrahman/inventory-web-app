@@ -11,3 +11,10 @@ export interface IDashboardOverview {
   totalProducts: number;
   totalEmployees: number;
 }
+
+export interface IPieChartData {
+  sale: number;
+  corporateSale: number;
+  return: number;
+  due: number;
+};
