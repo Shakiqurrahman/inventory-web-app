@@ -215,7 +215,7 @@ const AllRecivingHistory = () => {
                 id="search"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Search Expense"
+                placeholder="Search Receiving"
                 className="placeholder:text-sm size-full outline-none"
               />
               <button

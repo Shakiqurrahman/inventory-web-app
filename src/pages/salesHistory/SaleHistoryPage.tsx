@@ -111,7 +111,7 @@ const SaleHistoryPage = () => {
                 id="search"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Search Expense"
+                placeholder="Search Sales"
                 className="placeholder:text-sm size-full outline-none"
               />
               <button
