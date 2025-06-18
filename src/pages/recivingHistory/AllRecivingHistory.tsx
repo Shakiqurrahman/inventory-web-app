@@ -62,7 +62,6 @@ const AllRecivingHistory = () => {
     );
 
     const { data: receivingHistory, meta } = response || {};
-    console.log(receivingHistory);
 
     useEffect(() => {
         if (searchValue) {
