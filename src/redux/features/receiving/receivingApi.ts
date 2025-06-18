@@ -22,5 +22,8 @@ const receivingApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCreateReceiveMutation, useGetReceiveByIdQuery } =
-  receivingApi;
+export const {
+  useCreateReceiveMutation,
+  useGetReceiveByIdQuery,
+  useLazyGetReceiveByIdQuery,
+} = receivingApi;

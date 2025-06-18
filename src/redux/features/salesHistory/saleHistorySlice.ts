@@ -1,8 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { ISaleVariant } from "../../../types/products";
+import type { IEmployee } from "../employees/employeeSlice";
+
+export type IReturnItem = {
+  createdAt: string;
+  id: string;
+  isDeleted: boolean;
+  price: number;
+  quantity: number;
+  saleId: string;
+  updatedAt: string;
+  variant: ISaleVariant;
+  variantId: string;
+};
 
 export type ISaleHistory = {
-  id?: number;
+  id: string;
   invoiceId: string;
   customer: { id?: number; name: string; phone: string };
   dueAmount: number;
@@ -14,11 +27,20 @@ export type ISaleHistory = {
   totalPrice: number;
   returnAmount: number;
   reason?: string;
-  saleStatus: "PAID" | "DUE";
+  saleStatus: "PAID" | "DUE" | "REFUNDED";
   payments: { amount: number; method: string }[];
   saleVariant: ISaleVariant[];
   isCorporateSale: boolean;
   createdAt: string;
+  customerId: string;
+  discountAmount: number;
+  discountPercentage: number;
+  employee: IEmployee;
+  employeeId: string;
+  isDeleted: boolean;
+  isFree: boolean;
+  returnItems: IReturnItem[];
+  updatedAt: string;
 };
 
 type saleHistoryState = {

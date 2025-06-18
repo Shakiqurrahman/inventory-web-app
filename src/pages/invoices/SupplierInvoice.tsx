@@ -1,47 +1,81 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import Barcode from "react-barcode";
+import toast from "react-hot-toast";
 import { FiPrinter } from "react-icons/fi";
 import { IoSearch } from "react-icons/io5";
 import { TbCurrencyTaka } from "react-icons/tb";
+import { useReactToPrint } from "react-to-print";
+import { useLazyGetReceiveByIdQuery } from "../../redux/features/receiving/receivingApi";
+import type { IReceiveHistory } from "../../redux/features/receivingHistory/receivingHIstorySlice";
+import type { Payments } from "../../redux/features/sales/salesFormSlice";
+import { useGetStoreConfigDataQuery } from "../../redux/features/storeConfig/storeConfigApi";
+import type { IReceiveVariant } from "../../types/products";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const SupplierInvoice = () => {
   const [searchValue, setSearchValue] = useState("");
   const printRef = useRef<HTMLDivElement>(null);
+  const [receiveData, setReceiveData] = useState<IReceiveHistory | null>(null);
 
-  const handlePrint = () => {
-    const printContent = printRef.current;
-    const originalContent = document.body.innerHTML;
+  const { data: storeData } = useGetStoreConfigDataQuery(null);
 
-    if (printContent) {
-      const receiptHTML = printContent.innerHTML;
+  const [getSaleData, { isFetching: receiveFetching }] =
+    useLazyGetReceiveByIdQuery();
 
-      document.body.innerHTML = receiptHTML;
-      window.print();
-      document.body.innerHTML = originalContent;
-      window.location.reload(); // To restore event listeners and app state
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+  });
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchValue) {
+      try {
+        const res = await getSaleData(searchValue).unwrap();
+        setSearchValue("");
+        setReceiveData(res);
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+        setReceiveData(null);
+      }
     }
   };
 
-  const items = [
-    { qty: 3, description: "Blue Cotton T-Shirt", unitPrice: 20 },
-    { qty: 2, description: "Women's Leather Handbag", unitPrice: 80 },
-    { qty: 5, description: "Pair of Running Shoes", unitPrice: 50 },
-    { qty: 4, description: "Ceramic Coffee Mug", unitPrice: 10 },
-  ];
+  const subTotal = receiveData?.recieveVariant
+    ? receiveData?.recieveVariant?.reduce(
+        (acc: number, curr: IReceiveVariant) => acc + curr.subTotal,
+        0
+      )
+    : 0;
 
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.qty * item.unitPrice,
-    0
-  );
+  const totalPaid = receiveData?.payments
+    ? receiveData?.payments?.reduce(
+        (acc: number, curr: Payments) => acc + curr?.amount,
+        0
+      )
+    : 0;
+  const dueAmount = receiveData?.totalPrice
+    ? receiveData?.totalPrice - totalPaid
+    : 0;
 
-  const taxRate = 0.05;
-  const taxAmount = subtotal * taxRate;
-  const total = subtotal + taxAmount;
+  const formatDate = (isoString: string): string => {
+    const date = new Date(isoString);
+    const isValid = !isNaN(date.getTime());
+
+    const finalDate = isValid ? date : new Date();
+    const day = String(finalDate.getDate()).padStart(2, "0");
+    const month = String(finalDate.getMonth() + 1).padStart(2, "0");
+    const year = finalDate.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  };
 
   return (
     <div className="relative">
       <div className="">
-        <div className="bg-white flex gap-2 items-center border border-gray-300 rounded-md w-[500px] mx-auto">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white flex gap-2 items-center border border-gray-300 rounded-md w-[500px] mx-auto"
+        >
           <input
             className="border-0 outline-0 w-full px-4"
             type="text"
@@ -51,11 +85,14 @@ const SupplierInvoice = () => {
               setSearchValue((e.target as HTMLInputElement).value)
             }
           />
-          <div className="bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer flex gap-1 items-center text-white p-2 rounded-md">
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer flex gap-1 items-center text-white p-2 rounded-md"
+          >
             <IoSearch />
             <span>Search</span>
-          </div>
-        </div>
+          </button>
+        </form>
 
         <div className="absolute top-0 right-0">
           <button
@@ -69,121 +106,161 @@ const SupplierInvoice = () => {
       </div>
 
       <div className="mt-5">
-        <div
-          ref={printRef}
-          className="max-w-3xl mx-auto bg-white border border-gray-300 p-8 font-sans text-sm text-gray-800"
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="font-semibold text-lg">Fit & Found</h1>
-              <p>
-                1234 Company St,
-                <br />
-                Company Town, ST 12345
-              </p>
+        {receiveFetching ? (
+          <div className="text-center">Searching...</div>
+        ) : !receiveFetching && receiveData && storeData ? (
+          <div
+            ref={printRef}
+            className="max-w-3xl mx-auto bg-white border border-gray-300 p-8 font-sans text-sm text-gray-800"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h1 className="font-semibold text-lg">
+                  {storeData?.companyName}
+                </h1>
+                <p>Address: {storeData?.companyAddress}</p>
+                <p>Mobile No. {storeData?.mobileNo}</p>
+                {storeData?.companyWebsite && (
+                  <p>Website: {storeData?.companyWebsite}</p>
+                )}
+              </div>
+              <div>
+                <Barcode
+                  className="w-[150px]"
+                  value={receiveData?.invoiceId}
+                  fontSize={40}
+                />
+              </div>
             </div>
-            <div>
-              <Barcode
-                className="w-[150px]"
-                value="Reciving data"
-                fontSize={40}
-              />
-            </div>
-          </div>
 
-          {/* Title */}
-          <h2 className="text-center text-xl font-bold tracking-widest text-blue-800 mb-6">
-            SALES RECEIPT
-          </h2>
+            {/* Title */}
+            <h2 className="text-center text-xl font-bold tracking-widest text-blue-800 mb-6">
+              RECEIVING RECEIPT
+            </h2>
 
-          {/* Billing Info */}
-          <div className="flex justify-between mb-6">
-            <div>
-              <p className="font-semibold text-blue-800">Billed To</p>
-              <p className="font-medium">Customer Name</p>
-              <p>
-                1234 Customer St,
-                <br />
-                Customer Town, ST 12345
-              </p>
+            {/* Billing Info */}
+            <div className="flex justify-between mb-6">
+              <div>
+                <p className="font-semibold text-blue-800">Billed To</p>
+                <p>
+                  <span className="font-medium">Supplier Name:</span>{" "}
+                  {receiveData?.supplier?.fullName || ""}
+                </p>
+                <p>
+                  <span className="font-medium">Mobile No:</span>{" "}
+                  {receiveData?.supplier?.phone || ""}
+                </p>
+              </div>
+              <div>
+                <p className="flex justify-between">
+                  <span className="text-blue-800 font-semibold mr-2">
+                    Receipt date
+                  </span>{" "}
+                  {formatDate(receiveData?.receivingDate)}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="flex justify-between">
-                <span className="text-blue-800 font-semibold mr-2">
-                  Receipt #
-                </span>{" "}
-                0000457
-              </p>
-              <p className="flex justify-between">
-                <span className="text-blue-800 font-semibold mr-2">
-                  Receipt date
-                </span>{" "}
-                11-04-2023
-              </p>
-            </div>
-          </div>
 
-          {/* Table */}
-          <table className="w-full text-left mb-6 border-separate border-spacing-y-1">
-            <thead className="bg-blue-800 text-white text-sm">
-              <tr>
-                <th className="py-2 px-3">QTY</th>
-                <th className="py-2 px-3">Description</th>
-                <th className="py-2 px-3">Unit Price</th>
-                <th className="py-2 px-3">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item, idx) => (
-                <tr key={idx} className="bg-gray-100">
-                  <td className="py-2 px-3">{item.qty}</td>
-                  <td className="py-2 px-3">{item.description}</td>
-                  <td className="py-2 px-3 flex items-center gap-0.5">
-                    <TbCurrencyTaka />
-                    {item.unitPrice.toFixed(2)}
-                  </td>
-                  <td className="py-2 px-3">
-                    <TbCurrencyTaka className="inline mr-1" />
-                    {(item.qty * item.unitPrice).toFixed(2)}
-                  </td>
+            {/* Table */}
+            <table className="w-full text-left mb-6 border-separate border-spacing-y-1">
+              <thead className="bg-blue-800 text-white text-sm">
+                <tr>
+                  <th className="py-2 px-3">QTY</th>
+                  <th className="py-2 px-3">Description</th>
+                  <th className="py-2 px-3">Unit Price</th>
+                  <th className="py-2 px-3">Amount</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {receiveData?.recieveVariant?.map(
+                  (item: IReceiveVariant, idx: number) => (
+                    <tr key={idx} className="bg-gray-100">
+                      <td className="py-2 px-3">{item.quantity}</td>
+                      <td className="py-2 px-3">{item.variant.name}</td>
+                      <td className="py-2 px-3">
+                        <div className="flex items-center gap-0.5">
+                          <TbCurrencyTaka />
+                          {item.price.toFixed(2)}
+                        </div>
+                      </td>
+                      <td className="py-2 px-3">
+                        <TbCurrencyTaka className="inline mr-1" />
+                        {item?.subTotal?.toFixed(2)}
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
 
-          {/* Totals */}
-          <div className="flex justify-end">
-            <div className="w-1/3">
-              <div className="flex justify-between mb-1">
-                <span>Subtotal</span>
-                <span className="flex items-center gap-0.5">
-                  <TbCurrencyTaka /> {subtotal.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex justify-between mb-1">
-                <span>Sales Tax (5%)</span>
-                <span className="flex items-center gap-0.5">
-                  <TbCurrencyTaka />
-                  {taxAmount.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex justify-between font-bold border-t border-blue-700 pt-2 mt-2 text-blue-800">
-                <span>Total (USD)</span>
-                <span className="flex items-center gap-0.5">
-                  <TbCurrencyTaka />
-                  {total.toFixed(2)}
-                </span>
+            {/* Totals */}
+            <div className="flex justify-end">
+              <div className="w-1/3">
+                <div className="flex justify-between mb-1">
+                  <span>Subtotal</span>
+                  <span className="flex items-center gap-0.5">
+                    <TbCurrencyTaka /> {subTotal > 0 ? subTotal.toFixed(2) : 0}
+                  </span>
+                </div>
+                {receiveData?.discountPercentage > 0 && (
+                  <div className="flex justify-between mb-1">
+                    <span>Discount (%)</span>
+                    <span className="flex items-center gap-0.5">
+                      {receiveData?.discountPercentage.toFixed(2)}
+                    </span>
+                  </div>
+                )}
+                {receiveData?.discountAmount > 0 && (
+                  <div className="flex justify-between mb-1">
+                    <span>Discount</span>
+                    <span className="flex items-center gap-0.5">
+                      <TbCurrencyTaka />{" "}
+                      {receiveData?.discountAmount.toFixed(2)}
+                    </span>
+                  </div>
+                )}
+                {receiveData?.payments?.map((p: Payments, i: number) => (
+                  <div key={i} className="flex justify-between">
+                    <span className="capitalize">{p?.method}</span>
+                    <span>{p?.amount?.toFixed(1)}</span>
+                  </div>
+                ))}
+                {typeof receiveData?.dueAmount === "number" && (
+                  <div className="flex justify-between">
+                    <span>Due</span>
+                    <span>
+                      {receiveData.dueAmount > 0
+                        ? receiveData.dueAmount.toFixed(1)
+                        : "0.0"}
+                    </span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span>Change</span>
+                  <span>{dueAmount < 0 ? dueAmount.toFixed(1) : 0}</span>
+                </div>
+                <div className="flex justify-between font-bold border-t border-blue-700 pt-2 mt-2 text-blue-800">
+                  <span>Total (USD)</span>
+                  <span className="flex items-center gap-0.5">
+                    <TbCurrencyTaka />
+                    {receiveData?.totalPrice?.toFixed(2)}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Footer Notes */}
-          <div className="mt-8">
-            <p className="text-blue-800 font-semibold">Notes</p>
-            <p>Thank you for your business!</p>
+            {/* Footer Notes */}
+            <div className="mt-8">
+              <p className="text-blue-800 font-semibold">Notes</p>
+              <p>Thank you for your business!</p>
+            </div>
           </div>
-        </div>
+        ) : !receiveFetching && !receiveData ? (
+          <div className="text-center">No data found!</div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

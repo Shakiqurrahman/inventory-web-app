@@ -51,4 +51,5 @@ export const {
   useGetVariantByIdOrBarCodeQuery,
   useCreateSaleMutation,
   useGetSaleByIdQuery,
+  useLazyGetSaleByIdQuery,
 } = salesApi;

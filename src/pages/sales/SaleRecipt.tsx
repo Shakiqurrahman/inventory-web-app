@@ -104,27 +104,30 @@ const SaleRecipt = () => {
 
         <div className="flex justify-between font-bold">
           <span>Total</span>
-          <span>{saleData?.totalPrice?.toFixed(1)}</span>
+          <span>
+            {saleData?.isFree ? "Free" : saleData?.totalPrice?.toFixed(1)}
+          </span>
         </div>
-        {saleData?.discountPercentage > 0 && (
+        {!saleData?.isFree && saleData?.discountPercentage > 0 && (
           <div className="flex justify-between">
             <span>Discount</span>
             <span>{saleData?.discountPercentage?.toFixed(1)}</span>
           </div>
         )}
-        {saleData?.discountAmount > 0 && (
+        {!saleData?.isFree && saleData?.discountAmount > 0 && (
           <div className="flex justify-between">
             <span>Discount</span>
             <span>{saleData?.discountPercentage?.toFixed(1)}</span>
           </div>
         )}
-        {saleData?.payments?.map((p: Payments, i: number) => (
-          <div key={i} className="flex justify-between">
-            <span className="capitalize">{p?.method}</span>
-            <span>{p?.amount?.toFixed(1)}</span>
-          </div>
-        ))}
-        {typeof saleData?.dueAmount === "number" && (
+        {!saleData?.isFree &&
+          saleData?.payments?.map((p: Payments, i: number) => (
+            <div key={i} className="flex justify-between">
+              <span className="capitalize">{p?.method}</span>
+              <span>{p?.amount?.toFixed(1)}</span>
+            </div>
+          ))}
+        {!saleData?.isFree && typeof saleData?.dueAmount === "number" && (
           <div className="flex justify-between">
             <span>Due</span>
             <span>
@@ -132,10 +135,12 @@ const SaleRecipt = () => {
             </span>
           </div>
         )}
-        <div className="flex justify-between">
-          <span>Change</span>
-          <span>{dueAmount < 0 ? dueAmount.toFixed(1) : 0}</span>
-        </div>
+        {!saleData?.isFree && (
+          <div className="flex justify-between">
+            <span>Change</span>
+            <span>{dueAmount < 0 ? dueAmount.toFixed(1) : 0}</span>
+          </div>
+        )}
 
         <p className="text-center mt-2">{border}</p>
 
