@@ -17,7 +17,6 @@ const ReceivingsRecipt = () => {
     useGetReceiveByIdQuery(state?.id, {
       skip: !state?.id,
     });
-  console.log(receiveData);
   const printRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = useReactToPrint({
