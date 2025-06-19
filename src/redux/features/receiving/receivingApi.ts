@@ -19,6 +19,14 @@ const receivingApi = baseApi.injectEndpoints({
       providesTags: ["receivings"],
       transformResponse: (response) => response?.data,
     }),
+    updateReceive: builder.mutation({
+      query: ({ id, ...updatedData }) => ({
+        url: `/receivings/${id}`,
+        method: "PUT",
+        body: updatedData,
+      }),
+      invalidatesTags: ["receivings"],
+    }),
   }),
 });
 
@@ -26,4 +34,5 @@ export const {
   useCreateReceiveMutation,
   useGetReceiveByIdQuery,
   useLazyGetReceiveByIdQuery,
+  useUpdateReceiveMutation,
 } = receivingApi;

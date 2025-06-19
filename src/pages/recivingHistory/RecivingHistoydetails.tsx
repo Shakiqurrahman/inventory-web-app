@@ -3,9 +3,13 @@ import toast from "react-hot-toast";
 import { IoIosCloseCircle } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { useGetReceiveHistoryByIdQuery } from "../../redux/features/receivingHistory/receivingHIstoryApi";
+import {
+  useGetReceiveHistoryByIdQuery,
+  useUpdateReceivingHistoryMutation,
+} from "../../redux/features/receivingHistory/receivingHIstoryApi";
 import type { IReceiveHistory } from "../../redux/features/receivingHistory/receivingHIstorySlice";
 import type { Payments } from "../../redux/features/sales/salesFormSlice";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 interface SupplierDetailsModalProps {
   receiveId: string;
@@ -20,12 +24,12 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
   title,
   edit,
 }) => {
-  const { data, isLoading, isFetching } = useGetReceiveHistoryByIdQuery(
-    receiveId,
-    {
-      skip: !receiveId,
-    }
-  );
+  const { data, isLoading } = useGetReceiveHistoryByIdQuery(receiveId, {
+    skip: !receiveId,
+  });
+
+  const [updateReceive, { isLoading: isUpdating }] =
+    useUpdateReceivingHistoryMutation();
 
   const formRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(edit || false);
@@ -36,11 +40,11 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
   const [payments, setPayments] = useState<Payments[]>([]);
 
   useEffect(() => {
-    if (!isLoading && !isFetching && data) {
+    if (!isLoading && data) {
       setReceivingHistoryDetails(data);
       setPayments(data?.payments);
     }
-  }, [data, isLoading, isFetching]);
+  }, [data, isLoading]);
 
   useOutsideClick(formRef, () => {
     setShowModal();
@@ -74,10 +78,35 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
     }
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    console.log("Payments", payments);
-    // Optional: send updated data to backend
+  const handleSave = async () => {
+    const totalPayments = payments?.reduce(
+      (acc, curr) => acc + curr?.amount,
+      0
+    );
+    const paidAmount =
+      receivingHistoryDetails?.totalPrice &&
+      receivingHistoryDetails?.totalPrice > totalPayments
+        ? totalPayments
+        : receivingHistoryDetails?.totalPrice;
+    const dueAmount = receivingHistoryDetails?.totalPrice
+      ? receivingHistoryDetails?.totalPrice - totalPayments
+      : 0;
+    const updatedData = {
+      payments,
+      paidAmount,
+      dueAmount,
+    };
+    try {
+      await updateReceive({
+        id: receivingHistoryDetails?.id,
+        ...updatedData,
+      }).unwrap();
+      toast.success("Update successful.");
+      setIsEditing(false);
+      setShowModal();
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
   };
 
   const formatText = (text: string) =>
@@ -103,13 +132,15 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
               <>
                 <button
                   onClick={handleSave}
-                  className="text-white py-1 px-4 rounded-md text-sm bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer"
+                  disabled={isUpdating}
+                  className="text-white py-1 px-4 rounded-md text-sm bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer disabled:bg-blue-500/50"
                 >
                   Save
                 </button>
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="text-white py-1 px-4 rounded-md text-sm bg-red-500 hover:bg-red-600 duration-300 cursor-pointer"
+                  disabled={isUpdating}
+                  className="text-white py-1 px-4 rounded-md text-sm bg-red-500 hover:bg-red-600 duration-300 cursor-pointer disabled:bg-red-500/50"
                 >
                   cancel
                 </button>
@@ -126,10 +157,9 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
         </div>
         <hr className="mb-5" />
 
-        {isFetching || isLoading ? (
+        {isLoading ? (
           <div>Loading...</div>
         ) : (
-          !isFetching &&
           !isLoading &&
           receivingHistoryDetails && (
             <>
@@ -140,7 +170,6 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
                       <th className="p-3">Item Name</th>
                       <th className="p-3">Price</th>
                       <th className="p-3">Quantity</th>
-                      <th className="p-3">Discount</th>
                       <th className="p-3">Total</th>
                     </tr>
                   </thead>
@@ -158,15 +187,14 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
                           <td className="p-3">
                             <span className="">{item.quantity}</span>
                           </td>
-                          <td className="p-3">{item.discountPercentage}%</td>
                           <td className="p-3">৳ {item.subTotal?.toFixed(2)}</td>
                         </tr>
                       )
                     )}
-                    {/* {receivingHistoryDetails?.returnItems?.length > 0 && (
+                    {receivingHistoryDetails?.receiveReturn?.length > 0 && (
                       <>
                         <tr className="bg-[#F9FBFC] border-t border-b border-gray-200 *:font-semibold text-sm">
-                          <th colSpan={5} className="p-3">
+                          <th colSpan={4} className="p-3">
                             ***Return Items***
                           </th>
                         </tr>
@@ -175,37 +203,37 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
                             Item Name
                           </th>
                           <th className="p-3">Quantity</th>
-                          <th className="p-3" colSpan={2}>
-                            Price
-                          </th>
+                          <th className="p-3">Price</th>
                         </tr>
-                        {saleHistoryDetails?.returnItems?.map((item, index) => (
-                          <tr
-                            key={index}
-                            className={`hover:bg-gray-50 border-b border-gray-200 text-sm text-center`}
-                          >
-                            <td className="p-3" colSpan={2}>
-                              {item.variant?.name}
-                            </td>
-                            <td className="p-3">
-                              <span className="">{item.quantity}</span>
-                            </td>
-                            <td className="p-3" colSpan={2}>
-                              <span className="flex items-center justify-center">
-                                ৳ {item.price}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
+                        {receivingHistoryDetails?.receiveReturn?.map(
+                          (item, index) => (
+                            <tr
+                              key={index}
+                              className={`hover:bg-gray-50 border-b border-gray-200 text-sm text-center`}
+                            >
+                              <td className="p-3" colSpan={2}>
+                                {item.variant?.name}
+                              </td>
+                              <td className="p-3">
+                                <span className="">{item.quantity}</span>
+                              </td>
+                              <td className="p-3">
+                                <span className="flex items-center justify-center">
+                                  ৳ {item.price}
+                                </span>
+                              </td>
+                            </tr>
+                          )
+                        )}
                       </>
-                    )} */}
+                    )}
                   </tbody>
                   <tfoot>
                     <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
                       <td className="p-3 border-r border-gray-200">
                         <p>Total Price:</p>
                       </td>
-                      <td colSpan={3} className="p-3"></td>
+                      <td colSpan={2} className="p-3"></td>
                       <td className="p-3">
                         <span>৳ {receivingHistoryDetails?.totalPrice}</span>
                       </td>
@@ -214,7 +242,7 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
                       <td className="p-3 border-r border-gray-200">
                         <p>Total Paid:</p>
                       </td>
-                      <td colSpan={3} className="p-3"></td>
+                      <td colSpan={2} className="p-3"></td>
                       <td className="p-3">
                         <span>
                           ৳{" "}
@@ -233,7 +261,7 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
                             <td className="p-3 border-r border-gray-200">
                               <p>Discount:</p>
                             </td>
-                            <td colSpan={3} className="p-3"></td>
+                            <td colSpan={2} className="p-3"></td>
                             <td className="p-3">
                               <span>
                                 {receivingHistoryDetails?.discountAmount > 0
@@ -248,24 +276,24 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
                             </td>
                           </tr>
                         )}
-                        {/* {receivingHistoryDetails?.returnAmount > 0 && (
+                        {receivingHistoryDetails?.returnAmount > 0 && (
                           <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
                             <td className="p-3 border-r border-gray-200">
                               <p>Return Amount:</p>
                             </td>
-                            <td colSpan={3} className="p-3"></td>
+                            <td colSpan={2} className="p-3"></td>
                             <td className="p-3">
                               <span>
                                 ৳ {receivingHistoryDetails?.returnAmount}
                               </span>
                             </td>
                           </tr>
-                        )} */}
+                        )}
                         <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
                           <td className="p-3 border-r border-gray-200">
                             <p>Due:</p>
                           </td>
-                          <td colSpan={3} className="p-3"></td>
+                          <td colSpan={2} className="p-3"></td>
                           <td className="p-3">
                             <span>
                               ৳{" "}
@@ -279,7 +307,7 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
                           <td className="p-3 border-r border-gray-200">
                             <p>Change:</p>
                           </td>
-                          <td colSpan={3} className="p-3"></td>
+                          <td colSpan={2} className="p-3"></td>
                           <td className="p-3">
                             <span>
                               ৳{" "}

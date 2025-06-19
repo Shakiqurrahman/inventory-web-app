@@ -4,8 +4,12 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import type { Payments } from "../../redux/features/sales/salesFormSlice";
-import { useGetSalesHistoryByIdQuery } from "../../redux/features/salesHistory/saleHistoryApi";
+import {
+  useGetSalesHistoryByIdQuery,
+  useUpdateSalesHistoryMutation,
+} from "../../redux/features/salesHistory/saleHistoryApi";
 import type { ISaleHistory } from "../../redux/features/salesHistory/saleHistorySlice";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 interface SupplierDetailsModalProps {
   saleId: string;
@@ -20,9 +24,12 @@ const SaleHistoryDetails: React.FC<SupplierDetailsModalProps> = ({
   title,
   edit,
 }) => {
-  const { data, isLoading, isFetching } = useGetSalesHistoryByIdQuery(saleId, {
+  const { data, isLoading } = useGetSalesHistoryByIdQuery(saleId, {
     skip: !saleId,
   });
+
+  const [updateSale, { isLoading: isUpdating }] =
+    useUpdateSalesHistoryMutation();
 
   const formRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(edit || false);
@@ -33,11 +40,11 @@ const SaleHistoryDetails: React.FC<SupplierDetailsModalProps> = ({
   const [payments, setPayments] = useState<Payments[]>([]);
 
   useEffect(() => {
-    if (!isLoading && !isFetching && data) {
+    if (!isLoading && data) {
       setSaleHistoryDetails(data);
       setPayments(data?.payments);
     }
-  }, [data, isLoading, isFetching]);
+  }, [data, isLoading]);
 
   useOutsideClick(formRef, () => {
     setShowModal();
@@ -71,10 +78,32 @@ const SaleHistoryDetails: React.FC<SupplierDetailsModalProps> = ({
     }
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    console.log("Payments", payments);
-    // Optional: send updated data to backend
+  const handleSave = async () => {
+    const totalPayments = payments?.reduce(
+      (acc, curr) => acc + curr?.amount,
+      0
+    );
+    const paidAmount =
+      saleHistoryDetails?.totalPrice &&
+      saleHistoryDetails?.totalPrice > totalPayments
+        ? totalPayments
+        : saleHistoryDetails?.totalPrice;
+    const dueAmount = saleHistoryDetails?.totalPrice
+      ? saleHistoryDetails?.totalPrice - totalPayments
+      : 0;
+    try {
+      await updateSale({
+        id: saleHistoryDetails?.id,
+        payments: payments,
+        paidAmount,
+        dueAmount,
+      }).unwrap();
+      toast.success("Update successful.");
+      setIsEditing(false);
+      setShowModal();
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
   };
 
   const formatText = (text: string) =>
@@ -100,13 +129,15 @@ const SaleHistoryDetails: React.FC<SupplierDetailsModalProps> = ({
               <>
                 <button
                   onClick={handleSave}
-                  className="text-white py-1 px-4 rounded-md text-sm bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer"
+                  disabled={isUpdating}
+                  className="text-white py-1 px-4 rounded-md text-sm bg-blue-500 hover:bg-blue-600 duration-300 cursor-pointer disabled:bg-blue-500/50"
                 >
                   Save
                 </button>
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="text-white py-1 px-4 rounded-md text-sm bg-red-500 hover:bg-red-600 duration-300 cursor-pointer"
+                  disabled={isUpdating}
+                  className="text-white py-1 px-4 rounded-md text-sm bg-red-500 hover:bg-red-600 duration-300 cursor-pointer disabled:bg-red-500/50"
                 >
                   cancel
                 </button>
@@ -123,10 +154,9 @@ const SaleHistoryDetails: React.FC<SupplierDetailsModalProps> = ({
         </div>
         <hr className="mb-5" />
 
-        {isFetching || isLoading ? (
+        {isLoading ? (
           <div>Loading...</div>
         ) : (
-          !isFetching &&
           !isLoading &&
           saleHistoryDetails && (
             <>

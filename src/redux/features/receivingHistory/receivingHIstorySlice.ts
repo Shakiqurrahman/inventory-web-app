@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { IReceiveVariant } from "../../../types/products";
+import type { IReturnItem } from "../salesHistory/saleHistorySlice";
 import type { ISupplier } from "../suppliers/supplierSlice";
 
 export type IReceiveHistory = {
@@ -22,6 +23,8 @@ export type IReceiveHistory = {
   isCorporateSale: boolean;
   createdAt: string;
   supplier: ISupplier;
+  receiveReturn: IReturnItem[];
+  returnAmount: number;
 };
 
 type receiveHistoryState = {

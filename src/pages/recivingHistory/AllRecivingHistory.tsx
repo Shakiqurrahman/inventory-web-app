@@ -209,9 +209,9 @@ const AllRecivingHistory = () => {
                             receiving.paymentStatus === "PAID"
                               ? "bg-green-100 text-green-500"
                               : "bg-red-100 text-red-500"
-                          } uppercase text-center text-xs p-1.5 w-[50px] rounded-md`}
+                          } uppercase text-center text-xs p-1.5 rounded-md`}
                         >
-                          {receiving.paymentStatus === "PAID" ? "paid" : "due"}
+                          {receiving.paymentStatus}
                         </div>
                       </td>
 
