@@ -23,6 +23,7 @@ import {
 } from "../../redux/features/sales/salesApi";
 import { useAppSelector } from "../../redux/hook";
 import type { IProductSuggestions } from "../../types/products";
+import { isValidEAN13Code } from "../../utils/isValidEAN13Code";
 import InlineEditor from "./InlineEditor";
 import { RecivingInformation } from "./RecivingInformation";
 import RecivingOrderInformation from "./RecivingOrderInformation";
@@ -58,12 +59,16 @@ const RecivingsPage = () => {
     data: item,
     isFetching,
     isLoading,
+    isError,
   } = useGetVariantByIdOrBarCodeQuery(variantId, {
     skip: !variantId,
   });
 
   useEffect(() => {
-    if (item && !isFetching && variantId) {
+    if (variantId && isError) {
+      toast.error("Item not found.");
+      setVarantId("");
+    } else if (item && !isFetching && variantId) {
       const existingItem = recieveVariant.find((v) => v?.id === item?.id);
       if (existingItem) {
         const updateItems = recieveVariant.map((v) => {
@@ -176,7 +181,7 @@ const RecivingsPage = () => {
 
   const handleSubmitSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!/^\d{13}$/.test(searchItemValue)) {
+    if (!isValidEAN13Code(searchItemValue)) {
       toast.error("Please enter a valid barcode");
       setSearchItemValue("");
       return false;
@@ -376,9 +381,11 @@ const RecivingsPage = () => {
                 )}
 
                 {(isLoading || isFetching) && (
-                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-white/40">
-                    <ImSpinner8 className="animate-spin duration-300 size-7 text-primary" />
-                  </div>
+                  <tr className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-white/40">
+                    <td>
+                      <ImSpinner8 className="animate-spin duration-300 size-7 text-primary" />
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>

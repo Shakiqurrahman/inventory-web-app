@@ -23,6 +23,7 @@ import {
 } from "../../redux/features/sales/salesFormSlice";
 import type { RootState } from "../../redux/store";
 import type { IProductSuggestions } from "../../types/products";
+import { isValidEAN13Code } from "../../utils/isValidEAN13Code";
 import InlineEditor from "../receivings/InlineEditor";
 import OrderInformation from "./OrderInformation";
 import SalesInformation from "./SalesInformation";
@@ -53,12 +54,16 @@ const SalesPage = () => {
     data: item,
     isFetching,
     isLoading,
+    isError,
   } = useGetVariantByIdOrBarCodeQuery(variantId, {
     skip: !variantId,
   });
 
   useEffect(() => {
-    if (item && !isFetching && variantId) {
+    if (variantId && isError) {
+      toast.error("Item not found.");
+      setVarantId("");
+    } else if (item && !isFetching && variantId) {
       const existingItem = selectedItems.find((v) => v?.id === item?.id);
       if (existingItem) {
         const updateItems = selectedItems.map((v) => {
@@ -94,7 +99,7 @@ const SalesPage = () => {
       setSearchItemValue("");
       setVarantId("");
     }
-  }, [item, dispatch, variantId, isFetching, selectedItems]);
+  }, [item, dispatch, variantId, isFetching, selectedItems, isError]);
 
   useEffect(() => {
     if (discountAmount > 0) {
@@ -136,7 +141,7 @@ const SalesPage = () => {
 
   const handleSubmitSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!/^\d{13}$/.test(searchItemValue)) {
+    if (!isValidEAN13Code(searchItemValue)) {
       toast.error("Please enter a valid barcode");
       setSearchItemValue("");
       return false;
@@ -389,9 +394,11 @@ const SalesPage = () => {
                   </tr>
                 )}
                 {(isLoading || isFetching) && (
-                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-white/40">
-                    <ImSpinner8 className="animate-spin duration-300 size-7 text-primary" />
-                  </div>
+                  <tr className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-white/40">
+                    <td>
+                      <ImSpinner8 className="animate-spin duration-300 size-7 text-primary" />
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>
