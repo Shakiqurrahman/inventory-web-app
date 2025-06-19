@@ -1,4 +1,7 @@
 import ProfitAndLossReportCard from "./ProfitAndLossReportCard";
+import PurchaseAnalytics from "./PurchaseAnalytics";
+import SaleAnalytics from "./SaleAnalytics";
+import SalesOverviewChart from "./SalesOverviewChart";
 
 const ReportsPage = () => {
   return (
@@ -29,6 +32,26 @@ const ReportsPage = () => {
             bgColor="bg-[#6FD64B]"
             iconColor="text-green-600"
           />
+        </div>
+      </div>
+      <div className="flex flex-wrap md:flex-nowrap gap-4 mt-4">
+        <div className="w-full md:w-2/3 flex flex-col">
+          <h1 className="font-medium mb-4 text-lg">Sales Overview</h1>
+          <SalesOverviewChart />
+        </div>
+        <div className="w-full md:w-1/3 flex flex-col">
+          <h1 className="mb-4 font-medium text-lg">Sale Analytics</h1>
+          <SaleAnalytics />
+        </div>
+      </div>
+      <div className="flex flex-wrap md:flex-nowrap gap-4 mt-4">
+        <div className="w-full md:w-1/3 flex flex-col">
+          <h1 className="font-medium mb-4 text-lg">Sales</h1>
+          <SalesOverviewChart />
+        </div>
+        <div className="w-full md:w-2/3 flex flex-col">
+          <h1 className="mb-4 font-medium text-lg">Purchase Analytics</h1>
+          <PurchaseAnalytics />
         </div>
       </div>
     </div>
