@@ -14,6 +14,7 @@ import {
   LinearScale,
   Title,
   Tooltip,
+  type TooltipItem,
 } from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
 import {
@@ -21,6 +22,7 @@ import {
   useGetPieChartDataQuery,
   useGetWeeklySalesQuery,
 } from "../redux/features/dashboard/dashboardApi";
+import type { IWeeklySale } from "../types/dashboard";
 
 ChartJS.register(
   CategoryScale,
@@ -40,10 +42,15 @@ const DashboardPage = () => {
   const labels = weeklySales.map((item) => item.day);
   const data = {
     labels: labels,
+    parsing: false,
     datasets: [
       {
         label: "Weekly Sales",
-        data: weeklySales.map((item) => item.salesAmount),
+        data: weeklySales.map((d) => ({
+          x: d.day,
+          y: d.salesAmount,
+          raw: d, // Keep the full object for tooltip access
+        })),
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(255, 159, 64, 0.2)",
@@ -96,6 +103,42 @@ const DashboardPage = () => {
   const config = {
     data: data,
     options: {
+      plugins: {
+        legend: {
+          position: "top" as const,
+        },
+        tooltip: {
+          callbacks: {
+            title: (tooltipItems: TooltipItem<"bar">[]) => {
+              const raw = tooltipItems[0].raw as {
+                x: string;
+                y: number;
+                raw: IWeeklySale;
+              };
+              const rawData = raw.raw;
+              return rawData.day;
+            },
+            label: (tooltipItem: TooltipItem<"bar">) => {
+              const raw = tooltipItem.raw as {
+                x: string;
+                y: number;
+                raw: IWeeklySale;
+              };
+              const rawData = raw.raw;
+              return `Total: ৳${rawData.salesAmount}`;
+            },
+            afterLabel: (tooltipItem: TooltipItem<"bar">) => {
+              const raw = tooltipItem.raw as {
+                x: string;
+                y: number;
+                raw: IWeeklySale;
+              };
+              const rawData = raw.raw;
+              return `Sales: ${rawData.saleItems}`;
+            },
+          },
+        },
+      },
       scales: {
         y: {
           beginAtZero: true,
