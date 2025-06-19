@@ -95,7 +95,7 @@ const RecivingsPage = () => {
       setSearchItemValue("");
       setVarantId("");
     }
-  }, [item, variantId, isFetching, dispatch, recieveVariant]);
+  }, [item, variantId, isFetching, dispatch, recieveVariant, isError]);
 
   //   useEffect(() => {
   //     if (discountAmount > 0) {
@@ -164,7 +164,7 @@ const RecivingsPage = () => {
         dispatch(updateDiscountPercentage(0));
       }
     }
-  }, [recieveVariant, dispatch, discountAmount, discountPercentage]);
+  }, [recieveVariant, dispatch, discountAmount, discountPercentage, payments]);
 
   const handleChangeSearchItem = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchItemValue(e.target.value);

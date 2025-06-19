@@ -133,7 +133,7 @@ const SalesPage = () => {
         dispatch(updateDiscountPercentage(0));
       }
     }
-  }, [selectedItems, dispatch, freeSale, discountAmount]);
+  }, [selectedItems, dispatch, freeSale, discountAmount, payments]);
 
   const handleChangeSearchItem = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchItemValue(e.target.value);
