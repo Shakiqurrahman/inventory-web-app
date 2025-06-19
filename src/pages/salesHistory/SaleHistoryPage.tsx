@@ -31,6 +31,7 @@ const SaleHistoryPage = () => {
   const dispatch = useDispatch();
   const { openReturnModal } = useAppSelector((state) => state.saleHistory);
   const [selectedSale, setSelectedSale] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
 
   const [showclose, setShowClose] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -78,8 +79,7 @@ const SaleHistoryPage = () => {
   const [showSearchedFor, setShowSearchedFor] = useState(search ? true : false);
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [saleHistoryDetails, setSaleHistoryDetails] =
-    useState<ISaleHistory | null>(null);
+  const [saleHistoryDetails, setSaleHistoryDetails] = useState("");
 
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -180,7 +180,7 @@ const SaleHistoryPage = () => {
                 SalesHistory.map((sale: ISaleHistory, index: number) => (
                   <tr
                     onClick={() => {
-                      setSaleHistoryDetails(sale);
+                      setSaleHistoryDetails(sale?.id);
                       setShowModal(true);
                     }}
                     key={index}
@@ -216,15 +216,18 @@ const SaleHistoryPage = () => {
 
                     <td className="p-3 text-gray-500">
                       <div className="flex items-center border border-gray-300 rounded-sm w-fit">
-                        <Link
+                        <button
+                          type="button"
                           onClick={(e) => {
                             e.stopPropagation();
+                            setIsEditing(true);
+                            setSaleHistoryDetails(sale?.id);
+                            setShowModal(true);
                           }}
                           className="bg-gray-100 p-1 px-2 border-r border-gray-300 hover:bg-gray-200"
-                          to={"edit"}
                         >
                           Edit
-                        </Link>
+                        </button>
 
                         <div
                           ref={(el) => {
@@ -318,9 +321,13 @@ const SaleHistoryPage = () => {
       {/* Future implementation will go here */}
       {showModal && saleHistoryDetails && (
         <SaleHistoryDetails
-          saleHistoryDetails={saleHistoryDetails}
-          setShowModal={setShowModal} // pass setter function
-          title={"Supplier Information"}
+          saleId={saleHistoryDetails}
+          setShowModal={() => {
+            setShowModal(false);
+            setIsEditing(false);
+          }} // pass setter function
+          title={"Sale Information"}
+          edit={isEditing}
         />
       )}
       {openReturnModal && selectedSale && (

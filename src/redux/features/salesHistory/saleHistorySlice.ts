@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { ISaleVariant } from "../../../types/products";
 import type { IEmployee } from "../employees/employeeSlice";
+import type { IProductVariant } from "../items/itemApiSlice";
 
 export type IReturnItem = {
   createdAt: string;
@@ -10,7 +11,7 @@ export type IReturnItem = {
   quantity: number;
   saleId: string;
   updatedAt: string;
-  variant: ISaleVariant;
+  variant: IProductVariant;
   variantId: string;
 };
 
