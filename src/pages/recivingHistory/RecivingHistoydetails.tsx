@@ -132,37 +132,38 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
           !isFetching &&
           !isLoading &&
           receivingHistoryDetails && (
-            <div className="w-full overflow-x-auto">
-              <table className="w-full border border-gray-300 text-sm">
-                <thead>
-                  <tr className="bg-[#F9FBFC] border-t border-b border-gray-200 *:font-semibold text-sm">
-                    <th className="p-3">Item Name</th>
-                    <th className="p-3">Price</th>
-                    <th className="p-3">Quantity</th>
-                    <th className="p-3">Discount</th>
-                    <th className="p-3">Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {receivingHistoryDetails?.recieveVariant?.map(
-                    (item, index) => (
-                      <tr
-                        key={index}
-                        className={`hover:bg-gray-50 border-b border-gray-200 text-sm text-center`}
-                      >
-                        <td className="p-3">{item.variant?.name}</td>
-                        <td className="p-3 flex items-center justify-center">
-                          ৳ {item.price}
-                        </td>
-                        <td className="p-3">
-                          <span className="">{item.quantity}</span>
-                        </td>
-                        <td className="p-3">{item.discountPercentage}%</td>
-                        <td className="p-3">৳ {item.subTotal?.toFixed(2)}</td>
-                      </tr>
-                    )
-                  )}
-                  {/* {receivingHistoryDetails?.returnItems?.length > 0 && (
+            <>
+              <div className="w-full overflow-x-auto">
+                <table className="w-full border border-gray-300 text-sm">
+                  <thead>
+                    <tr className="bg-[#F9FBFC] border-t border-b border-gray-200 *:font-semibold text-sm">
+                      <th className="p-3">Item Name</th>
+                      <th className="p-3">Price</th>
+                      <th className="p-3">Quantity</th>
+                      <th className="p-3">Discount</th>
+                      <th className="p-3">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {receivingHistoryDetails?.recieveVariant?.map(
+                      (item, index) => (
+                        <tr
+                          key={index}
+                          className={`hover:bg-gray-50 border-b border-gray-200 text-sm text-center`}
+                        >
+                          <td className="p-3">{item.variant?.name}</td>
+                          <td className="p-3 flex items-center justify-center">
+                            ৳ {item.price}
+                          </td>
+                          <td className="p-3">
+                            <span className="">{item.quantity}</span>
+                          </td>
+                          <td className="p-3">{item.discountPercentage}%</td>
+                          <td className="p-3">৳ {item.subTotal?.toFixed(2)}</td>
+                        </tr>
+                      )
+                    )}
+                    {/* {receivingHistoryDetails?.returnItems?.length > 0 && (
                       <>
                         <tr className="bg-[#F9FBFC] border-t border-b border-gray-200 *:font-semibold text-sm">
                           <th colSpan={5} className="p-3">
@@ -198,55 +199,56 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
                         ))}
                       </>
                     )} */}
-                </tbody>
-                <tfoot>
-                  <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
-                    <td className="p-3 border-r border-gray-200">
-                      <p>Total Price:</p>
-                    </td>
-                    <td colSpan={3} className="p-3"></td>
-                    <td className="p-3">
-                      <span>৳ {receivingHistoryDetails?.totalPrice}</span>
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
-                    <td className="p-3 border-r border-gray-200">
-                      <p>Total Paid:</p>
-                    </td>
-                    <td colSpan={3} className="p-3"></td>
-                    <td className="p-3">
-                      <span>
-                        ৳{" "}
-                        {receivingHistoryDetails?.payments?.reduce(
-                          (acc, curr) => acc + curr?.amount,
-                          0
-                        ) || 0}
-                      </span>
-                    </td>
-                  </tr>
-                  {!isEditing && (
-                    <>
-                      {(receivingHistoryDetails?.discountAmount > 0 ||
-                        receivingHistoryDetails?.discountPercentage > 0) && (
-                        <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
-                          <td className="p-3 border-r border-gray-200">
-                            <p>Discount:</p>
-                          </td>
-                          <td colSpan={3} className="p-3"></td>
-                          <td className="p-3">
-                            <span>
-                              {receivingHistoryDetails?.discountAmount > 0
-                                ? "৳ " + receivingHistoryDetails?.discountAmount
-                                : receivingHistoryDetails?.discountPercentage >
-                                  0
-                                ? receivingHistoryDetails?.discountPercentage +
-                                  "%"
-                                : 0}
-                            </span>
-                          </td>
-                        </tr>
-                      )}
-                      {/* {receivingHistoryDetails?.returnAmount > 0 && (
+                  </tbody>
+                  <tfoot>
+                    <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
+                      <td className="p-3 border-r border-gray-200">
+                        <p>Total Price:</p>
+                      </td>
+                      <td colSpan={3} className="p-3"></td>
+                      <td className="p-3">
+                        <span>৳ {receivingHistoryDetails?.totalPrice}</span>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
+                      <td className="p-3 border-r border-gray-200">
+                        <p>Total Paid:</p>
+                      </td>
+                      <td colSpan={3} className="p-3"></td>
+                      <td className="p-3">
+                        <span>
+                          ৳{" "}
+                          {receivingHistoryDetails?.payments?.reduce(
+                            (acc, curr) => acc + curr?.amount,
+                            0
+                          ) || 0}
+                        </span>
+                      </td>
+                    </tr>
+                    {!isEditing && (
+                      <>
+                        {(receivingHistoryDetails?.discountAmount > 0 ||
+                          receivingHistoryDetails?.discountPercentage > 0) && (
+                          <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
+                            <td className="p-3 border-r border-gray-200">
+                              <p>Discount:</p>
+                            </td>
+                            <td colSpan={3} className="p-3"></td>
+                            <td className="p-3">
+                              <span>
+                                {receivingHistoryDetails?.discountAmount > 0
+                                  ? "৳ " +
+                                    receivingHistoryDetails?.discountAmount
+                                  : receivingHistoryDetails?.discountPercentage >
+                                    0
+                                  ? receivingHistoryDetails?.discountPercentage +
+                                    "%"
+                                  : 0}
+                              </span>
+                            </td>
+                          </tr>
+                        )}
+                        {/* {receivingHistoryDetails?.returnAmount > 0 && (
                           <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
                             <td className="p-3 border-r border-gray-200">
                               <p>Return Amount:</p>
@@ -259,41 +261,42 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
                             </td>
                           </tr>
                         )} */}
-                      <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
-                        <td className="p-3 border-r border-gray-200">
-                          <p>Due:</p>
-                        </td>
-                        <td colSpan={3} className="p-3"></td>
-                        <td className="p-3">
-                          <span>
-                            ৳{" "}
-                            {receivingHistoryDetails?.dueAmount > 0
-                              ? receivingHistoryDetails?.dueAmount
-                              : 0}
-                          </span>
-                        </td>
-                      </tr>
-                      <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
-                        <td className="p-3 border-r border-gray-200">
-                          <p>Change:</p>
-                        </td>
-                        <td colSpan={3} className="p-3"></td>
-                        <td className="p-3">
-                          <span>
-                            ৳{" "}
-                            {receivingHistoryDetails?.dueAmount > 0
-                              ? 0
-                              : receivingHistoryDetails?.dueAmount}
-                          </span>
-                        </td>
-                      </tr>
-                    </>
-                  )}
-                </tfoot>
-              </table>
+                        <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
+                          <td className="p-3 border-r border-gray-200">
+                            <p>Due:</p>
+                          </td>
+                          <td colSpan={3} className="p-3"></td>
+                          <td className="p-3">
+                            <span>
+                              ৳{" "}
+                              {receivingHistoryDetails?.dueAmount > 0
+                                ? receivingHistoryDetails?.dueAmount
+                                : 0}
+                            </span>
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-gray-50 border-b border-gray-200 text-sm text-center font-medium">
+                          <td className="p-3 border-r border-gray-200">
+                            <p>Change:</p>
+                          </td>
+                          <td colSpan={3} className="p-3"></td>
+                          <td className="p-3">
+                            <span>
+                              ৳{" "}
+                              {receivingHistoryDetails?.dueAmount > 0
+                                ? 0
+                                : receivingHistoryDetails?.dueAmount}
+                            </span>
+                          </td>
+                        </tr>
+                      </>
+                    )}
+                  </tfoot>
+                </table>
+              </div>
               {isEditing && (
-                <div className="flex mt-5">
-                  <div className="w-1/2 p-3 border-r border-dashed border-gray-300">
+                <div className="flex flex-wrap sm:flex-nowrap mt-5">
+                  <div className="w-full sm:w-1/2 p-3 border-r border-dashed border-gray-300">
                     <h1 className="text-sm font-medium text-gray-600">
                       Add payment
                     </h1>
@@ -374,7 +377,7 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
                       </button>
                     </div>
                   </div>
-                  <div className="w-1/2 p-3">
+                  <div className="w-full sm:w-1/2 p-3">
                     {payments.map(({ amount, method }, index) => (
                       <div
                         key={index}
@@ -398,7 +401,7 @@ const RecivingHistoydetails: React.FC<SupplierDetailsModalProps> = ({
                   </div>
                 </div>
               )}
-            </div>
+            </>
           )
         )}
       </div>
