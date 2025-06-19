@@ -16,7 +16,7 @@ export type IReceiveHistory = {
   discountAmount: number;
   discountPercentage: number;
   receivingDate: string;
-  saleStatus: "PAID" | "DUE";
+  paymentStatus: "PAID" | "DUE" | "REFUNDED";
   payments: { amount: number; method: string }[];
   recieveVariant: IReceiveVariant[];
   isCorporateSale: boolean;
