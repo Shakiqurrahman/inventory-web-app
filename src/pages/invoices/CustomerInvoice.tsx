@@ -11,6 +11,7 @@ import type { ISaleHistory } from "../../redux/features/salesHistory/saleHistory
 import { useGetStoreConfigDataQuery } from "../../redux/features/storeConfig/storeConfigApi";
 import type { ISaleVariant } from "../../types/products";
 import { getErrorMessage } from "../../utils/errorHandler";
+import { isValidEAN13Code } from "../../utils/isValidEAN13Code";
 
 const CustomerInvoice = () => {
   const [showNotFoundData, setShowNotFoundData] = useState(false);
@@ -28,7 +29,9 @@ const CustomerInvoice = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!/^\d{13}$/.test(searchValue)) {
+    console.log(!isValidEAN13Code(searchValue, "saleInvoice"));
+    
+    if (!isValidEAN13Code(searchValue, "saleInvoice")) {
       toast.error("Please enter a valid Invoice Id");
       setSearchValue("");
       setSaleData(null);
