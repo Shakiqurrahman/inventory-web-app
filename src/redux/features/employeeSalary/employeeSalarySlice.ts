@@ -6,9 +6,13 @@ export interface IEmployeeSalary {
     date: string;
     amount: number | string;
     bonusAmount?: number | string;
-    employee: string;
+    employee: {
+        id: string;
+        name: string;
+    };
     reason?: string;
     approvedBy: string;
+    name: string;
 }
 
 type employeeSalaryState = {

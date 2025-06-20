@@ -2,16 +2,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef } from "react";
 import DatePicker from "react-datepicker";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { z } from "zod";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import {
-    createEmployeeSalary,
-    toggleCreateEmployeeSalaryModal,
-} from "../../redux/features/employeeSalary/employeeSalarySlice";
 import { useGetEmployeeListQuery } from "../../redux/features/employees/employeeApi";
 import type { IEmployee } from "../../redux/features/employees/employeeSlice";
+import { useCreateEmployeeSalaryMutation } from "../../redux/features/employeeSalary/employeeSalaryApi";
+import { toggleCreateEmployeeSalaryModal } from "../../redux/features/employeeSalary/employeeSalarySlice";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const employeeSalarySchema = z.object({
     date: z
@@ -24,12 +24,14 @@ const employeeSalarySchema = z.object({
     bonusAmount: z.coerce.number().optional(),
     approvedBy: z.string().min(1, "Approved By must be required"),
     reason: z.string().optional(),
-    employee: z.string().optional(),
+    employeeId: z.string().optional(),
 });
 
 type employeeSalaryForm = z.infer<typeof employeeSalarySchema>;
 
 const NewSalarymodal = () => {
+    const [createEmployeeSalary, { isLoading }] =
+        useCreateEmployeeSalaryMutation();
     const {
         register,
         handleSubmit,
@@ -53,8 +55,14 @@ const NewSalarymodal = () => {
         dispatch(toggleCreateEmployeeSalaryModal());
     });
 
-    const onSubmit = (data: employeeSalaryForm) => {
-        dispatch(createEmployeeSalary(data));
+    const onSubmit = async (data: employeeSalaryForm) => {
+        console.log(data);
+        try {
+            const res = await createEmployeeSalary(data).unwrap();
+            toast.success(res.message);
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        }
         dispatch(toggleCreateEmployeeSalaryModal());
     };
 
@@ -142,14 +150,13 @@ const NewSalarymodal = () => {
                     <div>
                         <label htmlFor="employee">Employee</label>
                         <select
-                            {...register("employee")}
-                            name="employee"
+                            {...register("employeeId")}
                             id="employee"
                             className="border border-gray-300 w-full p-2 outline-none rounded-md mt-2"
                         >
                             {getEmployeeList?.map(
                                 (options: IEmployee, index: number) => (
-                                    <option key={index} value={options.name}>
+                                    <option key={index} value={options.id}>
                                         {options.name}
                                     </option>
                                 )
@@ -193,7 +200,7 @@ const NewSalarymodal = () => {
                             type="submit"
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 cursor-pointer text-sm"
                         >
-                            Create
+                            {isLoading ? "Creating..." : "Create"}
                         </button>
                     </div>
                 </form>

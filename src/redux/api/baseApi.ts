@@ -75,6 +75,7 @@ export const baseApi = createApi({
     "receivings",
     "dashboard",
     "receivingsHistory",
+    'employeeSalary'
     
   ],
   endpoints: () => ({}),
