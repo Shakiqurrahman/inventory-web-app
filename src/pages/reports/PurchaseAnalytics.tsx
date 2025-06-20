@@ -46,7 +46,7 @@ const PurchaseAnalytics = () => {
         data: sold,
         backgroundColor: "#D1D5DB", // Tailwind gray-300
         borderRadius: 4,
-        barThickness: 20,
+        barThickness: 15,
         barPercentage: 0.4,
         categoryPercentage: 0.6,
       },
@@ -55,7 +55,7 @@ const PurchaseAnalytics = () => {
         data: purchased,
         backgroundColor: "#9CA3AF", // Tailwind gray-400
         borderRadius: 4,
-        barThickness: 20,
+        barThickness: 15,
         barPercentage: 0.4,
         categoryPercentage: 0.6,
       },
@@ -66,13 +66,7 @@ const PurchaseAnalytics = () => {
     responsive: true,
     plugins: {
       legend: {
-        display: true,
-        position: "top",
-        labels: {
-          usePointStyle: true,
-          pointStyle: "circle",
-          padding: 20,
-        },
+        display: false,
       },
       tooltip: {
         callbacks: {
@@ -110,9 +104,16 @@ const PurchaseAnalytics = () => {
   };
 
   return (
-    <div className="p-4 bg-white">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="font-medium text-gray-700">Purchase Analytics</h2>
+    <div className="p-4 bg-white h-full flex flex-col justify-between">
+      <div className="flex justify-between gap-3 items-center mb-4">
+        <div className="flex items-center gap-1 text-xs">
+          <span className="w-3 h-3 rounded-full bg-[#9CA3AF]"></span>
+          <p className="text-gray-600">Sold</p>
+        </div>
+        <div className="flex items-center gap-1 text-xs mr-auto">
+          <span className="w-3 h-3 rounded-full bg-[#E5E7EB]"></span>
+          <p className="text-gray-600">Purchased</p>
+        </div>
         <select className="text-sm px-3 py-1 border border-gray-300 rounded text-gray-500 outline-none">
           <option value="2024">2024</option>
         </select>
