@@ -2,17 +2,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef } from "react";
 import DatePicker from "react-datepicker";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { z } from "zod";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import {
-    toggleEditEmployeeSalaryModal,
-    updateEmployeeSalary,
-    type IEmployeeSalary,
-} from "../../redux/features/employeeSalary/employeeSalarySlice";
 import { useGetEmployeeListQuery } from "../../redux/features/employees/employeeApi";
 import type { IEmployee } from "../../redux/features/employees/employeeSlice";
+import { useUpdateEmployeeSalaryMutation } from "../../redux/features/employeeSalary/employeeSalaryApi";
+import {
+    toggleEditEmployeeSalaryModal,
+    type IEmployeeSalary,
+} from "../../redux/features/employeeSalary/employeeSalarySlice";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const employeeSalarySchema = z.object({
     date: z
@@ -38,8 +40,9 @@ export type EditSalaryModalProps = {
 };
 
 const EditSalarymodal = ({
-    seletedData: { index, employee },
+    seletedData: { employee },
 }: EditSalaryModalProps) => {
+    console.log(employee);
     const {
         register,
         handleSubmit,
@@ -61,6 +64,8 @@ const EditSalarymodal = ({
     });
 
     const dispatch = useDispatch();
+    const [updateEmployeeSalary, { isLoading }] =
+        useUpdateEmployeeSalaryMutation();
     const formRef = useRef<HTMLDivElement>(null);
     const { data: getEmployeeList } = useGetEmployeeListQuery(null);
 
@@ -68,8 +73,13 @@ const EditSalarymodal = ({
         dispatch(toggleEditEmployeeSalaryModal());
     });
 
-    const onSubmit = (data: employeeSalaryForm) => {
-        dispatch(updateEmployeeSalary({ index, updatedEmployeeSalary: data }));
+    const onSubmit = async (data: employeeSalaryForm) => {
+        try {
+            await updateEmployeeSalary({ id: employee.id, ...data });
+            toast.success("Update Successful");
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        }
         dispatch(toggleEditEmployeeSalaryModal());
     };
 
@@ -208,7 +218,7 @@ const EditSalarymodal = ({
                             type="submit"
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 cursor-pointer text-sm"
                         >
-                            Create
+                            {isLoading ? "Saving..." : "Save"}
                         </button>
                     </div>
                 </form>

@@ -12,7 +12,6 @@ export interface IEmployeeSalary {
     };
     reason?: string;
     approvedBy: string;
-    name: string;
 }
 
 type employeeSalaryState = {
