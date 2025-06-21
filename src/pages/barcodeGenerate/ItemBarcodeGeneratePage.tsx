@@ -3,34 +3,34 @@ import Barcode from "react-barcode";
 import { useLocation } from "react-router";
 import { useReactToPrint } from "react-to-print";
 
-// const pageStyle = `
-// @page {
-//     size: 38mm 25mm;
-// margin: 0;
-// };
+const pageStyle = `
+@page {
+    size: 38mm 25mm;
+margin: 0;
+};
 
-// @media all {
+@media all {
 
-//     .pageBreak {
-//         display: none
-//     }
+    .pageBreak {
+        display: none
+    }
 
-// }
+}
 
-// @media print {
+@media print {
 
-// body {
-//     margin: 0;
-//     padding: 0;
-//   }
+body {
+    margin: 0;
+    padding: 0;
+  }
 
-//     .pageBreak {
-//         page-break-before: always;
-//     }
+    .pageBreak {
+        page-break-before: always;
+    }
 
-// }
+}
 
-// `;
+`;
 
 const ItemBarcodeGeneratePage = () => {
   const { state } = useLocation();
@@ -38,7 +38,7 @@ const ItemBarcodeGeneratePage = () => {
   const printRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
     contentRef: printRef,
-    // pageStyle,
+    pageStyle,
   });
 
   const labels = Array.from({ length: state?.printQuantity });
