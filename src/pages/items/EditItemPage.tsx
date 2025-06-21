@@ -67,6 +67,7 @@ const EditItemPage = () => {
       const findStock = itemData?.variant?.find(
         (v: IProductVariant) => v?.attributes
       );
+
       const defaultValues = {
         name: itemData?.name || "",
         costPrice: itemData?.costPrice?.toString() || "",
@@ -77,8 +78,14 @@ const EditItemPage = () => {
         brand: itemData?.brand || "",
         stock:
           !itemData?.isVariantChecked && itemData?.variant?.length > 0
-            ? findStock.stock?.toString()
+            ? findStock?.stock?.toString()
             : itemData?.stock?.toString() || "",
+
+        // stock:
+        //   itemData?.isVariantChecked && itemData?.variant?.length > 1
+        //     ? findStock?.stock?.toString()
+        //     : itemData?.variant?.[0]?.stock.toString() || "",
+
         isVariantChecked: itemData?.isVariantChecked || false,
       };
       reset(defaultValues);
