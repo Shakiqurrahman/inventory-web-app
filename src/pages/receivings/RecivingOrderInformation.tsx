@@ -155,8 +155,14 @@ const RecivingOrderInformation = () => {
         totalPrice: totalAmount,
         paidAmount: totalPaid,
         dueAmount: dueAmount,
-        discountAmount: discountAmount,
-        discountPercentage: discountPercentage,
+        discountAmount:
+          typeof discountAmount === "string"
+            ? parseFloat(discountAmount)
+            : discountAmount,
+        discountPercentage:
+          typeof discountPercentage === "string"
+            ? parseFloat(discountPercentage)
+            : discountPercentage,
         receivingDate: receivingDate ? new Date(receivingDate) : undefined,
       };
       const confirm = window.confirm("Are you sure you want to complete?");

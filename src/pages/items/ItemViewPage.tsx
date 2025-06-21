@@ -95,7 +95,7 @@ const ItemViewPage = () => {
             <table className="w-full border-collapse border border-gray-200 rounded-md text-gray-700">
               <thead>
                 <tr className="bg-gray-200 text-left *:font-semibold text-sm">
-                  <th colSpan={5} className="p-3">
+                  <th colSpan={6} className="p-3">
                     <span className="flex items-center gap-1">
                       <BsToggles /> Item Variation
                     </span>
@@ -104,6 +104,7 @@ const ItemViewPage = () => {
                 <tr className="bg-gray-100 text-left *:font-semibold text-sm">
                   <th className="p-3 border border-gray-200">Name</th>
                   <th className="p-3 border border-gray-200">Attributes</th>
+                  <th className="p-3 border border-gray-200">Barcode</th>
                   <th className="p-3 border border-gray-200">Cost Price</th>
                   <th className="p-3 border border-gray-200">Sell Price</th>
                   <th className="p-3 border border-gray-200">Stock</th>
@@ -123,6 +124,7 @@ const ItemViewPage = () => {
                             .join(", ")
                         : "N/A"}
                     </td>
+                    <td className="p-3 border border-gray-200">{v?.barcode}</td>
                     <td className="p-3 border border-gray-200">
                       <span className="flex items-center">
                         <TbCurrencyTaka />

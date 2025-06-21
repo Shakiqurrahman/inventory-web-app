@@ -77,14 +77,9 @@ const EditItemPage = () => {
         categoryId: itemData?.categoryId || "",
         brand: itemData?.brand || "",
         stock:
-          !itemData?.isVariantChecked && itemData?.variant?.length > 0
+          itemData?.isVariantChecked && itemData?.variant?.length > 1
             ? findStock?.stock?.toString()
-            : itemData?.stock?.toString() || "",
-
-        // stock:
-        //   itemData?.isVariantChecked && itemData?.variant?.length > 1
-        //     ? findStock?.stock?.toString()
-        //     : itemData?.variant?.[0]?.stock.toString() || "",
+            : itemData?.variant?.[0]?.stock.toString() || "",
 
         isVariantChecked: itemData?.isVariantChecked || false,
       };
@@ -117,7 +112,9 @@ const EditItemPage = () => {
         sellPrice: parseFloat(sellPrice) || 0,
         costPrice: parseFloat(costPrice) || 0,
         discountPercentage:
-          (discountPercentage && parseFloat(discountPercentage)) || 0,
+          discountPercentage && parseFloat(discountPercentage) > 0
+            ? parseFloat(discountPercentage)
+            : 0,
       };
       try {
         await updateItem({
@@ -195,6 +192,10 @@ const EditItemPage = () => {
 
       finalData = {
         ...finalData,
+        discountPercentage:
+          discountPercentage && parseFloat(discountPercentage) > 0
+            ? parseFloat(discountPercentage)
+            : 0,
         categoryId: finalData?.categoryId ? finalData?.categoryId : undefined,
         sellPrice: parseFloat(sellPrice) || 0,
         costPrice: parseFloat(costPrice) || 0,

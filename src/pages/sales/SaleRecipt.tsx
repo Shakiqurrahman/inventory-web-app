@@ -111,13 +111,13 @@ const SaleRecipt = () => {
         {!saleData?.isFree && saleData?.discountPercentage > 0 && (
           <div className="flex justify-between">
             <span>Discount</span>
-            <span>{saleData?.discountPercentage?.toFixed(1)}</span>
+            <span>{saleData?.discountPercentage?.toFixed(1)}%</span>
           </div>
         )}
         {!saleData?.isFree && saleData?.discountAmount > 0 && (
           <div className="flex justify-between">
             <span>Discount</span>
-            <span>{saleData?.discountPercentage?.toFixed(1)}</span>
+            <span>{saleData?.discountAmount?.toFixed(1)}</span>
           </div>
         )}
         {!saleData?.isFree &&

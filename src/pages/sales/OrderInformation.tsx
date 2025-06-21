@@ -184,8 +184,14 @@ const OrderInformation = () => {
         paidAmount: freeSale ? 0 : paid > totalAmount ? totalAmount : paid,
         dueAmount: dueAmount,
         isFree: freeSale,
-        discountAmount: discountAmount,
-        discountPercentage: discountPercentage,
+        discountAmount:
+          typeof discountAmount === "string"
+            ? parseFloat(discountAmount)
+            : discountAmount,
+        discountPercentage:
+          typeof discountPercentage === "string"
+            ? parseFloat(discountPercentage)
+            : discountPercentage,
         isCorporateSale: isCorporateSale,
       };
       const confirm = window.confirm("Are you sure you want to sale?");

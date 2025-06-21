@@ -29,8 +29,7 @@ const CustomerInvoice = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(!isValidEAN13Code(searchValue, "saleInvoice"));
-    
+
     if (!isValidEAN13Code(searchValue, "saleInvoice")) {
       toast.error("Please enter a valid Invoice Id");
       setSearchValue("");
@@ -157,13 +156,13 @@ const CustomerInvoice = () => {
             {!saleData?.isFree && saleData?.discountPercentage > 0 && (
               <div className="flex justify-between">
                 <span>Discount</span>
-                <span>{saleData?.discountPercentage?.toFixed(1)}</span>
+                <span>{saleData?.discountPercentage?.toFixed(1)}%</span>
               </div>
             )}
             {!saleData?.isFree && saleData?.discountAmount > 0 && (
               <div className="flex justify-between">
                 <span>Discount</span>
-                <span>{saleData?.discountPercentage?.toFixed(1)}</span>
+                <span>{saleData?.discountAmount?.toFixed(1)}</span>
               </div>
             )}
             {!saleData?.isFree &&
