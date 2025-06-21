@@ -47,7 +47,7 @@ const Customerspage = () => {
   const { openEditCutomerModal } = useSelector(
     (state: RootState) => state.customers
   );
-  // console.log(customers);
+  
 
   useEffect(() => {
     if (searchValue) {

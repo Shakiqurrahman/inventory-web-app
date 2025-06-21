@@ -19,10 +19,26 @@ const expensesApi = baseApi.injectEndpoints({
             providesTags: ["bankDeposit"],
             transformResponse: (response) => response?.data,
         }),
+        getSingleBankDeposit: builder.query({
+            query: (id: string) => ({
+                url: `/bank_deposits/${id}`,
+                method: "GET",
+            }),
+            transformResponse: (response) => response?.data,
+            providesTags: ["bankDeposit"],
+        }),
         createBankDeposit: builder.mutation({
             query: (body) => ({
                 url: "/bank_deposits",
                 method: "POST",
+                body,
+            }),
+            invalidatesTags: ["bankDeposit"],
+        }),
+        updateBankDeposite: builder.mutation({
+            query: ({ id, ...body }) => ({
+                url: `/bank_deposits/${id}`,
+                method: "PUT",
                 body,
             }),
             invalidatesTags: ["bankDeposit"],
@@ -40,6 +56,8 @@ const expensesApi = baseApi.injectEndpoints({
 
 export const {
     useGetBankDepositListQuery,
+    useGetSingleBankDepositQuery,
     useCreateBankDepositMutation,
     useDeleteBankDepositMutation,
+    useUpdateBankDepositeMutation,
 } = expensesApi;

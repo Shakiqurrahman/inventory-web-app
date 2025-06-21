@@ -16,6 +16,7 @@ import {
     type IEmployeeSalary,
 } from "../../redux/features/employeeSalary/employeeSalarySlice";
 import { useAppSelector } from "../../redux/hook";
+import { getErrorMessage } from "../../utils/errorHandler";
 import { formatDateToLongDate } from "../../utils/timeFormatHandler";
 import type { IMetaInfo } from "../bankDeposites/BankDeposites";
 import EditSalarymodal from "./EditSalarymodal";
@@ -54,7 +55,6 @@ const EmployeeSalaryList = () => {
     );
 
     const { data: employeeSalary, meta } = response || {};
-    console.log(employeeSalary);
 
     useEffect(() => {
         if (searchValue) {
@@ -92,8 +92,7 @@ const EmployeeSalaryList = () => {
             await deleteEmployeeSalary(id).unwrap();
             toast.success("Employee deleted successfully");
         } catch (err) {
-            console.error("Failed to delete employee", err);
-            toast.error("Failed to delete employee");
+            toast.error(getErrorMessage(err));
         } finally {
             setDeletingId(null); // clear after done
         }

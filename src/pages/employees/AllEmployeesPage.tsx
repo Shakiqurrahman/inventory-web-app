@@ -9,6 +9,7 @@ import {
     useGetEmployeeListQuery,
 } from "../../redux/features/employees/employeeApi";
 import { type IEmployee } from "../../redux/features/employees/employeeSlice";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const AllEmployeesPage = () => {
     const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -35,7 +36,7 @@ const AllEmployeesPage = () => {
             toast.success("Employee deleted successfully");
             setDeletingId(null);
         } catch (err) {
-            console.error("Failed to delete employee", err);
+            toast.error(getErrorMessage(err));
         }
     };
 

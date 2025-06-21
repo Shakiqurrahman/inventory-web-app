@@ -48,7 +48,6 @@ const EditSupplier = () => {
     const navigate = useNavigate();
 
     const onSubmit = async (data: supplierForm) => {
-        console.log(data);
         try {
             await updateSupplier({
                 payload: data,

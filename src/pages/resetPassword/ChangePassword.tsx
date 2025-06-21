@@ -58,7 +58,7 @@ const ChangePassword = () => {
     });
 
     const onSubmit = async (data: loginForm) => {
-        console.log("Login Data: ", data);
+      
 
         try {
             const response = await changePassword({
@@ -66,7 +66,7 @@ const ChangePassword = () => {
                 newPassword: data.newPassword,
             }).unwrap();
             toast.success(response.message);
-            console.log(response);
+          
             if (response.success) {
                 navigate("/");
             }

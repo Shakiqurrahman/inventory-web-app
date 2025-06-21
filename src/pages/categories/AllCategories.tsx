@@ -14,6 +14,7 @@ import {
     type ICategory,
 } from "../../redux/features/categories/categoriesSlice";
 import { useAppSelector } from "../../redux/hook";
+import { getErrorMessage } from "../../utils/errorHandler";
 import CreateCategoryModal from "./CreateCategoryModal";
 import EditCategories from "./EditCategories";
 
@@ -45,8 +46,7 @@ const AllCategories = () => {
             toast.success("Category deleted successfully");
             setDeletingId(null);
         } catch (error) {
-            console.error("Failed to delete category:", error);
-            toast.error("Failed to delete category");
+            toast.error(getErrorMessage(error));
             setDeletingId(null);
         }
     };

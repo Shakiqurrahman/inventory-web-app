@@ -9,6 +9,7 @@ import { z } from "zod";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useCreateBankDepositMutation } from "../../redux/features/bankDeposite/bankDepositeApi";
 import { toggleCreateDepositeModal } from "../../redux/features/bankDeposite/bankDepositeSlice";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const bankDepositeSchema = z.object({
     date: z
@@ -57,17 +58,13 @@ const CreateBankDepositoryModal = () => {
     });
 
     const onSubmit = async (data: bankDepositeForm) => {
-        // console.log(data);
         try {
             const res = await createBankDeposite(data).unwrap();
             toast.success(res.message);
             dispatch(toggleCreateDepositeModal());
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
+        } catch (error) {
             dispatch(toggleCreateDepositeModal());
-            toast.error(error?.message || "Failed to create bankDeposite");
-            console.log(error);
+            toast.error(getErrorMessage(error));
         }
     };
 
@@ -204,7 +201,11 @@ const CreateBankDepositoryModal = () => {
                             {...register("reason")}
                             name="reason"
                             type="text"
-                            placeholder="Reason for the deposit"
+                            placeholder={`Reason for the ${
+                                watch("transactionType") === "DEPOSIT"
+                                    ? "deposit"
+                                    : "withdraw"
+                            }`}
                             className="w-full border border-gray-300 rounded-md p-2 outline-none focus:border-blue-500 text-sm"
                         />
                     </div>

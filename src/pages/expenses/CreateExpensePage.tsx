@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { z } from "zod";
 import { useCreateExpensesMutation } from "../../redux/features/expenses/expenseApi";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const expensesSchema = z.object({
     date: z
@@ -44,13 +45,11 @@ const CreateExpensePage = () => {
     const navigate = useNavigate();
 
     const onSubmit = async (data: expensesForm) => {
-        console.log(data);
-
         try {
             const res = await createExpenses(data).unwrap();
             toast.success(res.message);
         } catch (error) {
-            console.error("Failed to create expense:", error);
+           toast.error(getErrorMessage(error));
             // Handle error appropriately, e.g., show a toast notification
             return;
         }

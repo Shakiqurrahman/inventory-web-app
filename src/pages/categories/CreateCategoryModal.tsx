@@ -36,7 +36,6 @@ const CreateCategoryModal = () => {
                 dispatch(toggleCreateModal());
             } catch (err) {
                 toast.error(getErrorMessage(err));
-                console.error(err);
             }
             // Reset form
             setForm({ categoryName: "" });

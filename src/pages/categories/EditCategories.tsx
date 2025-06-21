@@ -6,6 +6,7 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 import { useUpdateCategoryMutation } from "../../redux/features/categories/categoriesApiSlice";
 import { toggleEditModal } from "../../redux/features/categories/categoriesSlice";
 import type { RootState } from "../../redux/store";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const EditCategories = () => {
     const dispatch = useDispatch();
@@ -38,7 +39,7 @@ const EditCategories = () => {
                     name: form.categoryName,
                 }).unwrap();
             } catch (error) {
-                console.error("Failed to update category:", error);
+                toast.error(getErrorMessage(error));
             }
 
             dispatch(toggleEditModal(null));

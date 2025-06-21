@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router";
 import { z } from "zod";
 import { useUpdateExpensesMutation } from "../../redux/features/expenses/expenseApi";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const expensesSchema = z.object({
     date: z
@@ -54,20 +55,17 @@ const EditExpensePage = () => {
     }, [state, setValue]);
 
     const onSubmit = async (data: expensesForm) => {
-        console.log(data);
         try {
             const res = await updateExpenses({
                 id: state.id,
                 ...data,
             }).unwrap();
-            console.log("response data");
-            console.log(res);
+
             toast.success(res.message);
 
             navigate("/expenses");
         } catch (error) {
-            console.error("Failed to update expense:", error);
-            toast.error("Failed to update expense");
+            toast.error(getErrorMessage(error));
             return;
         }
     };

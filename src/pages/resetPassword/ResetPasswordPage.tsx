@@ -11,6 +11,7 @@ import logo from "../../assets/logo/logo.png";
 import { useForgotPasswordMutation } from "../../redux/features/auth/authApi";
 import { toggleTheme } from "../../redux/features/theme/themeSlice";
 import type { RootState } from "../../redux/store";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 // zod schema
 const loginSchema = z.object({
@@ -50,21 +51,15 @@ const ResetPasswordPage = () => {
     });
 
     const onSubmit = async (data: loginForm) => {
-        console.log("Login Data: ", data);
-
         try {
             const response = await forgetPassword(data.email).unwrap();
             toast.success(response.message);
-            console.log(response);
+
             if (response.success) {
                 navigate("otp", { state: { email: data.email } });
             }
-
-            // console.log(response);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            toast.error("Please enter a valid email");
-            console.log(error?.message);
+        } catch (error) {
+            toast.error(getErrorMessage(error));
         }
     };
 

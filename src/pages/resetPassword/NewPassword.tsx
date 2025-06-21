@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -7,11 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { z } from "zod";
 import logo from "../../assets/logo/logo.png";
 
+import toast from "react-hot-toast";
 import { FaEyeSlash, FaRegEye } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { useResetPasswordMutation } from "../../redux/features/auth/authApi";
 import { toggleTheme } from "../../redux/features/theme/themeSlice";
 import type { RootState } from "../../redux/store";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 // zod schema
 const loginSchema = z
@@ -60,20 +61,19 @@ const NewPassword = () => {
 
     const onSubmit = async (data: loginForm) => {
         if (!resetToken) {
-            console.error("Reset token not available");
             return;
         }
 
         try {
-            const res = await resetPassword({
+            await resetPassword({
                 token: resetToken,
                 newPassword: data.password,
             }).unwrap();
 
-            console.log("password reset successfully", res);
+            toast.success("password reset successfully");
             navigate("/");
-        } catch (err: any) {
-            console.error("Password reset failed, ", err);
+        } catch (err) {
+            toast.error(getErrorMessage(err));
         }
     };
     return (

@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 
 export interface IBankDeposite {
-    id?: string;
+    id: string;
     transactionId: string;
     bankName: string;
     accountNumber?: string;

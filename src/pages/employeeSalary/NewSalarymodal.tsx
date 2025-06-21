@@ -56,7 +56,6 @@ const NewSalarymodal = () => {
     });
 
     const onSubmit = async (data: employeeSalaryForm) => {
-        console.log(data);
         try {
             const res = await createEmployeeSalary(data).unwrap();
             toast.success(res.message);
@@ -172,7 +171,7 @@ const NewSalarymodal = () => {
                             {...register("reason")}
                             name="reason"
                             type="text"
-                            placeholder="Reason for the deposit"
+                            placeholder="Reason for the salary"
                             className="w-full border border-gray-300 rounded-md p-2 outline-none focus:border-blue-500 text-sm"
                         />
                     </div>

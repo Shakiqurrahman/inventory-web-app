@@ -40,7 +40,6 @@ const NewSuplier = () => {
     const [createSupplier, { isLoading }] = useCreateSupplierMutation();
 
     const onSubmit = async (data: supplierForm) => {
-        console.log(data);
         try {
             const res = await createSupplier(data);
 

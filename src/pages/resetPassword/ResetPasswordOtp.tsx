@@ -8,6 +8,7 @@ import {
     useVerifyOtpMutation,
 } from "../../redux/features/auth/authApi";
 import { setResetToken } from "../../redux/features/auth/resetPasswordSlice";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 const ResetPasswordOtp = () => {
     const location = useLocation();
@@ -64,7 +65,7 @@ const ResetPasswordOtp = () => {
             // ✅ Call handleSubmit with the latest value
             if (newCode.every((digit) => digit !== "")) {
                 const otpCode = newCode.join("");
-                console.log("Submitted OTP: ", otpCode);
+
                 handleSubmit(otpCode);
             }
         }
@@ -72,7 +73,6 @@ const ResetPasswordOtp = () => {
 
     const handleSubmit = async (otpCodeFromPaste?: string) => {
         const otpCode = otpCodeFromPaste || code.join("");
-        console.log("Submitted OTP: ", otpCode);
 
         try {
             const result = await verifyOtp({ email, otp: otpCode }).unwrap();
@@ -82,11 +82,8 @@ const ResetPasswordOtp = () => {
                 navigate("/new-password");
             }
             toast.success("Token verification Successful");
-            console.log(result);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (err: any) {
-            toast.error(err.data.message);
-            // console.log(err);
+        } catch (error) {
+            toast.error(getErrorMessage(error));
         }
     };
 
