@@ -9,9 +9,12 @@ const ReportsPage = () => {
     <div>
       <h1 className="p-4 font-medium bg-white">All Reports Summary</h1>
       <div className="bg-white mt-4">
-        <h1 className="p-3 border-b border-gray-200 bg-[#F9F9F9] text-sm">
-          Reports - Profit & Loss
-        </h1>
+        <div className="flex items-center justify-between gap-2 p-3 border-b border-gray-200 bg-[#F9F9F9] text-sm">
+          <h1>Reports - Profit & Loss</h1>
+          <select className="text-sm px-3 py-1 border border-gray-300 rounded text-gray-500 outline-none">
+            <option value="2024">2024</option>
+          </select>
+        </div>
         <div className="p-4 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           <ProfitAndLossReportCard
             name="Receiving"

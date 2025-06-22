@@ -124,7 +124,7 @@ const SalesOverviewChart: FC = () => {
       <div className="flex justify-between gap-3 items-center mb-5">
         <div className="flex items-center gap-1 text-xs">
           <span className="w-3 h-3 rounded-full bg-[#A78BFA]"></span>
-          <p>Orders</p>
+          <p>Sales</p>
         </div>
         <div className="flex items-center gap-1 text-xs mr-auto">
           <span className="w-3 h-3 rounded-full bg-[#5EEAD4]"></span>
