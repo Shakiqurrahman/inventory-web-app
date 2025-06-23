@@ -78,7 +78,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
         >
             <div
                 ref={sidebarRef}
-                className={`h-full w-[220px] bg-white duration-300 lg:duration-[0ms] ease-in-out ${
+                className={`h-full w-[220px] bg-white dark:bg-[#202023] duration-300 lg:duration-[0ms] ease-in-out ${
                     open ? "translate-x-0" : "-translate-x-full"
                 } lg:translate-x-0 transition-transform`}
             >
@@ -92,7 +92,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-[#303030] border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -113,10 +113,10 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 } text-sm cursor-pointer`}
                             >
                                 <div
-                                    className={`flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 ${
+                                    className={`flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 ${
                                         isActiveInventory ||
                                         openMenu === "inventory"
-                                            ? "bg-gray-200"
+                                            ? "bg-gray-200 dark:bg-gray-900"
                                             : ""
                                     }`}
                                 >
@@ -131,7 +131,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                     />
                                 </div>
                                 <ul
-                                    className="pl-4 bg-gray-200 duration-300"
+                                    className="pl-4 bg-gray-200 dark:bg-gray-800 duration-300 "
                                     ref={inventoryRef}
                                     style={{
                                         height:
@@ -148,7 +148,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                                 `flex items-center gap-2 p-3 ${
                                                     isActive
                                                         ? "text-secondary"
-                                                        : "text-gray-700 hover:text-secondary"
+                                                        : "text-gray-700 dark:text-gray-300 hover:text-secondary"
                                                 } text-sm`
                                             }
                                         >
@@ -163,7 +163,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                                 `flex items-center gap-2 p-3 ${
                                                     isActive
                                                         ? "text-secondary"
-                                                        : "text-gray-700 hover:text-secondary"
+                                                        : "text-gray-700 dark:text-gray-300 hover:text-secondary"
                                                 } text-sm`
                                             }
                                         >
@@ -178,7 +178,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                                 `flex items-center gap-2 p-3 ${
                                                     isActive
                                                         ? "text-secondary"
-                                                        : "text-gray-700 hover:text-secondary"
+                                                        : "text-gray-700 dark:text-gray-300 hover:text-secondary"
                                                 } text-sm`
                                             }
                                         >
@@ -192,7 +192,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/customers`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -207,7 +207,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/suppliers`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -222,7 +222,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/reports`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -237,7 +237,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/receiving`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -252,7 +252,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/sales`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -267,7 +267,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/sales-history`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -282,7 +282,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/receiving-history`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -297,7 +297,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/expenses`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -312,7 +312,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/bank-deposit`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -327,7 +327,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/employees`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -342,7 +342,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/employee-salary`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -357,7 +357,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <NavLink
                                     to={`/store-config`}
                                     className={({ isActive }) =>
-                                        `flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 ${
+                                        `flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 ${
                                             isActive
                                                 ? "border-primary"
                                                 : "hover:border-primary border-transparent"
@@ -377,10 +377,10 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 } text-sm cursor-pointer`}
                             >
                                 <div
-                                    className={`flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 ${
+                                    className={`flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 ${
                                         isActiveInvoices ||
                                         openMenu === "invoices"
-                                            ? "bg-gray-200"
+                                            ? "bg-gray-200 dark:bg-gray-900"
                                             : ""
                                     }`}
                                 >
@@ -395,7 +395,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                     />
                                 </div>
                                 <ul
-                                    className="pl-4 bg-gray-200 duration-300"
+                                    className="pl-4 bg-gray-200 dark:bg-gray-800 duration-300"
                                     ref={invoicesRef}
                                     style={{
                                         height:
@@ -412,7 +412,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                                 `flex items-center gap-2 p-3 ${
                                                     isActive
                                                         ? "text-secondary"
-                                                        : "text-gray-700 hover:text-secondary"
+                                                        : "text-gray-700 dark:text-gray-300 hover:text-secondary"
                                                 } text-sm`
                                             }
                                         >
@@ -427,7 +427,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                                 `flex items-center gap-2 p-3 ${
                                                     isActive
                                                         ? "text-secondary"
-                                                        : "text-gray-700 hover:text-secondary"
+                                                        : "text-gray-700 dark:text-gray-300 hover:text-secondary"
                                                 } text-sm`
                                             }
                                         >
@@ -441,7 +441,7 @@ const Sidebar: FC<SidebarProps> = ({ open, close }) => {
                                 <button
                                     type="button"
                                     onClick={handleLogout}
-                                    className="flex items-center gap-2 p-3 text-gray-700 hover:bg-gray-200 border-l-4 border-transparent hover:border-red-700 text-sm w-full"
+                                    className="flex items-center gap-2 p-3 text-gray-700 dark:text-gray-200 dark:hover:bg-[#303030] hover:bg-gray-200 border-l-4 border-transparent hover:border-red-700 text-sm w-full"
                                 >
                                     <MdOutlinePowerSettingsNew className="text-lg" />
                                     Logout
