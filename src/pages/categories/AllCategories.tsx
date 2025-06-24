@@ -53,10 +53,12 @@ const AllCategories = () => {
 
     return (
         <>
-            <div className="bg-white p-4 rounded-lg">
-                <h1 className="font-medium text-lg mb-4">Categories</h1>
-                <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
-                    <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 w-[300px] gap-2">
+            <div className="bg-white dark:bg-stone-800 p-4 rounded-lg">
+                <h1 className="font-medium dark:text-gray-300 text-lg mb-4">
+                    Categories
+                </h1>
+                <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2 dark:text-gray-300">
+                    <div className="flex items-center border border-gray-300 dark:border-gray-500 rounded-lg px-3 py-2 w-[300px] gap-2">
                         <FiSearch className="text-lg shrink-0" />
                         <input
                             type="text"
@@ -76,9 +78,9 @@ const AllCategories = () => {
                     </button>
                 </div>
                 <div className="mt-10 overflow-x-auto">
-                    <table className="w-full border-collapse rounded-md text-gray-700">
+                    <table className="w-full border-collapse rounded-md text-gray-700 dark:text-gray-300">
                         <thead>
-                            <tr className="bg-gray-200 text-left *:font-semibold text-sm">
+                            <tr className="bg-gray-200 dark:bg-stone-600 dark:text-gray-300 text-left *:font-semibold text-sm">
                                 <th className="p-3 w-[60px]">ID</th>
                                 <th className="p-3">Category Name</th>
                                 <th className="p-3 w-[200px]">Products</th>
@@ -99,7 +101,7 @@ const AllCategories = () => {
                                 filteredCategories?.map(
                                     (category: ICategory, index: number) => (
                                         <tr
-                                            className="border-b border-gray-300 hover:bg-gray-50 text-sm"
+                                            className="border-b border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-stone-500 text-sm"
                                             key={index}
                                         >
                                             <td className="p-3">{index + 1}</td>

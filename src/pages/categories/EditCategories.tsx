@@ -55,14 +55,14 @@ const EditCategories = () => {
     return (
         <div className="fixed top-0 left-0 w-full h-screen bg-black/20 flex justify-center items-start z-[99999] p-4">
             <div
-                className="bg-white rounded-lg p-6 w-full max-w-[400px] mt-20"
+                className="bg-white dark:bg-stone-600 rounded-lg p-6 w-full max-w-[400px] mt-20"
                 ref={formRef}
             >
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-4 dark:text-gray-300">
                     <h2 className="text-lg font-medium">Edit Category</h2>
                     <button
                         type="button"
-                        className="text-gray-500 hover:text-gray-700 cursor-pointer"
+                        className="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-400 cursor-pointer"
                         onClick={() => dispatch(toggleEditModal(null))}
                     >
                         <IoClose />
@@ -70,7 +70,7 @@ const EditCategories = () => {
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label className="block text-sm text-gray-700 mb-2">
+                        <label className="block text-sm text-gray-700 dark:text-gray-300 mb-2">
                             Category Name
                         </label>
                         <input
@@ -79,7 +79,7 @@ const EditCategories = () => {
                             value={form.categoryName}
                             onChange={handleChange}
                             placeholder="Enter category name"
-                            className="w-full border border-gray-300 rounded-md p-2 outline-none focus:border-blue-500 text-sm"
+                            className="w-full border border-gray-300 dark:border-gray-500 dark:text-gray-300 rounded-md p-2 outline-none focus:border-blue-500 text-sm"
                         />
                     </div>
                     <div className="flex justify-end">
