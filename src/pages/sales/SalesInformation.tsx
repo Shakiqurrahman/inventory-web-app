@@ -86,11 +86,11 @@ const SalesInformation = () => {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white dark:bg-stone-700">
       <h1 className="bg-primary text-white font-medium px-5 py-3">
         Sales Information
       </h1>
-      <div className="p-5">
+      <div className="p-5 dark:text-gray-300">
         <label htmlFor="employee" className="block mb-3">
           Select Employee <span className="text-red-500">*</span>
         </label>
@@ -99,7 +99,7 @@ const SalesInformation = () => {
           id="employee"
           value={selectedEmployee}
           onChange={handleEmployeeChange}
-          className="border border-gray-200 outline-none p-2 w-full block bg-gray-100"
+          className="border border-gray-200 dark:border-gray-500 outline-none p-2 w-full block bg-gray-100 dark:bg-stone-600"
           required
         >
           {!selectedEmployee && <option value="Shakil">Select Employee</option>}

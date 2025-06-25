@@ -1,8 +1,8 @@
 const TopSellingItems = () => {
   return (
-    <div className="p-4 bg-white h-full">
+    <div className="p-4 bg-white dark:bg-stone-700 h-full">
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse rounded-md text-gray-700">
+        <table className="w-full border-collapse rounded-md text-gray-700 dark:text-gray-300">
           <thead>
             <tr className="border-b border-gray-400 *:font-medium text-sm *:text-left">
               <th className="p-2">Item</th>

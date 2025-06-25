@@ -62,8 +62,10 @@ const NewSuplier = () => {
         textarea.style.height = textarea.scrollHeight + "px";
     };
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-lg">
-            <h3 className="font-medium text-lg mb-4">Supplier Information</h3>
+        <div className="bg-white dark:bg-stone-700 p-4 sm:p-6 rounded-lg dark:text-gray-300">
+            <h3 className="font-medium text-lg mb-4 dark:text-gray-300">
+                Supplier Information
+            </h3>
 
             <form
                 className="mt-5 space-y-4 *:flex *:flex-col *:gap-2"
@@ -78,7 +80,7 @@ const NewSuplier = () => {
                         type="text"
                         name="companyName"
                         id="companyName"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md text-sm"
+                        className="border border-gray-300 dark:border-gray-500 w-full p-2 outline-none rounded-md text-sm"
                     />
                     {errors.companyName && (
                         <p className="text-red-500 text-xs">
@@ -95,7 +97,7 @@ const NewSuplier = () => {
                         type="text"
                         name="fullName"
                         id="fullName"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md text-sm"
+                        className="border border-gray-300 dark:border-gray-500 w-full p-2 outline-none rounded-md text-sm"
                     />
                     {errors.fullName && (
                         <p className="text-red-500 text-xs">
@@ -112,7 +114,7 @@ const NewSuplier = () => {
                         type="text"
                         name="email"
                         id="email"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md text-sm"
+                        className="border border-gray-300 dark:border-gray-500 w-full p-2 outline-none rounded-md text-sm"
                     />
                     {errors.email && (
                         <p className="text-red-500 text-xs">
@@ -129,7 +131,7 @@ const NewSuplier = () => {
                         type="text"
                         name="phone"
                         id="phone"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md text-sm"
+                        className="border border-gray-300 dark:border-gray-500 w-full p-2 outline-none rounded-md text-sm"
                     />
                     {errors.phone && (
                         <p className="text-red-500 text-xs">
@@ -145,7 +147,7 @@ const NewSuplier = () => {
                         {...register("address1")}
                         name="address1"
                         id="address1"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md overflow-hidden resize-none min-h-[100px] text-sm"
+                        className="border border-gray-300 dark:border-gray-500 w-full p-2 outline-none rounded-md overflow-hidden resize-none min-h-[100px] text-sm"
                     ></textarea>
                     {errors.address1 && (
                         <p className="text-red-500 text-xs">
@@ -161,7 +163,7 @@ const NewSuplier = () => {
                         {...register("address2")}
                         name="address2"
                         id="address2"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md overflow-hidden resize-none min-h-[100px] text-sm"
+                        className="border border-gray-300 dark:border-gray-500 w-full p-2 outline-none rounded-md overflow-hidden resize-none min-h-[100px] text-sm"
                     ></textarea>
                 </div>
                 <div>
@@ -174,7 +176,7 @@ const NewSuplier = () => {
                         onInput={handleInput}
                         name="comments"
                         id="comments"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md overflow-hidden resize-none min-h-[100px] text-sm"
+                        className="border border-gray-300 dark:border-gray-500 w-full p-2 outline-none rounded-md overflow-hidden resize-none min-h-[100px] text-sm"
                         placeholder="Enter your comment..."
                     />
                 </div>
@@ -188,7 +190,7 @@ const NewSuplier = () => {
                         onInput={handleInput}
                         name="internalNotes"
                         id="internalNotes"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md overflow-hidden resize-none min-h-[100px] text-sm"
+                        className="border border-gray-300 dark:border-gray-500 w-full p-2 outline-none rounded-md overflow-hidden resize-none min-h-[100px] text-sm"
                     ></textarea>
                 </div>
                 <div>
@@ -200,7 +202,7 @@ const NewSuplier = () => {
                         type="text"
                         name="account"
                         id="account"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md text-sm"
+                        className="border border-gray-300 dark:border-gray-500 w-full p-2 outline-none rounded-md text-sm"
                     />
                     {errors.account && (
                         <p className="text-red-500 text-xs">

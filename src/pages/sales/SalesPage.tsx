@@ -234,7 +234,7 @@ const SalesPage = () => {
   return (
     <div className="flex flex-wrap lg:flex-nowrap items-start gap-4">
       <div className="w-full">
-        <div className="bg-white p-5 flex relative">
+        <div className="bg-white dark:bg-stone-700 p-5 flex relative dark:text-gray-200">
           <Link
             to={"/items/new-item"}
             className="shrink-0 p-3 bg-primary hover:bg-secondary text-white"
@@ -247,27 +247,27 @@ const SalesPage = () => {
               value={searchItemValue}
               onChange={handleChangeSearchItem}
               placeholder="Enter item name or scan barcode"
-              className="w-full p-3 outline-none text-sm border border-gray-200 block"
+              className="w-full p-3 outline-none text-sm border border-gray-200 dark:border-gray-500 block"
               autoFocus
             />
           </form>
-          <div className="bg-white absolute top-full  left-0 w-full z-10 ">
+          <div className="bg-white dark:bg-stone-700 absolute top-full  left-0 w-full z-10 ">
             {searchItemValue.length >= 3 &&
               !isSuggestionsLoading &&
               !isSuggestionsFetching &&
               suggestions?.length > 0 && (
-                <ul className="border border-gray-200 max-h-[300px] overflow-y-auto">
+                <ul className="border border-gray-200 dark:border-gray-500 max-h-[300px] overflow-y-auto">
                   {suggestions.map((item: IProductSuggestions) => (
                     <li
                       key={item.id}
                       onClick={() => handleSuggestionClick(item.id, item.stock)}
-                      className="p-3 hover:bg-gray-50 cursor-pointer text-sm grid grid-cols-2 place-items-center gap-2"
+                      className="p-3 hover:bg-gray-50 dark:hover:bg-stone-500 cursor-pointer text-sm grid grid-cols-2 place-items-center gap-2"
                     >
                       <div className="space-y-2">
                         <p>
                           {item.name} - {item.sellPrice}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 dark:text-gray-300">
                           Bar Code : {item.barcode}
                         </p>
                       </div>
@@ -281,15 +281,15 @@ const SalesPage = () => {
               )}
           </div>
         </div>
-        <div className="bg-white pt-2 pb-10 mt-4 paper-cut relative">
+        <div className="bg-white dark:bg-stone-700 pt-2 pb-10 mt-4 paper-cut relative">
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse rounded-md text-gray-700">
+            <table className="w-full border-collapse rounded-md text-gray-700 dark:text-gray-200">
               <thead>
-                <tr className="bg-[#F9FBFC] border-t border-b border-gray-200 *:font-semibold text-sm">
+                <tr className="bg-[#F9FBFC] dark:bg-stone-500 dark:text-gray-200 border-t border-b border-gray-200 *:font-semibold text-sm">
                   <th className="p-3 w-[100px]">
                     <button
                       type="button"
-                      className="text-blue-500 cursor-pointer"
+                      className="text-blue-500 dark:text-blue-200 cursor-pointer"
                       onClick={() => setHideDetails((prev) => !prev)}
                     >
                       {!hideDetails ? <FaMinus /> : <FaPlus />}
@@ -308,7 +308,7 @@ const SalesPage = () => {
                     <tr
                       className={`${
                         !hideDetails ? "" : "border-b border-gray-200"
-                      } hover:bg-gray-50 text-sm text-center`}
+                      } hover:bg-gray-50 dark:hover:bg-stone-500 text-sm text-center`}
                     >
                       <td className="p-3">
                         <button
@@ -348,9 +348,9 @@ const SalesPage = () => {
                       <td className="p-3">{item.totalPrice.toFixed(2)}</td>
                     </tr>
                     {!hideDetails && (
-                      <tr className="text-sm border-b border-gray-200 hover:bg-gray-50">
+                      <tr className="text-sm border-b border-gray-200 hover:bg-gray-50 dark:hover:bg-stone-500">
                         <td></td>
-                        <td className="p-3 text-gray-500">
+                        <td className="p-3 text-gray-500 dark:text-gray-300">
                           <ul className="text-[13px]">
                             <li className="flex items-center justify-between gap-2">
                               <span>Category</span>
