@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
-    BaseQueryApi,
-    BaseQueryFn,
-    DefinitionType,
-    FetchArgs,
+  BaseQueryApi,
+  BaseQueryFn,
+  DefinitionType,
+  FetchArgs,
 } from "@reduxjs/toolkit/query";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { config } from "../../config/config";
@@ -75,8 +75,8 @@ export const baseApi = createApi({
     "receivings",
     "dashboard",
     "receivingsHistory",
-    'employeeSalary'
-    
+    "employeeSalary",
+    "reports",
   ],
   endpoints: () => ({}),
 });
