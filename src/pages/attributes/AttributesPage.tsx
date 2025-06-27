@@ -184,7 +184,7 @@ const AttributesPage = () => {
                         </div>
                     ))
                 ) : (
-                    <div className="text-gray-500 text-sm py-2">
+                    <div className="text-gray-500 dark:text-gray-300 text-sm py-2">
                         No attributes available. Click "Add Attribute" to create
                         one.
                     </div>

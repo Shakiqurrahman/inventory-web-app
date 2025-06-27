@@ -83,7 +83,7 @@ const SupplierInvoice = () => {
       <div className="">
         <form
           onSubmit={handleSubmit}
-          className="bg-white flex gap-2 items-center border border-gray-300 rounded-md w-[500px] mx-auto"
+          className="bg-white dark:bg-stone-600 dark:border-gray-500 dark:text-gray-200 flex gap-2 items-center border border-gray-300 rounded-md w-[500px] mx-auto"
         >
           <input
             className="border-0 outline-0 w-full px-4"

@@ -87,10 +87,12 @@ const SaleHistoryPage = () => {
 
     return (
         <div>
-            <div className="bg-white rounded-md p-2 sm:p-4 sm:px-6">
-                <h1 className="font-medium text-lg mb-4">Sale History</h1>
+            <div className="bg-white dark:bg-stone-700 rounded-md p-2 sm:p-4 sm:px-6">
+                <h1 className="font-medium text-lg mb-4 dark:text-gray-300">
+                    Sale History
+                </h1>
 
-                <div className="flex gap-4 flex-wrap lg:flex-nowrap items-center">
+                <div className="flex gap-4 flex-wrap lg:flex-nowrap items-center dark:text-gray-300">
                     {showSearchedFor ? (
                         <div className="flex items-center gap-4 mb-1.5">
                             <h2 className="text-base font-medium">
@@ -105,7 +107,7 @@ const SaleHistoryPage = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-1">
+                        <div className="flex items-center border border-gray-300 dark:border-gray-500 rounded-lg pl-3 w-[300px] gap-1">
                             <FiSearch className="text-lg shrink-0 text-gray-500" />
                             <input
                                 type="text"
@@ -118,7 +120,7 @@ const SaleHistoryPage = () => {
                             />
                             <button
                                 onClick={() => setSearchValue("")}
-                                className={`bg-gray-200 cursor-pointer hover:bg-gray-300 duration-300  rounded-full p-1 ${
+                                className={`bg-gray-200 dark:bg-gray-500 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 duration-300  rounded-full p-1 ${
                                     showclose ? "block" : "hidden"
                                 }`}
                             >
@@ -136,7 +138,7 @@ const SaleHistoryPage = () => {
                         </div>
                     )}
                     <select
-                        className="border border-gray-300 text-sm p-2 rounded-sm outline-0 bg-gray-100"
+                        className="border border-gray-300 dark:border-gray-500 text-sm p-2 rounded-sm outline-0 bg-gray-100 dark:bg-stone-500"
                         defaultValue="all_time"
                         onChange={(e) => {
                             const value = e.target.value;
@@ -156,9 +158,9 @@ const SaleHistoryPage = () => {
                 </div>
 
                 <div className="mt-10 overflow-x-auto text-nowrap">
-                    <table className="w-full border-collapse rounded-md text-gray-700">
+                    <table className="w-full border-collapse rounded-md text-gray-700 dark:text-gray-300">
                         <thead>
-                            <tr className="bg-gray-200 text-left *:font-semibold text-sm">
+                            <tr className="bg-gray-200 dark:bg-stone-600 dark:text-gray-300 text-left *:font-semibold text-sm">
                                 <th className="p-3">ID</th>
                                 <th className="p-3">Date</th>
                                 <th className="p-3">Invoice ID</th>
@@ -176,7 +178,7 @@ const SaleHistoryPage = () => {
                                 <tr className="text-sm">
                                     <td
                                         colSpan={9}
-                                        className="p-4 text-center text-gray-500"
+                                        className="p-4 text-center text-gray-500 dark:text-gray-300"
                                     >
                                         Loading...
                                     </td>
@@ -190,7 +192,7 @@ const SaleHistoryPage = () => {
                                                 setShowModal(true);
                                             }}
                                             key={index}
-                                            className="hover:bg-gray-100"
+                                            className="hover:bg-gray-100 dark:hover:bg-stone-400"
                                         >
                                             <td className="p-3">{index + 1}</td>
                                             <td className="p-3">
@@ -247,7 +249,7 @@ const SaleHistoryPage = () => {
                                                             );
                                                             setShowModal(true);
                                                         }}
-                                                        className="bg-gray-100 p-1 px-2 border-r border-gray-300 hover:bg-gray-200"
+                                                        className="bg-gray-100 dark:bg-stone-500 dark:text-gray-300 p-1 px-2 border-r border-gray-300 hover:bg-gray-200 dark:hover:bg-stone-600"
                                                     >
                                                         Edit
                                                     </button>
@@ -333,7 +335,7 @@ const SaleHistoryPage = () => {
                                 <tr>
                                     <td
                                         colSpan={9}
-                                        className="text-center py-3 text-gray-500"
+                                        className="text-center py-3 text-gray-500 dark:text-gray-300"
                                     >
                                         No sales history found.
                                     </td>
@@ -343,7 +345,7 @@ const SaleHistoryPage = () => {
                     </table>
                     {!isLoading && (meta as IMetaInfo)?.totalPages > 1 && (
                         <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
-                            <p className="text-sm font-medium text-gray-600">
+                            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
                                 Total Expenses : {(meta as IMetaInfo)?.total}
                             </p>
                             <Pagination
@@ -352,7 +354,9 @@ const SaleHistoryPage = () => {
                                 onPageChange={setPage}
                             />
                             <div className="flex items-center gap-2">
-                                <p className="text-sm">Show per page :</p>
+                                <p className="text-sm dark:text-gray-300">
+                                    Show per page :
+                                </p>
                                 <select
                                     onChange={(e) =>
                                         setShowLimit(Number(e.target.value))
@@ -360,7 +364,7 @@ const SaleHistoryPage = () => {
                                     name="pageLimit"
                                     id="pageLimit"
                                     value={showLimit}
-                                    className="px-2 py-1 outline-none border border-gray-300 rounded-md"
+                                    className="px-2 py-1 outline-none border border-gray-300 dark:text-gray-300 dark:bg-stone-500 rounded-md"
                                 >
                                     <option value="10">10</option>
                                     <option value="20">20</option>

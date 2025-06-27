@@ -46,20 +46,20 @@ const StoreConfigPage = () => {
     };
 
     return isLoading ? (
-        <div className="p-4 bg-white">Loading...</div>
+        <div className="p-4 bg-white dark:bg-stone-700 dark:text-gray-300">Loading...</div>
     ) : (
-        <div className="bg-white">
-            <h1 className="px-4 py-2 bg-[#F9F9F9] border-t border-b border-gray-300 font-medium text-base sm:text-lg">
+        <div className="bg-white dark:bg-stone-700">
+            <h1 className="px-4 py-2 bg-[#F9F9F9] dark:bg-stone-500 border-t border-b border-gray-300 dark:border-gray-500 dark:text-gray-200 font-medium text-base sm:text-lg">
                 Company Information
             </h1>
             <div className="p-4">
                 <form className="space-y-4" onSubmit={handleSubmit}>
-                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 text-gray-700 text-sm sm:text-base">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 text-gray-700 dark:text-gray-300 text-sm sm:text-base">
                         <label
                             htmlFor="companyName"
                             className={`shrink-0 w-full sm:w-[200px] sm:text-right ${
                                 form.companyName
-                                    ? "text-green-700"
+                                    ? "text-green-700 dark:text-gray-300"
                                     : "text-red-400"
                             }`}
                         >
@@ -74,12 +74,12 @@ const StoreConfigPage = () => {
                             className="border border-gray-200 w-full outline-none p-2"
                         />
                     </div>
-                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 text-gray-700 text-sm sm:text-base">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 text-gray-700 dark:text-gray-300 text-sm sm:text-base">
                         <label
                             htmlFor="companyAddress"
                             className={`shrink-0 w-full sm:w-[200px] sm:text-right ${
                                 form.companyAddress
-                                    ? "text-green-700"
+                                    ? "text-green-700 dark:text-gray-300"
                                     : "text-red-400"
                             }`}
                         >
@@ -94,12 +94,12 @@ const StoreConfigPage = () => {
                             className="border border-gray-200 w-full outline-none p-2"
                         />
                     </div>
-                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 text-gray-700 text-sm sm:text-base">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 text-gray-700 dark:text-gray-300 text-sm sm:text-base">
                         <label
                             htmlFor="mobileNo"
                             className={`shrink-0 w-full sm:w-[200px] sm:text-right ${
                                 form.mobileNo
-                                    ? "text-green-700"
+                                    ? "text-green-700 dark:text-gray-300"
                                     : "text-red-400"
                             }`}
                         >
@@ -114,10 +114,10 @@ const StoreConfigPage = () => {
                             className="border border-gray-200 w-full outline-none p-2"
                         />
                     </div>
-                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 text-gray-700 text-sm sm:text-base">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 text-gray-700 dark:text-gray-300 text-sm sm:text-base">
                         <label
                             htmlFor="companyWebsite"
-                            className="shrink-0 w-full sm:w-[200px] sm:text-right"
+                            className="shrink-0 w-full sm:w-[200px] sm:text-right dark:text-gray-300"
                         >
                             Website:
                         </label>

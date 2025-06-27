@@ -70,7 +70,7 @@ const EditExpensePage = () => {
         }
     };
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-lg">
+        <div className="bg-white dark:bg-stone-700 p-4 sm:p-6 rounded-lg dark:text-gray-300">
             <h3 className="text-2xl font-semibold">Expense Information</h3>
             <form
                 className="mt-5 space-y-4 *:flex *:flex-col *:gap-2"
@@ -138,7 +138,7 @@ const EditExpensePage = () => {
                         {...register("paymentMethod")}
                         name="paymentMethod"
                         id="paymentMethod"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                        className="border border-gray-300 dark:bg-stone-500 w-full p-2 outline-none rounded-md"
                     >
                         <option value="CASH">Cash</option>
                         <option value="CARD">Card</option>
@@ -162,7 +162,7 @@ const EditExpensePage = () => {
                         {...register("recipientName")}
                         name="recipientName"
                         id="recipientName"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                        className="border border-gray-300 dark:text-gray-300 dark:bg-stone-500 w-full p-2 outline-none rounded-md"
                     >
                         <option value="Shakil">Shakil</option>
                         <option value="Mahdi">Mahdi</option>
@@ -175,7 +175,7 @@ const EditExpensePage = () => {
                         {...register("approvedBy")}
                         name="approvedBy"
                         id="approvedBy"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                        className="border border-gray-300 dark:bg-stone-500 w-full p-2 outline-none rounded-md"
                     >
                         <option value="Shakil">Shakil</option>
                         <option value="Mahdi">Mahdi</option>

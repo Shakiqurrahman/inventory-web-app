@@ -271,7 +271,7 @@ const OrderInformation = () => {
                                 inputType="number"
                                 suffix="%"
                                 defaultValue="Set Discount"
-                                contentClasses="text-red-800 dark:text-red-300 font-light italic border-b border-dashed border-red-800 cursor-pointer"
+                                contentClasses="text-red-800 dark:text-red-500 font-light italic border-b border-dashed border-red-800 cursor-pointer"
                             />
                         </div>
                         <div className="flex items-center justify-between gap-2 text-xs sm:text-sm mt-2">
@@ -285,7 +285,7 @@ const OrderInformation = () => {
                                 inputType="number"
                                 prefix={<TbCurrencyTaka />}
                                 defaultValue="Set Discount"
-                                contentClasses="text-red-800 dark:text-red-300 font-light italic border-b border-dashed border-red-800 cursor-pointer"
+                                contentClasses="text-red-800 dark:text-red-500 font-light italic border-b border-dashed border-red-800 cursor-pointer"
                             />
                         </div>
                     </>
@@ -338,7 +338,9 @@ const OrderInformation = () => {
                         >
                             <IoIosCloseCircle className="text-lg" />
                         </button>
-                        <span className="text-gray-600 dark:text-gray-300">{method}</span>
+                        <span className="text-gray-600 dark:text-gray-300">
+                            {method}
+                        </span>
                         <span className="flex items-center justify-center ml-auto text-gray-600 dark:text-gray-300">
                             <TbCurrencyTaka />
                             {amount.toFixed(2)}

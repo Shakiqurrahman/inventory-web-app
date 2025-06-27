@@ -84,7 +84,7 @@ const AllItemsPage = () => {
 
     return (
         <>
-            <div className="bg-white dark:bg-stone-800 p-4 rounded-lg">
+            <div className="bg-white dark:bg-stone-700 p-4 rounded-lg">
                 <h1 className="font-medium text-lg mb-4 dark:text-gray-300">
                     Items
                 </h1>
@@ -278,7 +278,7 @@ const AllItemsPage = () => {
                                 <tr className="border-b border-gray-300 text-sm">
                                     <td
                                         colSpan={7}
-                                        className="p-3 text-center text-gray-500"
+                                        className="p-3 text-center text-gray-500 dark:text-gray-300"
                                     >
                                         No item added yet.
                                     </td>
@@ -289,7 +289,7 @@ const AllItemsPage = () => {
                 </div>
                 {!isLoading && (meta as IMetaInfo)?.totalPages > 1 && (
                     <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
-                        <p className="text-sm font-medium text-gray-600">
+                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
                             Total Items : {(meta as IMetaInfo)?.total}
                         </p>
                         <Pagination
@@ -297,7 +297,7 @@ const AllItemsPage = () => {
                             totalPages={(meta as IMetaInfo)?.totalPages}
                             onPageChange={setPage}
                         />
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 dark:text-gray-300">
                             <p className="text-sm">Show per page :</p>
                             <select
                                 onChange={(e) =>
@@ -306,9 +306,9 @@ const AllItemsPage = () => {
                                 name="pageLimit"
                                 id="pageLimit"
                                 value={showLimit}
-                                className="px-2 py-1 outline-none border border-gray-300 rounded-md"
+                                className="px-2 py-1 outline-none border border-gray-300 rounded-md dark:bg-stone-500"
                             >
-                                <option value="10">10</option>
+                                <option value="1">10</option>
                                 <option value="20">20</option>
                                 <option value="30">30</option>
                                 <option value="50">50</option>

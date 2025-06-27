@@ -94,7 +94,7 @@ const SuppliersPage = () => {
 
     return (
         <div className="space-y-4">
-            <div className="bg-white dark:bg-stone-800 rounded-md p-2 sm:p-4 sm:px-6">
+            <div className="bg-white dark:bg-stone-700 rounded-md p-2 sm:p-4 sm:px-6">
                 <h1 className="font-medium text-lg mb-4 dark:text-gray-300">
                     Suppliers
                 </h1>
@@ -172,7 +172,7 @@ const SuppliersPage = () => {
                             {getSupplierLoading || isFetching ? (
                                 <tr>
                                     <td
-                                        className="p-3 text-center text-gray-500"
+                                        className="p-3 text-center text-gray-500 dark:text-gray-300"
                                         colSpan={6}
                                     >
                                         Loading...
@@ -231,10 +231,10 @@ const SuppliersPage = () => {
                                     )
                                 )
                             ) : (
-                                <tr className="border-b border-gray-300 text-sm">
+                                <tr className="border-b border-gray-300 dark:border-gray-300 text-sm">
                                     <td
                                         colSpan={6}
-                                        className="p-3 text-center text-gray-500"
+                                        className="p-3 text-center text-gray-500 dark:text-gray-300"
                                     >
                                         No Suppliers found
                                     </td>
@@ -244,7 +244,7 @@ const SuppliersPage = () => {
                     </table>
                     {!isLoading && (meta as IMetaInfo)?.totalPages > 1 && (
                         <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
-                            <p className="text-sm font-medium text-gray-600">
+                            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
                                 Total Expenses : {(meta as IMetaInfo)?.total}
                             </p>
                             <Pagination
@@ -252,7 +252,7 @@ const SuppliersPage = () => {
                                 totalPages={(meta as IMetaInfo)?.totalPages}
                                 onPageChange={setPage}
                             />
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 dark:text-gray-300">
                                 <p className="text-sm">Show per page :</p>
                                 <select
                                     onChange={(e) =>
@@ -261,7 +261,7 @@ const SuppliersPage = () => {
                                     name="pageLimit"
                                     id="pageLimit"
                                     value={showLimit}
-                                    className="px-2 py-1 outline-none border border-gray-300 rounded-md"
+                                    className="px-2 py-1 outline-none border border-gray-300 dark:border-gray-500 dark:bg-stone-500 dark:text-gray-300 rounded-md"
                                 >
                                     <option value="10">10</option>
                                     <option value="20">20</option>

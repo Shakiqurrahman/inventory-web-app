@@ -53,7 +53,7 @@ const AllCategories = () => {
 
     return (
         <>
-            <div className="bg-white dark:bg-stone-800 p-4 rounded-lg">
+            <div className="bg-white dark:bg-stone-700 p-4 rounded-lg">
                 <h1 className="font-medium dark:text-gray-300 text-lg mb-4">
                     Categories
                 </h1>
@@ -153,7 +153,7 @@ const AllCategories = () => {
                                 <tr className="text-sm">
                                     <td
                                         colSpan={4}
-                                        className="p-3 text-center text-gray-500"
+                                        className="p-3 text-center text-gray-500 dark:text-gray-300"
                                     >
                                         No categories found
                                     </td>

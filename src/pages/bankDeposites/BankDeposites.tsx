@@ -92,15 +92,17 @@ const BankDeposites = () => {
     // };
 
     return (
-        <div className="bg-white p-4 rounded-lg">
-            <div className="flex justify-between py-4">
-                <h1 className="font-medium text-lg mb-4">Bank Deposit</h1>
-                <h1 className="font-medium text-lg mb-4">
+        <div className="bg-white dark:bg-stone-700 p-4 rounded-lg">
+            <div className="flex justify-between py-4 ">
+                <h1 className="font-medium text-lg mb-4 dark:text-gray-200">
+                    Bank Deposit
+                </h1>
+                <h1 className="font-medium text-lg mb-4 dark:text-gray-200">
                     Balance: <span>{balance ? balance : 0}</span>
                 </h1>
             </div>
 
-            <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
+            <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2 dark:text-gray-300">
                 <div>
                     <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
                         {showSearchedFor ? (
@@ -117,7 +119,7 @@ const BankDeposites = () => {
                                 </button>
                             </div>
                         ) : (
-                            <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-1">
+                            <div className="flex items-center border border-gray-300 dark:border-gray-500 rounded-lg pl-3 w-[300px] gap-1">
                                 <FiSearch className="text-lg shrink-0 text-gray-500" />
                                 <input
                                     type="text"
@@ -132,7 +134,7 @@ const BankDeposites = () => {
                                 />
                                 <button
                                     onClick={() => setSearchValue("")}
-                                    className={`bg-gray-200 cursor-pointer hover:bg-gray-300 duration-300  rounded-full p-1 ${
+                                    className={`bg-gray-200 dark:text-gray-700 cursor-pointer hover:bg-gray-300 duration-300  rounded-full p-1 ${
                                         showclose ? "block" : "hidden"
                                     }`}
                                 >
@@ -163,9 +165,9 @@ const BankDeposites = () => {
             </div>
 
             <div className="mt-10 overflow-x-auto text-nowrap">
-                <table className="w-full border-collapse rounded-md text-gray-700">
+                <table className="w-full border-collapse rounded-md text-gray-700 dark:text-gray-300">
                     <thead>
-                        <tr className="bg-gray-200 text-left *:font-semibold text-sm">
+                        <tr className="bg-gray-200 dark:bg-stone-500 text-left *:font-semibold text-sm">
                             <th className="p-3 w-[60px]">ID</th>
                             <th className="p-3">Transection Number</th>
                             <th className="p-3">Transection Type</th>
@@ -182,7 +184,7 @@ const BankDeposites = () => {
                             <tr className="text-sm">
                                 <td
                                     colSpan={9}
-                                    className="p-4 text-center text-gray-500"
+                                    className="p-4 text-center text-gray-500 dark:text-gray-200"
                                 >
                                     Loading...
                                 </td>
@@ -192,7 +194,7 @@ const BankDeposites = () => {
                                 (item: IBankDeposite, index: number) => (
                                     <tr
                                         key={index}
-                                        className="border-b border-gray-300 hover:bg-gray-50 text-sm"
+                                        className="border-b border-gray-300 hover:bg-gray-50 dark:hover:bg-stone-400 text-sm"
                                     >
                                         <td className="p-3">{index + 1}</td>
                                         <td className="p-3">
@@ -262,8 +264,8 @@ const BankDeposites = () => {
                     </tbody>
                 </table>
                 {!isLoading && (meta as IMetaInfo)?.totalPages > 1 && (
-                    <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
-                        <p className="text-sm font-medium text-gray-600">
+                    <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200 ">
+                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
                             Total Expenses : {(meta as IMetaInfo)?.total}
                         </p>
                         <Pagination
@@ -272,7 +274,9 @@ const BankDeposites = () => {
                             onPageChange={setPage}
                         />
                         <div className="flex items-center gap-2">
-                            <p className="text-sm">Show per page :</p>
+                            <p className="text-sm dark:text-gray-300">
+                                Show per page :
+                            </p>
                             <select
                                 onChange={(e) =>
                                     setShowLimit(Number(e.target.value))
@@ -280,7 +284,7 @@ const BankDeposites = () => {
                                 name="pageLimit"
                                 id="pageLimit"
                                 value={showLimit}
-                                className="px-2 py-1 outline-none border border-gray-300 rounded-md"
+                                className="px-2 py-1 outline-none border border-gray-300 dark:text-gray-300 dark:bg-stone-500 rounded-md"
                             >
                                 <option value="10">10</option>
                                 <option value="20">20</option>

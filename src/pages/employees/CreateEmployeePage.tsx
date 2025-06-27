@@ -55,7 +55,7 @@ const CreateEmployeePage = () => {
     };
 
     return (
-        <div className="bg-white p-4 sm:p-6 rounded-lg">
+        <div className="bg-white dark:bg-stone-700 dark:text-gray-300 p-4 sm:p-6 rounded-lg">
             <h3 className="text-2xl font-semibold">Employee Information</h3>
             <form
                 className="mt-5 space-y-4 *:flex *:flex-col *:gap-2"
@@ -143,7 +143,7 @@ const CreateEmployeePage = () => {
                         name="role"
                         id="role"
                         defaultValue="Staff"
-                        className="border border-gray-300 w-full p-2 outline-none rounded-md"
+                        className="border border-gray-300 dark:bg-stone-500 w-full p-2 outline-none rounded-md"
                     >
                         <option value="STAFF">Staff</option>
                         <option value="MANAGER">Manager</option>

@@ -71,7 +71,7 @@ const Customerspage = () => {
 
     return (
         <div className="space-y-4">
-            <div className="bg-white dark:bg-stone-800 dark:text-gray-200 rounded-md p-2 sm:p-4 sm:px-6">
+            <div className="bg-white dark:bg-stone-700 dark:text-gray-200 rounded-md p-2 sm:p-4 sm:px-6">
                 <h1 className="font-medium text-lg mb-4">Customers</h1>
                 <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
                     {showSearchedFor ? (
@@ -134,7 +134,7 @@ const Customerspage = () => {
                                 <tr className="text-sm">
                                     <td
                                         colSpan={9}
-                                        className="p-4 text-center text-gray-500"
+                                        className="p-4 text-center text-gray-500 dark:text-gray-300"
                                     >
                                         Loading...
                                     </td>
@@ -144,7 +144,7 @@ const Customerspage = () => {
                                     (customer: ICustomer, idx: number) => (
                                         <tr
                                             key={idx}
-                                            className="border-b border-gray-300 hover:bg-gray-50 dark:hover:bg-stone-500 text-sm"
+                                            className="border-b border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-stone-500 text-sm"
                                         >
                                             <td className="p-3">{idx + 1}</td>
                                             <td className="p-3">
@@ -181,7 +181,7 @@ const Customerspage = () => {
                                 <tr>
                                     <td
                                         colSpan={4}
-                                        className="p-4 text-center text-gray-500"
+                                        className="p-4 text-center text-gray-500 dark:text-gray-300"
                                     >
                                         No customers found
                                     </td>
@@ -191,7 +191,7 @@ const Customerspage = () => {
                     </table>
                     {!isLoading && (meta as IMetaInfo)?.totalPages > 1 && (
                         <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
-                            <p className="text-sm font-medium text-gray-600">
+                            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
                                 Total Expenses : {(meta as IMetaInfo)?.total}
                             </p>
                             <Pagination
@@ -208,7 +208,7 @@ const Customerspage = () => {
                                     name="pageLimit"
                                     id="pageLimit"
                                     value={showLimit}
-                                    className="px-2 py-1 outline-none border border-gray-300 rounded-md"
+                                    className="px-2 py-1 outline-none border border-gray-300 dark:bg-stone-500 rounded-md"
                                 >
                                     <option value="10">10</option>
                                     <option value="20">20</option>

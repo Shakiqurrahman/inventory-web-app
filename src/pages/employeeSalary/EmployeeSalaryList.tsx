@@ -99,7 +99,7 @@ const EmployeeSalaryList = () => {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg">
+        <div className="bg-white dark:bg-stone-700 dark:text-gray-300 p-4 rounded-lg">
             <h1 className="font-medium text-lg mb-4">Employees Salary</h1>
             <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
                 {showSearchedFor ? (
@@ -116,7 +116,7 @@ const EmployeeSalaryList = () => {
                         </button>
                     </div>
                 ) : (
-                    <div className="flex items-center border border-gray-300 rounded-lg pl-3 w-[300px] gap-1">
+                    <div className="flex items-center border border-gray-300 dark:border-gray-500 rounded-lg pl-3 w-[300px] gap-1">
                         <FiSearch className="text-lg shrink-0 text-gray-500" />
                         <input
                             type="text"
@@ -129,7 +129,7 @@ const EmployeeSalaryList = () => {
                         />
                         <button
                             onClick={() => setSearchValue("")}
-                            className={`bg-gray-200 cursor-pointer hover:bg-gray-300 duration-300  rounded-full p-1 ${
+                            className={`bg-gray-200 dark:text-gray-500 cursor-pointer hover:bg-gray-300 duration-300  rounded-full p-1 ${
                                 showclose ? "block" : "hidden"
                             }`}
                         >
@@ -157,9 +157,9 @@ const EmployeeSalaryList = () => {
                 </button>
             </div>
             <div className="mt-10 overflow-x-auto">
-                <table className="w-full border-collapse rounded-md text-gray-700">
+                <table className="w-full border-collapse rounded-md text-gray-700 dark:text-gray-300">
                     <thead>
-                        <tr className="bg-gray-200 text-left *:font-semibold text-sm text-nowrap">
+                        <tr className="bg-gray-200 dark:bg-stone-500 text-left *:font-semibold text-sm text-nowrap">
                             <th className="p-3 w-[60px]">ID</th>
                             <th className="p-3">Date</th>
                             <th className="p-3">Amount</th>
@@ -175,7 +175,7 @@ const EmployeeSalaryList = () => {
                             <tr className="text-sm">
                                 <td
                                     colSpan={7}
-                                    className="p-3 text-center text-gray-500"
+                                    className="p-3 text-center text-gray-500 dark:text-gray-300"
                                 >
                                     Loading...
                                 </td>
@@ -184,7 +184,7 @@ const EmployeeSalaryList = () => {
                             employeeSalary?.map(
                                 (employee: IEmployeeSalary, index: number) => (
                                     <tr
-                                        className="border-b border-gray-300 hover:bg-gray-50 text-sm"
+                                        className="border-b border-gray-300 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-stone-400 text-sm"
                                         key={index}
                                     >
                                         <td className="p-3">{index + 1}</td>
@@ -255,7 +255,7 @@ const EmployeeSalaryList = () => {
                             <tr className="border-b border-gray-300 text-sm">
                                 <td
                                     colSpan={7}
-                                    className="p-3 text-center text-gray-500"
+                                    className="p-3 text-center text-gray-500 dark:text-gray-300"
                                 >
                                     No employees found
                                 </td>
@@ -264,8 +264,8 @@ const EmployeeSalaryList = () => {
                     </tbody>
                 </table>
                 {!isLoading && (meta as IMetaInfo)?.totalPages > 1 && (
-                    <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
-                        <p className="text-sm font-medium text-gray-600">
+                    <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200 ">
+                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
                             Total Expenses : {(meta as IMetaInfo)?.total}
                         </p>
                         <Pagination
@@ -282,7 +282,7 @@ const EmployeeSalaryList = () => {
                                 name="pageLimit"
                                 id="pageLimit"
                                 value={showLimit}
-                                className="px-2 py-1 outline-none border border-gray-300 rounded-md"
+                                className="px-2 py-1 outline-none border border-gray-300 rounded-md dark:bg-stone-500"
                             >
                                 <option value="10">10</option>
                                 <option value="20">20</option>

@@ -80,15 +80,15 @@ const InlineEditor: React.FC<InlineEditorProps> = ({
     ? createPortal(
         <div
           ref={inputRef}
-          className={`absolute top-full mt-2 w-48 bg-white border shadow-lg rounded-md p-3 z-50 `}
+          className={`absolute top-full mt-2 w-48 bg-white dark:bg-stone-500 border shadow-lg rounded-md p-3 z-50 `}
           style={{
             top: position.top,
             left: position.left,
             width: "200px",
           }}
         >
-          <label className="text-sm text-gray-700 mb-1 block">{label}</label>
-          <form onSubmit={handleSubmit} className="flex items-center gap-2">
+          <label className="text-sm text-gray-700 dark:text-gray-300 mb-1 block">{label}</label>
+          <form onSubmit={handleSubmit} className="flex items-center gap-2 dark:text-gray-200">
             <input
               type={inputType}
               value={editValue}

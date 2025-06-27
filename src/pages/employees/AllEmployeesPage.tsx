@@ -41,10 +41,10 @@ const AllEmployeesPage = () => {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg">
+        <div className="bg-white dark:bg-stone-700 dark:text-gray-300 p-4 rounded-lg">
             <h1 className="font-medium text-lg mb-4">Employees</h1>
             <div className="flex justify-between flex-wrap sm:flex-nowrap gap-2">
-                <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 w-[300px] gap-2">
+                <div className="flex items-center border border-gray-300 dark:border-gray-500 rounded-lg px-3 py-2 w-[300px] gap-2">
                     <FiSearch className="text-lg shrink-0" />
                     <input
                         type="text"
@@ -65,9 +65,9 @@ const AllEmployeesPage = () => {
                 </Link>
             </div>
             <div className="mt-10 overflow-x-auto">
-                <table className="w-full border-collapse rounded-md text-gray-700">
+                <table className="w-full border-collapse rounded-md text-gray-700 dark:text-gray-300">
                     <thead>
-                        <tr className="bg-gray-200 text-left *:font-semibold text-sm text-nowrap">
+                        <tr className="bg-gray-200 dark:bg-stone-500 text-left *:font-semibold text-sm text-nowrap">
                             <th className="p-3 w-[60px]">ID</th>
                             <th className="p-3">Name</th>
                             <th className="p-3">Email</th>
@@ -82,7 +82,7 @@ const AllEmployeesPage = () => {
                             <tr className="text-sm">
                                 <td
                                     colSpan={7}
-                                    className="p-3 text-center text-gray-500"
+                                    className="p-3 text-center text-gray-500 dark:text-gray-300"
                                 >
                                     Loading...
                                 </td>
