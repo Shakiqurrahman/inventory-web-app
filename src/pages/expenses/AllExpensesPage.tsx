@@ -240,8 +240,8 @@ const AllExpensesPage = () => {
                     </tbody>
                 </table>
                 {!isLoading && (meta as IMetaInfo)?.totalPages > 1 && (
-                    <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
-                        <p className="text-sm font-medium text-gray-600">
+                    <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200 dark:text-gray-300">
+                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
                             Total Expenses : {(meta as IMetaInfo)?.total}
                         </p>
                         <Pagination
@@ -258,7 +258,7 @@ const AllExpensesPage = () => {
                                 name="pageLimit"
                                 id="pageLimit"
                                 value={showLimit}
-                                className="px-2 py-1 outline-none border border-gray-300 rounded-md"
+                                className="px-2 py-1 outline-none border border-gray-300 dark:border-gray-500 dark:bg-stone-500 rounded-md"
                             >
                                 <option value="10">10</option>
                                 <option value="20">20</option>

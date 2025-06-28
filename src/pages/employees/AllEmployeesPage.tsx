@@ -91,7 +91,7 @@ const AllEmployeesPage = () => {
                             filteredEmployees?.map(
                                 (employee: IEmployee, index: number) => (
                                     <tr
-                                        className="border-b border-gray-300 hover:bg-gray-50 text-sm"
+                                        className="border-b border-gray-300 hover:bg-gray-50 dark:hover:bg-stone-400 text-sm"
                                         key={index}
                                     >
                                         <td className="p-3">{index + 1}</td>
