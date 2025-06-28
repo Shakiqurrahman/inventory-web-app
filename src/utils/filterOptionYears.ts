@@ -1,5 +1,5 @@
 export const getYearOptions = () => {
-  const startYear = 2024;
+  const startYear = 2025;
   const currentYear = new Date().getFullYear();
 
   const years = [];
@@ -14,9 +14,10 @@ export const getYearOptions = () => {
 };
 
 export const getDateFilterOptions = () => {
-  const startYear = 2024;
+  const startYear = 2025;
   const currentYear = new Date().getFullYear();
   const lastYear = currentYear - 1;
+  const lastYearOption = currentYear > startYear ? currentYear - 1 : null;
 
   const staticOptions = [
     { label: "Today", value: "today" },
@@ -25,7 +26,9 @@ export const getDateFilterOptions = () => {
     { label: "Last Month", value: "last_month" },
     { label: "6 Months", value: "6_months" },
     { label: "This Year", value: `${currentYear}` },
-    { label: "Last Year", value: `${lastYear}` },
+    ...(lastYearOption
+      ? [{ label: "Last Year", value: `${lastYearOption}` }]
+      : []),
   ];
 
   const yearOptions = [];

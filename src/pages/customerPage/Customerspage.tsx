@@ -192,7 +192,7 @@ const Customerspage = () => {
                     {!isLoading && (meta as IMetaInfo)?.totalPages > 1 && (
                         <section className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
                             <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                                Total Expenses : {(meta as IMetaInfo)?.total}
+                                Total Customers : {(meta as IMetaInfo)?.total}
                             </p>
                             <Pagination
                                 currentPage={(meta as IMetaInfo)?.page || page}
