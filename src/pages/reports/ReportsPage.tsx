@@ -16,7 +16,7 @@ const ReportsPage = () => {
         <div className="flex items-center justify-between gap-2 p-3 border-b border-gray-200 bg-[#F9F9F9] dark:bg-stone-600 dark:text-gray-300 dark:border-gray-500 text-sm">
           <h1>Reports - Profit & Loss</h1>
           <select className="text-sm px-3 py-1 border border-gray-300 dark:border-gray-500 rounded text-gray-500 dark:text-gray-300 outline-none">
-            <option value="2024">2024</option>
+            {<option value="2024">2024</option>}
           </select>
         </div>
         <div className="p-4 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
